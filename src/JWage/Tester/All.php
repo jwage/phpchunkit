@@ -6,7 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Runs all tests in this order: unit, functional and twig lint.
+ * Runs all tests in this order: unit and functional.
  */
 class All
 {
