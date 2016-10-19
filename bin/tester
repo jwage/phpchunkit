@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+use JWage\Tester\Configuration;
+use JWage\Tester\TesterApplication;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+
+$rootDir = realpath(__DIR__.'/..');
+
+chdir($rootDir);
+
+require_once $rootDir.'/vendor/autoload.php';
+
+$input = new ArgvInput();
+$output = new ConsoleOutput();
+$app = new Application();
+
+$configuration = (new Configuration())
+    ->setRootDir($rootDir)
+;
+
+$testerApplication = new TesterApplication($app, $configuration);
+$testerApplication->run($input, $output);

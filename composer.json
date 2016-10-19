@@ -1,0 +1,28 @@
+{
+    "name": "jwage/tester",
+    "type": "library",
+    "description": "PHPUnit Tester",
+    "keywords": ["tests", "phpunit"],
+    "homepage": "http://github.com/jwage/tester",
+    "license": "MIT",
+    "authors": [
+        {"name": "Jonathan H. Wage", "email": "jonwage@gmail.com"},
+        {"name": "Kris Wallsmith", "email": "kris.wallsmith@gmail.com"}
+    ],
+    "autoload": {
+        "psr-0": {
+            "JWage\\Tester": "src/",
+            "JWage\\Tester\\Test": "tests/"
+        }
+    },
+    "require": {
+    	"php": ">=7.0.0",
+        "symfony/console": "^3.1",
+        "symfony/process": "^3.1",
+        "symfony/stopwatch": "^3.1",
+        "symfony/finder": "^3.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.5.*"
+    }
+}
