@@ -10,6 +10,8 @@
     - Groups to consider functional tests.
     - Nothing should be hardcoded/assumed in the lib. Make it all configurable.
 - Create abstraction for the create database/sandbox stuff. Functional tests need to be sandboxed.
+- Remove dependency on PHP 7.
+- Update author doc blocks to mention Kris Wallsmith on code he wrote.
 
 ## Usage
 
