@@ -14,11 +14,6 @@ class TestWatcher
     private $testRunner;
 
     /**
-     * @var string
-     */
-    private $rootDir;
-
-    /**
      * @param TestRunner     $testRunner
      * @param Configuration  $configuration
      */
