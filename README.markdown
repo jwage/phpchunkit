@@ -121,3 +121,6 @@ $eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
 $testerApplication = new TesterApplication($app, $configuration);
 $testerApplication->run($input, $output);
 ```
+
+Take a look at the example in [bin/tester](https://github.com/jwage/tester/blob/master/bin/tester)
+which has example listeners using MySQL.
