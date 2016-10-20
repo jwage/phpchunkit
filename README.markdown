@@ -13,6 +13,7 @@
 - Remove dependency on PHP 7.
 - Update author doc blocks to mention Kris Wallsmith on code he wrote.
 - Blank TODO need to be handled. Things that used to be specific to OpenSky had to be removed. We need to replace with something more abstract and configurable.
+- Implement event system.
 
 ## Setup
 
