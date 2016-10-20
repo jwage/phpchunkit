@@ -1,19 +1,61 @@
 # Tester
 
-## TODO
+This library sits on top of PHPUnit and adds sugar to make it easier to work with large test suites.
+The primary feature is test chunking which gives you the ability to run your tests in parallel chunks.
 
-- Rename the project.
-- Create some kind of config object with the following:
-    - Root dir
-    - Path to tests
-    - Path to phpunit.xml
-    - Groups to consider functional tests.
-    - Nothing should be hardcoded/assumed in the lib. Make it all configurable.
-- Create abstraction for the create database/sandbox stuff. Functional tests need to be sandboxed.
-- Remove dependency on PHP 7.
-- Update author doc blocks to mention Kris Wallsmith on code he wrote.
-- Blank TODO need to be handled. Things that used to be specific to OpenSky had to be removed. We need to replace with something more abstract and configurable.
-- Implement event system.
+## Example Commands
+
+Run all tests:
+
+    ./bin/tester all
+
+Run just unit tests:
+
+    ./bin/tester unit
+
+Run all functional tests:
+
+    ./bin/tester functional
+
+Run a specific chunk of functional tests:
+
+    ./bin/tester functional --chunk=1
+
+Watch your code for changes and run tests:
+
+    ./bin/tester watch
+
+Run tests that match a filter:
+
+    ./bin/tester filter BuildSandbox
+
+Run a specific file:
+
+    ./bin/tester file tests/JWage/Tester/Test/BuildSandboxTest.php
+
+Run tests for changed files:
+
+    ./bin/tester changed
+
+Create test databases and schema:
+
+    ./bin/tester create-dbs
+
+With the `chunk`, `num-chunks`, `sandbox` and `create-dbs` options you can run multiple
+chunks in parallel in sandboxed environments across multiple servers. Here is an
+example:
+
+    # Server 1
+    ./bin/tester functional --num-chunks=4 --chunk=1 --sandbox --create-dbs
+    ./bin/tester functional --num-chunks=4 --chunk=2 --sandbox --create-dbs
+
+    # Server 2
+    ./bin/tester functional --num-chunks=4 --chunk=3 --sandbox --create-dbs
+    ./bin/tester functional --num-chunks=4 --chunk=4 --sandbox --create-dbs
+
+Hook this up to something like Jenkins and you can scale your tests and keep them fast!
+At [OpenSky](https://www.opensky.com) our test suite takes 25 to 30 minutes when ran serially
+but when ran across 14 parallel jobs on a single Jenkins server they take ~2 minutes.
 
 ## Setup
 
@@ -64,37 +106,3 @@ $eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
 $testerApplication = new TesterApplication($app, $configuration);
 $testerApplication->run($input, $output);
 ```
-
-## Example Commands
-
-Run all tests:
-
-    ./bin/tester all
-
-Run just unit tests:
-
-    ./bin/tester unit
-
-Run all functional tests:
-
-    ./bin/tester functional
-
-Run a specific chunk of functional tests:
-
-    ./bin/tester functional --chunk=1
-
-Watch your code for changes and run tests:
-
-    ./bin/tester watch
-
-Run tests that match a filter:
-
-    ./bin/tester filter BuildSandbox
-
-Run a specific file:
-
-    ./bin/tester file tests/JWage/Tester/Test/BuildSandboxTest.php
-
-Run tests for changed files:
-
-    ./bin/tester changed
