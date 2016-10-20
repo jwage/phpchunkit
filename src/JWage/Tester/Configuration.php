@@ -15,9 +15,14 @@ class Configuration
     private $watchDirectories = [];
 
     /**
-     * @var array
+     * @var string
      */
     private $testsDirectory = '';
+
+    /**
+     * @var string
+     */
+    private $phpunitPath = '';
 
     public function setRootDir(string $rootDir) : Configuration
     {
@@ -53,5 +58,17 @@ class Configuration
     public function getTestsDirectory() : string
     {
         return $this->testsDirectory;
+    }
+
+    public function setPhpunitPath(string $phpunitPath) : Configuration
+    {
+        $this->phpunitPath = $phpunitPath;
+
+        return $this;
+    }
+
+    public function getPhpunitPath() : string
+    {
+        return $this->phpunitPath;
     }
 }

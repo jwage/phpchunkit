@@ -202,7 +202,8 @@ class TestRunner
      */
     public function runPhpunit($command, array $env = [], \Closure $callback = null)
     {
-        $command = sprintf('php vendor/bin/phpunit %s %s',
+        $command = sprintf('php %s %s %s',
+            $this->configuration->getPhpunitPath(),
             $command,
             $this->flags($this->input, $this->output)
         );

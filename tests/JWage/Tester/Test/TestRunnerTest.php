@@ -48,6 +48,7 @@ class TestRunnerTest extends BaseTest
         $this->process = $this->createMock(Process::class);
         $this->configuration = (new Configuration())
             ->setRootDir(realpath(__DIR__.'/../../../..'))
+            ->setPhpunitPath(realpath(__DIR__.'/../../../../vendor/bin/phpunit'))
         ;
 
         $this->testRunner = new TestRunnerStub(
@@ -235,7 +236,7 @@ class TestRunnerTest extends BaseTest
 
         $testRunner->expects($this->once())
             ->method('run')
-            ->with("php vendor/bin/phpunit --exclude-group=functional -d memory_limit=''")
+            ->with(sprintf("php %s --exclude-group=functional -d memory_limit=''", $this->configuration->getPhpunitPath()))
             ->will($this->returnValue(0));
 
         $this->assertEquals(0, $testRunner->runPhpunit('--exclude-group=functional'));
