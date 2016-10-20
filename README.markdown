@@ -17,54 +17,53 @@
 
 ## Setup
 
-    ```php
-    #!/usr/bin/env php
-    <?php
+```php
+#!/usr/bin/env php
+<?php
 
-    use JWage\Tester\Configuration;
-    use JWage\Tester\Events;
-    use JWage\Tester\TesterApplication;
-    use Symfony\Component\Console\Application;
-    use Symfony\Component\Console\Input\ArgvInput;
-    use Symfony\Component\Console\Output\ConsoleOutput;
+use JWage\Tester\Configuration;
+use JWage\Tester\Events;
+use JWage\Tester\TesterApplication;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
-    $rootDir = realpath(__DIR__.'/..');
-    $sourceDir = sprintf('%s/src', $rootDir);
-    $testsDir = sprintf('%s/tests', $rootDir);
-    $phpunitPath = sprintf('%s/vendor/bin/phpunit', $rootDir);
+$rootDir = realpath(__DIR__.'/..');
+$sourceDir = sprintf('%s/src', $rootDir);
+$testsDir = sprintf('%s/tests', $rootDir);
+$phpunitPath = sprintf('%s/vendor/bin/phpunit', $rootDir);
 
-    require_once $rootDir.'/vendor/autoload.php';
+require_once $rootDir.'/vendor/autoload.php';
 
-    $input = new ArgvInput();
-    $output = new ConsoleOutput();
-    $app = new Application();
+$input = new ArgvInput();
+$output = new ConsoleOutput();
+$app = new Application();
 
-    $configuration = (new Configuration())
-        ->setRootDir($rootDir)
-        ->setWatchDirectories([$sourceDir, $testsDir])
-        ->setTestsDirectory($testsDir)
-        ->setPhpunitPath($phpunitPath)
-    ;
+$configuration = (new Configuration())
+    ->setRootDir($rootDir)
+    ->setWatchDirectories([$sourceDir, $testsDir])
+    ->setTestsDirectory($testsDir)
+    ->setPhpunitPath($phpunitPath)
+;
 
-    $eventDispatcher = $configuration->getEventDispatcher();
+$eventDispatcher = $configuration->getEventDispatcher();
 
-    $eventDispatcher->addListener(Events::SANDBOX_PREPARE, function() {
-        // prepare a sandboxed environment
-        // modify database configuration files here
-    });
+$eventDispatcher->addListener(Events::SANDBOX_PREPARE, function() {
+    // prepare a sandboxed environment
+    // modify database configuration files here
+});
 
-    $eventDispatcher->addListener(Events::SANDBOX_CLEANUP, function() {
-        // cleanup modified database configuration file and cleanup sandboxed databases
-    });
+$eventDispatcher->addListener(Events::SANDBOX_CLEANUP, function() {
+    // cleanup modified database configuration file and cleanup sandboxed databases
+});
 
-    $eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
-        // create test databases
-    });
+$eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
+    // create test databases
+});
 
-    $testerApplication = new TesterApplication($app, $configuration);
-    $testerApplication->run($input, $output);
-    ```
-
+$testerApplication = new TesterApplication($app, $configuration);
+$testerApplication->run($input, $output);
+```
 
 ## Example Commands
 
