@@ -11,17 +11,20 @@ use JWage\Tester\TestChunker;
 class TestChunkerTest extends BaseTest
 {
     /**
+     * @var string
+     */
+    private $testsDirectory;
+
+    /**
      * @var TestRunner
      */
     private $testChunker;
 
     protected function setUp()
     {
-        $this->rootDir = realpath(__DIR__.'/../../../..');
+        $this->testsDirectory = realpath(__DIR__.'/../../../../tests');
 
-        $this->testChunker = new TestChunker(
-            $this->rootDir
-        );
+        $this->testChunker = new TestChunker($this->testsDirectory);
     }
 
     public function testChunkFunctionalTests()

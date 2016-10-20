@@ -7,14 +7,14 @@ class TestChunker
     /**
      * @var string
      */
-    private $rootDir;
+    private $testsDirectory;
 
     /**
-     * @param string $rootDir
+     * @param string $testsDirectory
      */
-    public function __construct($rootDir)
+    public function __construct(string $testsDirectory)
     {
-        $this->rootDir = $rootDir;
+        $this->testsDirectory = $testsDirectory;
     }
 
     /**
@@ -82,7 +82,7 @@ class TestChunker
 
     private function countNumTestsInFile(string $file) : int
     {
-        $className = str_replace($this->rootDir.'/tests/', '', $file);
+        $className = str_replace($this->testsDirectory, '', $file);
         $className = str_replace('.php', '', $className);
         $className = str_replace('/', '\\', $className);
 
@@ -131,7 +131,7 @@ class TestChunker
     {
         $command = sprintf(
             'find %s -name *Test.php -print0 | xargs -0 grep -l "@group functional" | sort',
-            $this->rootDir
+            $this->testsDirectory
         );
         $output = shell_exec($command);
 

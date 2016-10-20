@@ -14,6 +14,11 @@ class Configuration
      */
     private $watchDirectories = [];
 
+    /**
+     * @var array
+     */
+    private $testsDirectory = '';
+
     public function setRootDir(string $rootDir) : Configuration
     {
         $this->rootDir = $rootDir;
@@ -36,5 +41,17 @@ class Configuration
     public function getWatchDirectories() : array
     {
         return $this->watchDirectories;
+    }
+
+    public function setTestsDirectory(string $testsDirectory) : Configuration
+    {
+        $this->testsDirectory = $testsDirectory;
+
+        return $this;
+    }
+
+    public function getTestsDirectory() : string
+    {
+        return $this->testsDirectory;
     }
 }

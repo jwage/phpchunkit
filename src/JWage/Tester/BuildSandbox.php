@@ -37,8 +37,6 @@ class BuildSandbox
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $rootDir = $this->testRunner->getRootDir();
-
         $databaseConfigPath = ''; // TODO
 
         // update database configs

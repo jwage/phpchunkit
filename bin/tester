@@ -8,6 +8,8 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 $rootDir = realpath(__DIR__.'/..');
+$sourceDir = sprintf('%s/src', $rootDir);
+$testsDir = sprintf('%s/tests', $rootDir);
 
 chdir($rootDir);
 
@@ -19,10 +21,8 @@ $app = new Application();
 
 $configuration = (new Configuration())
     ->setRootDir($rootDir)
-    ->setWatchDirectories([
-        sprintf('%s/src', $rootDir),
-        sprintf('%s/tests', $rootDir),
-    ])
+    ->setWatchDirectories([$sourceDir, $testsDir])
+    ->setTestsDirectory($testsDir)
 ;
 
 $testerApplication = new TesterApplication($app, $configuration);

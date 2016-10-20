@@ -20,13 +20,22 @@ class Functional
     private $testRunner;
 
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @param DatabaseSandbox $databaseSandbox
      * @param TestRunner      $testRunner
      */
-    public function __construct(DatabaseSandbox $databaseSandbox, TestRunner $testRunner)
+    public function __construct(
+        DatabaseSandbox $databaseSandbox,
+        TestRunner $testRunner,
+        Configuration $configuration)
     {
         $this->databaseSandbox = $databaseSandbox;
         $this->testRunner = $testRunner;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -38,15 +47,13 @@ class Functional
         $stopwatch = new Stopwatch();
         $stopwatch->start('Functional Tests');
 
-        $rootDir = $this->testRunner->getRootDir();
-
         $verbose = $output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
 
         $chunk = $input->getOption('chunk');
         $numChunks = $input->getOption('num-chunks');
 
         $chunkedFunctionalTests = $this->chunkFunctionalTests(
-            $rootDir, $numChunks, $chunk
+            $numChunks, $chunk
         );
 
         $chunks = $chunkedFunctionalTests->getChunks();
@@ -158,14 +165,14 @@ class Functional
         return $this->testRunner->runPhpunit($command, $env, $callback);
     }
 
-    private function chunkFunctionalTests(string $rootDir, int $numChunks, int $chunk = null) : ChunkedFunctionalTests
+    private function chunkFunctionalTests(int $numChunks, int $chunk = null) : ChunkedFunctionalTests
     {
         $chunkedFunctionalTests = (new ChunkedFunctionalTests())
             ->setNumChunks($numChunks)
             ->setChunk($chunk)
         ;
 
-        $testChunker = new TestChunker($rootDir);
+        $testChunker = new TestChunker($this->configuration->getTestsDirectory());
 
         $testChunker->chunkFunctionalTests($chunkedFunctionalTests);
 

@@ -105,7 +105,7 @@ class TesterApplication
             ->addOption('chunk', null, InputOption::VALUE_REQUIRED, 'Run a specific chunk of tests.')
             ->addOption('num-chunks', null, InputOption::VALUE_REQUIRED, 'The number of chunks to run tests in.', 14)
             ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed')
-            ->setCode([new Functional($databaseSandbox, $testRunner), 'execute'])
+            ->setCode([new Functional($databaseSandbox, $testRunner, $this->configuration), 'execute'])
         ;
 
         $this->app->register('create-dbs')

@@ -41,12 +41,6 @@ class BuildSandboxTest extends BaseTest
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
 
-        $rootDir = realpath(__DIR__.'/../../../..');
-
-        $this->testRunner->expects($this->once())
-            ->method('getRootDir')
-            ->willReturn($rootDir);
-
         $input->expects($this->once())
             ->method('getOption')
             ->with('create-dbs')

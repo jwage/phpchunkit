@@ -2,6 +2,7 @@
 
 namespace JWage\Tester\Test;
 
+use JWage\Tester\Configuration;
 use JWage\Tester\DatabaseSandbox;
 use JWage\Tester\Functional;
 use JWage\Tester\TestRunner;
@@ -24,6 +25,11 @@ class FunctionalTest extends BaseTest
     private $testRunner;
 
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @var Functional
      */
     private $functional;
@@ -32,10 +38,14 @@ class FunctionalTest extends BaseTest
     {
         $this->databaseSandbox = $this->createMock(DatabaseSandbox::class);
         $this->testRunner = $this->createMock(TestRunner::class);
+        $this->configuration = (new Configuration())
+            ->setTestsDirectory(realpath(__DIR__.'/../../../../tests'))
+        ;
 
         $this->functional = new Functional(
             $this->databaseSandbox,
-            $this->testRunner
+            $this->testRunner,
+            $this->configuration
         );
     }
 
@@ -43,10 +53,6 @@ class FunctionalTest extends BaseTest
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
-
-        $this->testRunner->expects($this->once())
-            ->method('getRootDir')
-            ->willReturn(realpath(__DIR__.'/../../../..'));
 
         $input->expects($this->at(0))
             ->method('getOption')
