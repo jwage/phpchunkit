@@ -2,14 +2,14 @@
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="JWage Tester Test Suite">
-            <directory suffix="Test.php">./tests/JWage/Tester/Test/</directory>
+        <testsuite name="PHPChunkit Test Suite">
+            <directory suffix="Test.php">./tests/PHPChunkit/Test/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">./src/JWage/Tester/</directory>
+            <directory suffix=".php">./src/PHPChunkit/</directory>
         </whitelist>
     </filter>
 </phpunit>

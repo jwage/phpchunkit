@@ -1,9 +1,9 @@
 {
-    "name": "jwage/tester",
+    "name": "jwage/phpchunkit",
     "type": "library",
-    "description": "PHPUnit Tester",
+    "description": "PHPUnit Test Runner",
     "keywords": ["tests", "phpunit"],
-    "homepage": "http://github.com/jwage/tester",
+    "homepage": "http://github.com/jwage/phpchunkit",
     "license": "MIT",
     "authors": [
         {"name": "Jonathan H. Wage", "email": "jonwage@gmail.com"},
@@ -11,8 +11,8 @@
     ],
     "autoload": {
         "psr-0": {
-            "JWage\\Tester": "src/",
-            "JWage\\Tester\\Test": "tests/"
+            "PHPChunkit": "src/",
+            "PHPChunkit\\Test": "tests/"
         }
     },
     "require": {

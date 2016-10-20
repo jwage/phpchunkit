@@ -1,4 +1,4 @@
-# Tester
+# PHPChunkit
 
 This library sits on top of PHPUnit and adds sugar to make it easier to work with large test suites.
 The primary feature is test chunking which gives you the ability to run your tests in parallel chunks.
@@ -37,7 +37,7 @@ Run tests that match a filter:
 
 Run a specific file:
 
-    ./bin/tester file tests/JWage/Tester/Test/BuildSandboxTest.php
+    ./bin/tester file tests/PHPChunkit/Test/BuildSandboxTest.php
 
 Run tests for changed files:
 
@@ -78,9 +78,9 @@ database creation and sandbox cleanup processes by adding [EventDispatcher](http
 #!/usr/bin/env php
 <?php
 
-use JWage\Tester\Configuration;
-use JWage\Tester\Events;
-use JWage\Tester\TesterApplication;
+use PHPChunkit\Configuration;
+use PHPChunkit\Events;
+use PHPChunkit\TesterApplication;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
