@@ -4,21 +4,18 @@ namespace JWage\Tester\Test;
 
 use JWage\Tester\CreateDatabases;
 use JWage\Tester\DatabaseSandbox;
+use JWage\Tester\Events;
 use JWage\Tester\TestRunner;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CreateDatabasesTest extends BaseTest
 {
     /**
-     * @var DatabaseSandbox
+     * @var EventDispatcher
      */
-    private $databaseSandbox;
-
-    /**
-     * @var TestRunner
-     */
-    private $testRunner;
+    private $eventDispatcher;
 
     /**
      * @var CreateDatabases
@@ -27,12 +24,10 @@ class CreateDatabasesTest extends BaseTest
 
     protected function setUp()
     {
-        $this->databaseSandbox = $this->createMock(DatabaseSandbox::class);
-        $this->testRunner = $this->createMock(TestRunner::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcher::class);
 
         $this->createDatabases = new CreateDatabases(
-            $this->databaseSandbox,
-            $this->testRunner
+            $this->eventDispatcher
         );
     }
 
@@ -41,11 +36,10 @@ class CreateDatabasesTest extends BaseTest
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
 
-        // TODO
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(Events::SANDBOX_CREATE_DATABASES);
 
-        $this->createDatabases->execute(
-            $input,
-            $output
-        );
+        $this->createDatabases->execute($input, $output);
     }
 }

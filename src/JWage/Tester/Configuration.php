@@ -2,6 +2,8 @@
 
 namespace JWage\Tester;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 class Configuration
 {
     /**
@@ -23,6 +25,11 @@ class Configuration
      * @var string
      */
     private $phpunitPath = '';
+
+    /**
+     * @var null|EventDispatcher
+     */
+    private $eventDispatcher;
 
     public function setRootDir(string $rootDir) : Configuration
     {
@@ -70,5 +77,21 @@ class Configuration
     public function getPhpunitPath() : string
     {
         return $this->phpunitPath;
+    }
+
+    public function setEventDispatcher(EventDispatcher $eventDispatcher) : Configuration
+    {
+        $this->eventDispatcher = $eventDispatcher;
+
+        return $this;
+    }
+
+    public function getEventDispatcher() : EventDispatcher
+    {
+        if ($this->eventDispatcher === null) {
+            $this->eventDispatcher = new EventDispatcher();
+        }
+
+        return $this->eventDispatcher;
     }
 }

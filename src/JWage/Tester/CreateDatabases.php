@@ -4,27 +4,21 @@ namespace JWage\Tester;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CreateDatabases
 {
     /**
-     * @var DatabaseSandbox
+     * @var EventDispatcher
      */
-    private $databaseSandbox;
+    private $eventDispatcher;
 
     /**
-     * @var TestRunner
+     * @param EventDispatcher $eventDispatcher
      */
-    private $testRunner;
-
-    /**
-     * @param DatabaseSandbox $databaseSandbox
-     * @param TestRunner      $testRunner
-     */
-    public function __construct(DatabaseSandbox $databaseSandbox, TestRunner $testRunner)
+    public function __construct(EventDispatcher $eventDispatcher)
     {
-        $this->databaseSandbox = $databaseSandbox;
-        $this->testRunner = $testRunner;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -33,7 +27,7 @@ class CreateDatabases
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        // todo
+        $this->eventDispatcher->dispatch(Events::DATABASES_CREATE);
 
         if (!$input->getOption('quiet')) {
             $output->writeln('Done creating databases!');

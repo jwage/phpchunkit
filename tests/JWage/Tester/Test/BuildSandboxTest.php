@@ -4,21 +4,23 @@ namespace JWage\Tester\Test;
 
 use JWage\Tester\BuildSandbox;
 use JWage\Tester\DatabaseSandbox;
+use JWage\Tester\Events;
 use JWage\Tester\TestRunner;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class BuildSandboxTest extends BaseTest
 {
     /**
-     * @var DatabaseSandbox
-     */
-    private $databaseSandbox;
-
-    /**
      * @var TestRunner
      */
     private $testRunner;
+
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
 
     /**
      * @var BuildSandbox
@@ -27,12 +29,12 @@ class BuildSandboxTest extends BaseTest
 
     protected function setUp()
     {
-        $this->databaseSandbox = $this->createMock(DatabaseSandbox::class);
         $this->testRunner = $this->createMock(TestRunner::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcher::class);
 
         $this->buildSandbox = new BuildSandbox(
-            $this->databaseSandbox,
-            $this->testRunner
+            $this->testRunner,
+            $this->eventDispatcher
         );
     }
 
@@ -40,6 +42,10 @@ class BuildSandboxTest extends BaseTest
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
+
+        $this->eventDispatcher->expects($this->at(0))
+            ->method('dispatch')
+            ->with(Events::SANDBOX_PREPARE);
 
         $input->expects($this->once())
             ->method('getOption')

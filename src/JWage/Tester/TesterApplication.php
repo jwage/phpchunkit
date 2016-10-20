@@ -111,13 +111,13 @@ class TesterApplication
         $this->app->register('create-dbs')
             ->setDescription('Create the test databases.')
             ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Configure unique names')
-            ->setCode([new CreateDatabases($databaseSandbox, $testRunner), 'execute'])
+            ->setCode([new CreateDatabases($this->configuration->getEventDispatcher()), 'execute'])
         ;
 
         $this->app->register('sandbox')
             ->setDescription('Build a sandbox for a functional test run.')
             ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases after building the sandbox.')
-            ->setCode([new BuildSandbox($databaseSandbox, $testRunner), 'execute'])
+            ->setCode([new BuildSandbox($testRunner, $this->configuration->getEventDispatcher()), 'execute'])
         ;
 
         $this->app->run($input, $output);

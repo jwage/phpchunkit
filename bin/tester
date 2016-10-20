@@ -2,6 +2,7 @@
 <?php
 
 use JWage\Tester\Configuration;
+use JWage\Tester\Events;
 use JWage\Tester\TesterApplication;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -24,6 +25,21 @@ $configuration = (new Configuration())
     ->setTestsDirectory($testsDir)
     ->setPhpunitPath($phpunitPath)
 ;
+
+$eventDispatcher = $configuration->getEventDispatcher();
+
+$eventDispatcher->addListener(Events::SANDBOX_PREPARE, function() {
+    // prepare a sandboxed environment
+    // modify database configuration files here
+});
+
+$eventDispatcher->addListener(Events::SANDBOX_CLEANUP, function() {
+    // cleanup modified database configuration file and cleanup sandboxed databases
+});
+
+$eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
+    // create test databases
+});
 
 $testerApplication = new TesterApplication($app, $configuration);
 $testerApplication->run($input, $output);
