@@ -10,11 +10,6 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class Functional
 {
     /**
-     * @var DatabaseSandbox
-     */
-    private $databaseSandbox;
-
-    /**
      * @var TestRunner
      */
     private $testRunner;
@@ -25,15 +20,13 @@ class Functional
     private $configuration;
 
     /**
-     * @param DatabaseSandbox $databaseSandbox
      * @param TestRunner      $testRunner
+     * @param Configuration   $configuration
      */
     public function __construct(
-        DatabaseSandbox $databaseSandbox,
         TestRunner $testRunner,
         Configuration $configuration)
     {
-        $this->databaseSandbox = $databaseSandbox;
         $this->testRunner = $testRunner;
         $this->configuration = $configuration;
     }

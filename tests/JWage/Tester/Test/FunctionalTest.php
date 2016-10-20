@@ -12,11 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class FunctionalTest extends BaseTest
 {
     /**
-     * @var DatabaseSandbox
-     */
-    private $databaseSandbox;
-
-    /**
      * @var TestRunner
      */
     private $testRunner;
@@ -33,14 +28,12 @@ class FunctionalTest extends BaseTest
 
     protected function setUp()
     {
-        $this->databaseSandbox = $this->createMock(DatabaseSandbox::class);
         $this->testRunner = $this->createMock(TestRunner::class);
         $this->configuration = (new Configuration())
             ->setTestsDirectory($this->getTestsDirectory())
         ;
 
         $this->functional = new Functional(
-            $this->databaseSandbox,
             $this->testRunner,
             $this->configuration
         );
