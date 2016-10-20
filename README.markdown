@@ -52,8 +52,8 @@ Create test databases and schema:
     ./bin/phpchunkit create-dbs
 
 With the `chunk`, `num-chunks`, `sandbox` and `create-dbs` options you can run multiple
-chunks in parallel in sandboxed environments across multiple servers. Here is an
-example:
+chunks in parallel in sandboxed environments across multiple servers or even on a single server.
+Here is an example:
 
     # Server 1
     ./bin/phpchunkit functional --num-chunks=4 --chunk=1 --sandbox --create-dbs
