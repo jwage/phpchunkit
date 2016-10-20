@@ -3,6 +3,8 @@
 This library sits on top of PHPUnit and adds sugar to make it easier to work with large test suites.
 The primary feature is test chunking which gives you the ability to run your tests in parallel chunks.
 
+![PHPChunkit Screenshot](https://raw.githubusercontent.com/jwage/PHPChunkit/master/docs/phpchunkit.png)
+
 TODO:
 
 - Dependencies need to be cleaned up.
