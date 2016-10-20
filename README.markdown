@@ -59,6 +59,15 @@ but when ran across 14 parallel jobs on a single Jenkins server they take ~2 min
 
 ## Setup
 
+Here is an example setup that can be placed in your project under something like `bin/tester`.
+
+It is important to note that you are responsible for implementing the sandbox preparation,
+database creation and sandbox cleanup processes by adding [EventDispatcher](http://symfony.com/doc/current/components/event_dispatcher.html) listeners. You can listen for the following events:
+
+- `sandbox.prepare` - Use the `Events::SANDBOX_PREPARE` constant.
+- `sandbox.cleanup` - Use the `Events::SANDBOX_CLEANUP` constant.
+- `databases.create` - Use the `Events::DATABASES_CREATE` constant.
+
 ```php
 #!/usr/bin/env php
 <?php
