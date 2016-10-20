@@ -17,6 +17,7 @@
 
 ## Setup
 
+    ```php
     #!/usr/bin/env php
     <?php
 
@@ -62,6 +63,7 @@
 
     $testerApplication = new TesterApplication($app, $configuration);
     $testerApplication->run($input, $output);
+    ```
 
 
 ## Example Commands
