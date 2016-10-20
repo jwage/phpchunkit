@@ -9,7 +9,7 @@
 
     <filter>
         <whitelist>
-            <directory suffix=".php">./src/Purl/</directory>
+            <directory suffix=".php">./src/JWage/Tester/</directory>
         </whitelist>
     </filter>
 </phpunit>
