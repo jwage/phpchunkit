@@ -32,7 +32,7 @@ class TestWatcherTest extends BaseTest
     {
         $this->testRunner = $this->createMock(TestRunner::class);
         $this->configuration = (new Configuration())
-            ->setRootDir(realpath(__DIR__.'/../../../..'))
+            ->setWatchDirectories([realpath(__DIR__.'/../../../..')])
         ;
 
         $this->testWatcher = new TestWatcherStub(

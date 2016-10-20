@@ -19,6 +19,10 @@ $app = new Application();
 
 $configuration = (new Configuration())
     ->setRootDir($rootDir)
+    ->setWatchDirectories([
+        sprintf('%s/src', $rootDir),
+        sprintf('%s/tests', $rootDir),
+    ])
 ;
 
 $testerApplication = new TesterApplication($app, $configuration);

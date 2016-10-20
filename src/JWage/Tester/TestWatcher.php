@@ -63,12 +63,12 @@ class TestWatcher
      */
     private function checkFile($file, $lastTime)
     {
-        $fileLastModified = filemtime($this->configuration->getRootDir().'/'.$file->getRelativePathname());
+        $fileLastModified = $file->getMTime();
 
         if ($fileLastModified > $lastTime) {
             $lastTime = $fileLastModified;
 
-            $files = [$file->getRelativePathname()];
+            $files = [$file->getPathName()];
 
             $this->testRunner->runTestFiles($files);
         }
@@ -84,7 +84,7 @@ class TestWatcher
         return Finder::create()
             ->files()
             ->name('*.php')
-            ->in($this->configuration->getRootDir())
+            ->in($this->configuration->getWatchDirectories())
         ;
     }
 }
