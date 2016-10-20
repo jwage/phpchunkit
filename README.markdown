@@ -43,3 +43,7 @@ Run tests that match a filter:
 Run a specific file:
 
     ./bin/tester file tests/JWage/Tester/Test/BuildSandboxTest.php
+
+Run tests for changed files:
+
+    ./bin/tester changed

@@ -73,33 +73,6 @@ class TestRunner
     }
 
     /**
-     * @return []
-     */
-    public function getNewClasses()
-    {
-        $command = "git status --porcelain | grep -e '^[?]\(.*\).php$' | cut -c 3-";
-
-        $process = $this->createProcess($command);
-        $process->run();
-
-        $output = $process->getOutput();
-        $files = $output ? array_map('trim', explode("\n", trim($output))) : [];
-
-        // convert file paths to class names
-        $classNames = array_map(function ($file) {
-            return str_replace(['.php', 'src/', '/'], ['', '', '\\'], $file);
-        }, $files);
-
-        return array_filter($classNames, function ($className) {
-            if (is_subclass_of($className, PHPUnit_Framework_TestCase::class)) {
-                return false;
-            }
-
-            return true;
-        });
-    }
-
-    /**
      * @param string $filter
      *
      * @return []
