@@ -43,6 +43,8 @@ Run a specific file:
 
 Run tests for changed files:
 
+> Note: This relies on git to know which files have changed.
+
     ./bin/phpchunkit changed
 
 Create test databases and schema:
