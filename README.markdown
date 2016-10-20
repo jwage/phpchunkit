@@ -14,7 +14,40 @@
 - Update author doc blocks to mention Kris Wallsmith on code he wrote.
 - Blank TODO need to be handled. Things that used to be specific to OpenSky had to be removed. We need to replace with something more abstract and configurable.
 
-## Usage
+## Setup
+
+    ```php
+    #!/usr/bin/env php
+    <?php
+
+    use JWage\Tester\Configuration;
+    use JWage\Tester\TesterApplication;
+    use Symfony\Component\Console\Application;
+    use Symfony\Component\Console\Input\ArgvInput;
+    use Symfony\Component\Console\Output\ConsoleOutput;
+
+    $rootDir = realpath(__DIR__.'/..');
+    $sourceDir = sprintf('%s/src', $rootDir);
+    $testsDir = sprintf('%s/tests', $rootDir);
+    $phpunitPath = sprintf('%s/vendor/bin/phpunit', $rootDir);
+
+    require_once $rootDir.'/vendor/autoload.php';
+
+    $input = new ArgvInput();
+    $output = new ConsoleOutput();
+    $app = new Application();
+
+    $configuration = (new Configuration())
+        ->setRootDir($rootDir)
+        ->setWatchDirectories([$sourceDir, $testsDir])
+        ->setTestsDirectory($testsDir)
+        ->setPhpunitPath($phpunitPath)
+    ;
+
+    $testerApplication = new TesterApplication($app, $configuration);
+    $testerApplication->run($input, $output);
+
+## Example Commands
 
 Run all tests:
 
