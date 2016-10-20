@@ -3,6 +3,12 @@
 This library sits on top of PHPUnit and adds sugar to make it easier to work with large test suites.
 The primary feature is test chunking which gives you the ability to run your tests in parallel chunks.
 
+TODO:
+
+- Dependencies need to be cleaned up.
+- Move command line classes with execute() methods to own namespace.
+- Try to identify and remove assumptions/hardcoded things that won't work for other people.
+
 ## Example Commands
 
 Run all tests:
