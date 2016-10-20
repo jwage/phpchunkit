@@ -31,3 +31,15 @@ Run all functional tests:
 Run a specific chunk of functional tests:
 
     ./bin/tester functional --chunk=1
+
+Watch your code for changes and run tests:
+
+    ./bin/tester watch
+
+Run tests that match a filter:
+
+    ./bin/tester filter BuildSandbox
+
+Run a specific file:
+
+    ./bin/tester file tests/JWage/Tester/Test/BuildSandboxTest.php
