@@ -2,74 +2,26 @@
 <?php
 
 use PHPChunkit\Configuration;
-use PHPChunkit\DatabaseSandbox;
-use PHPChunkit\Events;
 use PHPChunkit\TesterApplication;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-$rootDir = realpath(__DIR__.'/..');
-$configDir = sprintf('%s/bin/config', $rootDir);
-$configFilePath = sprintf('%s/databases_test.ini', $configDir);
-$configFileBackupPath = sprintf('%s/databases_test.ini.bak', $configDir);
-$sourceDir = sprintf('%s/src', $rootDir);
-$testsDir = sprintf('%s/tests', $rootDir);
-$phpunitPath = sprintf('%s/vendor/bin/phpunit', $rootDir);
-
-require_once $rootDir.'/vendor/autoload.php';
-
-$pdo = new PDO('mysql:host=localhost;', 'root', null);
+require_once __DIR__.'/../vendor/autoload.php';
 
 $input = new ArgvInput();
 $output = new ConsoleOutput();
 $app = new Application();
 
-$databaseNames = ['testdb1', 'testdb2'];
-$databaseSandbox = new DatabaseSandbox(null, $databaseNames);
+$distXmlPath = __DIR__.'/../phpchunkit.xml.dist';
+$xmlPath = __DIR__.'/../phpchunkit.xml';
 
-$configuration = (new Configuration())
-    ->setRootDir($rootDir)
-    ->setWatchDirectories([$sourceDir, $testsDir])
-    ->setTestsDirectory($testsDir)
-    ->setPhpunitPath($phpunitPath)
+$xmlPath = file_exists($distXmlPath)
+    ? realpath($distXmlPath)
+    : realpath($xmlPath)
 ;
 
-$eventDispatcher = $configuration->getEventDispatcher();
-
-$eventDispatcher->addListener(Events::SANDBOX_PREPARE, function() use (
-    $configDir, $databaseSandbox, $configFilePath, $configFileBackupPath
-) {
-    copy($configFilePath, $configFileBackupPath);
-
-    $configContent = file_get_contents($configFilePath);
-
-    $modifiedConfigContent = str_replace(
-        $databaseSandbox->getTestDatabaseNames(),
-        $databaseSandbox->getSandboxedDatabaseNames(),
-        $configContent
-    );
-
-    file_put_contents($configFilePath, $modifiedConfigContent);
-});
-
-$eventDispatcher->addListener(Events::SANDBOX_CLEANUP, function() use ($configFilePath, $configFileBackupPath, $pdo) {
-    $databases = parse_ini_file($configFilePath);
-
-    foreach ($databases as $databaseName) {
-        $pdo->exec(sprintf('DROP DATABASE IF EXISTS %s', $databaseName));
-    }
-
-    rename($configFileBackupPath, $configFilePath);
-});
-
-$eventDispatcher->addListener(Events::DATABASES_CREATE, function() use ($configFilePath, $pdo, $output) {
-    $databases = parse_ini_file($configFilePath);
-
-    foreach ($databases as $databaseName) {
-        $pdo->exec(sprintf('CREATE DATABASE %s', $databaseName));
-    }
-});
+$configuration = Configuration::createFromXmlFile($xmlPath);
 
 $testerApplication = new TesterApplication($app, $configuration);
 $testerApplication->run($input, $output);

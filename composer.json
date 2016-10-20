@@ -27,5 +27,8 @@
         "phpunit/phpunit": "5.5.*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*"
-    }
+    },
+    "bin": [
+        "bin/phpchunkit"
+    ]
 }

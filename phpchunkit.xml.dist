@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpchunkit root-dir="./" tests-dir="./tests" phpunit-path="./vendor/bin/phpunit">
+    <watch-directories>
+        <watch-directory>./src</watch-directory>
+        <watch-directory>./tests</watch-directory>
+    </watch-directories>
+
+    <database-names>
+        <database-name>testdb1</database-name>
+        <database-name>testdb2</database-name>
+    </database-names>
+
+    <events>
+        <listener event="sandbox.prepare">
+            <class>PHPChunkit\Test\Listener\SandboxPrepare</class>
+        </listener>
+
+        <listener event="sandbox.cleanup">
+            <class>PHPChunkit\Test\Listener\SandboxCleanup</class>
+        </listener>
+
+        <listener event="databases.create">
+            <class>PHPChunkit\Test\Listener\DatabasesCreate</class>
+        </listener>
+    </events>
+</phpchunkit>
