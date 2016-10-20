@@ -79,7 +79,7 @@ class TestRunnerTest extends BaseTest
     public function testGetFilteredFiles()
     {
         $files = [
-            'tests/PHPChunkit/Test/AllTest.php',
+            'tests/PHPChunkit/Test/Command/AllTest.php',
         ];
 
         $this->assertEquals($files, $this->testRunner->getFilteredFiles('AllTest.php'));
@@ -88,8 +88,8 @@ class TestRunnerTest extends BaseTest
     public function testGeneratePhpunitXml()
     {
         $files = [
-            'tests/PHPChunkit/Test/AllTest.php',
-            'src/PHPChunkit/BuildSandbox.php',
+            'tests/PHPChunkit/Test/Command/AllTest.php',
+            'tests/PHPChunkit/Test/TestCounterTest.php',
         ];
 
         $path = $this->testRunner->generatePhpunitXml($files);
@@ -102,8 +102,8 @@ class TestRunnerTest extends BaseTest
         $suiteFiles = (array) $suite->file;
 
         $expectedFiles = [
-            $this->configuration->getRootDir().'/tests/PHPChunkit/Test/AllTest.php',
-            $this->configuration->getRootDir().'/tests/PHPChunkit/Test/BuildSandboxTest.php',
+            $this->configuration->getRootDir().'/tests/PHPChunkit/Test/Command/AllTest.php',
+            $this->configuration->getRootDir().'/tests/PHPChunkit/Test/TestCounterTest.php',
         ];
 
         $this->assertEquals($expectedFiles, $suiteFiles);

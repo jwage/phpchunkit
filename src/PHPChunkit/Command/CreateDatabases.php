@@ -1,7 +1,8 @@
 <?php
 
-namespace PHPChunkit;
+namespace PHPChunkit\Command;
 
+use PHPChunkit\Events;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;

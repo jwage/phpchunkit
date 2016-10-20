@@ -1,10 +1,11 @@
 <?php
 
-namespace PHPChunkit\Test;
+namespace PHPChunkit\Test\Command;
 
 use PHPChunkit\Configuration;
 use PHPChunkit\TestRunner;
-use PHPChunkit\TestWatcher;
+use PHPChunkit\Command\TestWatcher;
+use PHPChunkit\Test\BaseTest;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace PHPChunkit\Test;
+namespace PHPChunkit\Test\Command;
 
-use PHPChunkit\All;
+use PHPChunkit\Command\All;
 use PHPChunkit\TestRunner;
+use PHPChunkit\Test\BaseTest;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

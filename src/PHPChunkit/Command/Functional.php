@@ -1,7 +1,11 @@
 <?php
 
-namespace PHPChunkit;
+namespace PHPChunkit\Command;
 
+use PHPChunkit\ChunkedFunctionalTests;
+use PHPChunkit\TestChunker;
+use PHPChunkit\TestRunner;
+use PHPChunkit\Configuration;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

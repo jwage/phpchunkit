@@ -1,11 +1,12 @@
 <?php
 
-namespace PHPChunkit\Test;
+namespace PHPChunkit\Test\Command;
 
-use PHPChunkit\BuildSandbox;
+use PHPChunkit\Command\BuildSandbox;
 use PHPChunkit\DatabaseSandbox;
 use PHPChunkit\Events;
 use PHPChunkit\TestRunner;
+use PHPChunkit\Test\BaseTest;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;

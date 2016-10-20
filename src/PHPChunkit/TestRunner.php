@@ -113,20 +113,6 @@ class TestRunner
         unset($xml->testsuites[0]->testsuite);
         $suite = $xml->testsuites[0]->addChild('testsuite');
 
-        foreach ($files as $key => $file) {
-            if (strpos($file, 'tests') === false) {
-                $testFile = str_replace('.php', 'Test.php', $file);
-                $testFile = str_replace('src', 'tests', $testFile);
-                $testFile = dirname($testFile).'/Test/'.basename($testFile);
-
-                if (file_exists($testFile)) {
-                    $files[$key] = $testFile;
-                } else {
-                    unset($files[$key]);
-                }
-            }
-        }
-
         if ($files) {
             $files = array_unique($files);
 

@@ -2,6 +2,7 @@
 
 namespace PHPChunkit;
 
+use PHPChunkit\Command;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -37,7 +38,7 @@ class TesterApplication
             ->addOption('chunk', null, InputOption::VALUE_REQUIRED, 'Run a specific chunk of tests.')
             ->addOption('num-chunks', null, InputOption::VALUE_REQUIRED, 'The number of chunks to run tests in.', 14)
             ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed')
-            ->setCode([new All($testRunner), 'execute'])
+            ->setCode([new Command\All($testRunner), 'execute'])
         ;
 
         $this->app->register('changed')
@@ -81,7 +82,7 @@ class TesterApplication
             ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for each chunk', '750M')
             ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error')
             ->addOption('failed', null, InputOption::VALUE_REQUIRED, 'Track tests that have failed', true)
-            ->setCode([new TestWatcher($testRunner, $this->configuration), 'execute'])
+            ->setCode([new Command\TestWatcher($testRunner, $this->configuration), 'execute'])
         ;
 
         $this->app->register('unit')
@@ -105,19 +106,19 @@ class TesterApplication
             ->addOption('chunk', null, InputOption::VALUE_REQUIRED, 'Run a specific chunk of tests.')
             ->addOption('num-chunks', null, InputOption::VALUE_REQUIRED, 'The number of chunks to run tests in.', 14)
             ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed')
-            ->setCode([new Functional($testRunner, $this->configuration), 'execute'])
+            ->setCode([new Command\Functional($testRunner, $this->configuration), 'execute'])
         ;
 
         $this->app->register('create-dbs')
             ->setDescription('Create the test databases.')
             ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Configure unique names')
-            ->setCode([new CreateDatabases($this->configuration->getEventDispatcher()), 'execute'])
+            ->setCode([new Command\CreateDatabases($this->configuration->getEventDispatcher()), 'execute'])
         ;
 
         $this->app->register('sandbox')
             ->setDescription('Build a sandbox for a functional test run.')
             ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases after building the sandbox.')
-            ->setCode([new BuildSandbox($testRunner, $this->configuration->getEventDispatcher()), 'execute'])
+            ->setCode([new Command\BuildSandbox($testRunner, $this->configuration->getEventDispatcher()), 'execute'])
         ;
 
         $this->app->run($input, $output);
