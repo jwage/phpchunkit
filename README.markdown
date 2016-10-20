@@ -15,51 +15,51 @@ TODO:
 
 Run all tests:
 
-    ./bin/tester all
+    ./bin/phpchunkit all
 
 Run just unit tests:
 
-    ./bin/tester unit
+    ./bin/phpchunkit unit
 
 Run all functional tests:
 
-    ./bin/tester functional
+    ./bin/phpchunkit functional
 
 Run a specific chunk of functional tests:
 
-    ./bin/tester functional --chunk=1
+    ./bin/phpchunkit functional --chunk=1
 
 Watch your code for changes and run tests:
 
-    ./bin/tester watch
+    ./bin/phpchunkit watch
 
 Run tests that match a filter:
 
-    ./bin/tester filter BuildSandbox
+    ./bin/phpchunkit filter BuildSandbox
 
 Run a specific file:
 
-    ./bin/tester file tests/PHPChunkit/Test/BuildSandboxTest.php
+    ./bin/phpchunkit file tests/PHPChunkit/Test/BuildSandboxTest.php
 
 Run tests for changed files:
 
-    ./bin/tester changed
+    ./bin/phpchunkit changed
 
 Create test databases and schema:
 
-    ./bin/tester create-dbs
+    ./bin/phpchunkit create-dbs
 
 With the `chunk`, `num-chunks`, `sandbox` and `create-dbs` options you can run multiple
 chunks in parallel in sandboxed environments across multiple servers. Here is an
 example:
 
     # Server 1
-    ./bin/tester functional --num-chunks=4 --chunk=1 --sandbox --create-dbs
-    ./bin/tester functional --num-chunks=4 --chunk=2 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=4 --chunk=1 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=4 --chunk=2 --sandbox --create-dbs
 
     # Server 2
-    ./bin/tester functional --num-chunks=4 --chunk=3 --sandbox --create-dbs
-    ./bin/tester functional --num-chunks=4 --chunk=4 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=4 --chunk=3 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=4 --chunk=4 --sandbox --create-dbs
 
 Hook this up to something like Jenkins and you can scale your tests and keep them fast!
 At [OpenSky](https://www.opensky.com) our test suite takes 25 to 30 minutes when ran serially
