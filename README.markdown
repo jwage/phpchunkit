@@ -65,14 +65,14 @@ but when ran across 14 parallel jobs on a single Jenkins server they take ~2 min
 
 ## Setup
 
-Here is an example setup that can be placed in your project under something like `bin/tester`.
-
 It is important to note that you are responsible for implementing the sandbox preparation,
 database creation and sandbox cleanup processes by adding [EventDispatcher](http://symfony.com/doc/current/components/event_dispatcher.html) listeners. You can listen for the following events:
 
 - `sandbox.prepare` - Use the `Events::SANDBOX_PREPARE` constant.
 - `sandbox.cleanup` - Use the `Events::SANDBOX_CLEANUP` constant.
 - `databases.create` - Use the `Events::DATABASES_CREATE` constant.
+
+Here is an example setup:
 
 ```php
 #!/usr/bin/env php
@@ -122,5 +122,5 @@ $testerApplication = new TesterApplication($app, $configuration);
 $testerApplication->run($input, $output);
 ```
 
-Take a look at the example in [bin/tester](https://github.com/jwage/tester/blob/master/bin/tester)
+Take a look at the example in [bin/phpchunkit](https://github.com/jwage/PHPChunkit/blob/master/bin/phpchunkit)
 which has example listeners using MySQL.
