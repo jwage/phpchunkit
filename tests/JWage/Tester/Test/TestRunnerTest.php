@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
-/** @group functional */
 class TestRunnerTest extends BaseTest
 {
     /**

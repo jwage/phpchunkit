@@ -5,7 +5,7 @@ namespace JWage\Tester\Test;
 /**
  * @group functional
  */
-class FunctionalTest1Test extends BaseTest
+class FunctionalTest4Test extends BaseTest
 {
     public function testTest1()
     {

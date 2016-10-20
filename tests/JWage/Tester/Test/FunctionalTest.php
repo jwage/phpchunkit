@@ -9,9 +9,6 @@ use JWage\Tester\TestRunner;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @group functional
- */
 class FunctionalTest extends BaseTest
 {
     /**
@@ -39,7 +36,7 @@ class FunctionalTest extends BaseTest
         $this->databaseSandbox = $this->createMock(DatabaseSandbox::class);
         $this->testRunner = $this->createMock(TestRunner::class);
         $this->configuration = (new Configuration())
-            ->setTestsDirectory(realpath(__DIR__.'/../../../../tests'))
+            ->setTestsDirectory($this->getTestsDirectory())
         ;
 
         $this->functional = new Functional(

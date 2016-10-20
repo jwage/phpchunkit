@@ -5,9 +5,6 @@ namespace JWage\Tester\Test;
 use JWage\Tester\ChunkedFunctionalTests;
 use JWage\Tester\TestChunker;
 
-/**
- * @group functional
- */
 class TestChunkerTest extends BaseTest
 {
     /**
@@ -22,7 +19,7 @@ class TestChunkerTest extends BaseTest
 
     protected function setUp()
     {
-        $this->testsDirectory = realpath(__DIR__.'/../../../../tests');
+        $this->testsDirectory = $this->getTestsDirectory();
 
         $this->testChunker = new TestChunker($this->testsDirectory);
     }
@@ -30,13 +27,61 @@ class TestChunkerTest extends BaseTest
     public function testChunkFunctionalTests()
     {
         $chunkFunctionalTests = (new ChunkedFunctionalTests())
-            ->setNumChunks(14)
+            ->setNumChunks(4)
         ;
 
         $this->testChunker->chunkFunctionalTests($chunkFunctionalTests);
 
-        $chunks = $chunkFunctionalTests->getChunks();
+        $expectedChunks = [
+            // chunk 1
+            [
+                [
+                    'file' => sprintf('%s/JWage/Tester/Test/FunctionalTest1Test.php', $this->testsDirectory),
+                    'numTests' => 4,
+                ],
+                [
+                    'file' => sprintf('%s/JWage/Tester/Test/FunctionalTest2Test.php', $this->testsDirectory),
+                    'numTests' => 4,
+                ]
+            ],
 
-        $this->assertTrue(count($chunks) <= 14);
+            // chunk 2
+            [
+                [
+                    'file' => sprintf('%s/JWage/Tester/Test/FunctionalTest3Test.php', $this->testsDirectory),
+                    'numTests' => 4,
+                ],
+                [
+                    'file' => sprintf('%s/JWage/Tester/Test/FunctionalTest4Test.php', $this->testsDirectory),
+                    'numTests' => 4,
+                ]
+            ],
+
+            // chunk 3
+            [
+                [
+                    'file' => sprintf('%s/JWage/Tester/Test/FunctionalTest5Test.php', $this->testsDirectory),
+                    'numTests' => 4,
+                ],
+                [
+                    'file' => sprintf('%s/JWage/Tester/Test/FunctionalTest6Test.php', $this->testsDirectory),
+                    'numTests' => 4,
+                ]
+            ],
+
+            // chunk 4
+            [
+                [
+                    'file' => sprintf('%s/JWage/Tester/Test/FunctionalTest7Test.php', $this->testsDirectory),
+                    'numTests' => 4,
+                ],
+                [
+                    'file' => sprintf('%s/JWage/Tester/Test/FunctionalTest8Test.php', $this->testsDirectory),
+                    'numTests' => 4,
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expectedChunks, $chunkFunctionalTests->getChunks());
     }
 }

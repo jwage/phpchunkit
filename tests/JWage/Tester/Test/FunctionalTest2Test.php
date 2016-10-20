@@ -7,7 +7,22 @@ namespace JWage\Tester\Test;
  */
 class FunctionalTest2Test extends BaseTest
 {
-    public function testTest()
+    public function testTest1()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function testTest2()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function testTest3()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function testTest4()
     {
         $this->assertTrue(true);
     }

@@ -38,7 +38,7 @@ class CreateDatabasesTest extends BaseTest
 
         $this->eventDispatcher->expects($this->once())
             ->method('dispatch')
-            ->with(Events::SANDBOX_CREATE_DATABASES);
+            ->with(Events::DATABASES_CREATE);
 
         $this->createDatabases->execute($input, $output);
     }

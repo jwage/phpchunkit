@@ -8,9 +8,6 @@ use JWage\Tester\TestWatcher;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @group functional
- */
 class TestWatcherTest extends BaseTest
 {
     /**

@@ -3,6 +3,7 @@
 namespace JWage\Tester\Test;
 
 use JWage\Tester\TestCounter;
+use JWage\Tester\TestFinder;
 
 class TestCounterTest extends BaseTest
 {
@@ -16,11 +17,17 @@ class TestCounterTest extends BaseTest
      */
     private $testCounter;
 
+    /**
+     * @var TestFinder
+     */
+    private $testFinder;
+
     protected function setUp()
     {
-        $this->testsDirectory = realpath(__DIR__.'/../../../../tests');
+        $this->testsDirectory = $this->getTestsDirectory();
 
         $this->testCounter = new TestCounter($this->testsDirectory);
+        $this->testFinder = new TestFinder($this->testsDirectory);
     }
 
     public function testCountNumTestsInFile()
@@ -31,6 +38,7 @@ class TestCounterTest extends BaseTest
     public function testCountTotalTestsInFiles()
     {
         $this->assertEquals(9, $this->testCounter->countTotalTestsInFiles([__FILE__]));
+        $this->assertEquals(32, $this->testCounter->countTotalTestsInFiles($this->testFinder->findFunctionalTestFiles()));
     }
 
     public function testCount1()

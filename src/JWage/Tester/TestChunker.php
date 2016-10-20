@@ -31,7 +31,7 @@ class TestChunker
         $chunk = $chunkedFunctionalTests->getChunk();
         $numChunks = $chunkedFunctionalTests->getNumChunks();
 
-        $testFiles = $this->testFinder->findTestFiles();
+        $testFiles = $this->testFinder->findFunctionalTestFiles();
 
         $totalTests = $this->testCounter->countTotalTestsInFiles($testFiles);
 
@@ -49,7 +49,7 @@ class TestChunker
             ];
 
             // start a new chunk
-            if ($numTestsInChunk > $testsPerChunk) {
+            if ($numTestsInChunk >= $testsPerChunk) {
                 $chunks[] = [$chunkFile];
                 $numTestsInChunk = $numTestsInFile;
 

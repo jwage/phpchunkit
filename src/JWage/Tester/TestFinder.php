@@ -17,7 +17,7 @@ class TestFinder
         $this->testsDirectory = $testsDirectory;
     }
 
-    public function findTestFiles() : array
+    public function findFunctionalTestFiles() : array
     {
         $command = sprintf(
             'find %s -name *Test.php -print0 | xargs -0 grep -l "@group functional" | sort',
