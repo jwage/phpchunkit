@@ -59,7 +59,7 @@ Take a look at the listeners implemented in this projects test suite for an exam
 
 - [SandboxPrepare.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/SandboxPrepare.php)
 - [DatabasesCreate.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/DatabasesCreate.php)
-- [SandboxCleanup.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/DatabasesCreate.php)
+- [SandboxCleanup.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/SandboxCleanup.php)
 
 ### Configuration
 
