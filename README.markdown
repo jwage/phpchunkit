@@ -52,8 +52,8 @@ by adding [EventDispatcher](http://symfony.com/doc/current/components/event_disp
 listeners. You can listen for the following events:
 
 - `sandbox.prepare` - Use the `Events::SANDBOX_PREPARE` constant.
-- `sandbox.cleanup` - Use the `Events::SANDBOX_CLEANUP` constant.
 - `databases.create` - Use the `Events::DATABASES_CREATE` constant.
+- `sandbox.cleanup` - Use the `Events::SANDBOX_CLEANUP` constant.
 
 Take a look at the listeners implemented in this projects test suite for an example:
 
