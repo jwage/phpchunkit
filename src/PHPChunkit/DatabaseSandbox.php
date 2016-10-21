@@ -14,27 +14,40 @@ class DatabaseSandbox
     /**
      * @var []
      */
-    private $rawDatabaseNames = [];
+    private $databaseNames = [];
 
     /**
      * @var []
      */
-    private $databaseNames = [];
+    private $sandboxDatabaseNames = [];
 
     /**
      * @param bool
      */
-    public function __construct($sandboxEnabled = null, array $rawDatabaseNames = [])
+    public function __construct(bool $sandboxEnabled = false, array $databaseNames = [])
     {
-        $this->rawDatabaseNames = $rawDatabaseNames;
+        $this->sandboxEnabled = $sandboxEnabled;
+        $this->databaseNames = $databaseNames;
+    }
 
-        if ($sandboxEnabled !== null) {
-            $this->sandboxEnabled = $sandboxEnabled;
-        } else {
-            $this->sandboxEnabled = array_filter($_SERVER['argv'], function ($arg) {
-                return strpos($arg, 'sandbox') !== false;
-            }) ? true : false;
-        }
+    public function getSandboxEnabled() : bool
+    {
+        return $this->sandboxEnabled;
+    }
+
+    public function setSandboxEnabled(bool $sandboxEnabled)
+    {
+        $this->sandboxEnabled = $sandboxEnabled;
+    }
+
+    public function getDatabaseNames() : array
+    {
+        return $this->databaseNames;
+    }
+
+    public function setDatabaseNames(array $databaseNames)
+    {
+        $this->databaseNames = $databaseNames;
     }
 
     /**
@@ -58,7 +71,7 @@ class DatabaseSandbox
     {
         $databaseNames = [];
 
-        foreach ($this->rawDatabaseNames as $databaseName) {
+        foreach ($this->databaseNames as $databaseName) {
             $databaseNames[$databaseName] = sprintf(self::SANDBOXED_DATABASE_NAME_PATTERN,
                 $databaseName, 'test'
             );
@@ -76,7 +89,7 @@ class DatabaseSandbox
     {
         $this->initialize();
 
-        return $this->databaseNames;
+        return $this->sandboxDatabaseNames;
     }
 
     /**
@@ -92,8 +105,8 @@ class DatabaseSandbox
      */
     private function initialize()
     {
-        if (!$this->databaseNames) {
-            $this->databaseNames = $this->generateDatabaseNames();
+        if (!$this->sandboxDatabaseNames) {
+            $this->sandboxDatabaseNames = $this->generateDatabaseNames();
         }
     }
 
@@ -106,7 +119,7 @@ class DatabaseSandbox
     {
         $databaseNames = [];
 
-        foreach ($this->rawDatabaseNames as $databaseName) {
+        foreach ($this->databaseNames as $databaseName) {
             if ($this->sandboxEnabled) {
                 $databaseNames[$databaseName] = sprintf(self::SANDBOXED_DATABASE_NAME_PATTERN,
                     $databaseName, $this->generateUniqueId()

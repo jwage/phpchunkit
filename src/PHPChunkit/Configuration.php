@@ -53,13 +53,8 @@ class Configuration
             ->setWatchDirectories($watchDirectories)
             ->setTestsDirectory($testsDir)
             ->setPhpunitPath($phpunitPath)
+            ->setDatabaseNames($databaseNames)
         ;
-
-        if ($databaseNames) {
-            $databaseSandbox = new DatabaseSandbox(null, $databaseNames);
-
-            $configuration->setDatabaseSandbox($databaseSandbox);
-        }
 
         if ($listeners) {
             $eventDispatcher = $configuration->getEventDispatcher();
@@ -134,7 +129,25 @@ class Configuration
 
     public function getDatabaseSandbox() : DatabaseSandbox
     {
+        if ($this->databaseSandbox === null) {
+            $this->databaseSandbox = new DatabaseSandbox();
+        }
+
         return $this->databaseSandbox;
+    }
+
+    public function setDatabaseNames(array $databaseNames) : self
+    {
+        $this->getDatabaseSandbox()->setDatabaseNames($databaseNames);
+
+        return $this;
+    }
+
+    public function setSandboxEnabled(bool $sandboxEnabled) : self
+    {
+        $this->getDatabaseSandbox()->setSandboxEnabled($sandboxEnabled);
+
+        return $this;
     }
 
     public function setEventDispatcher(EventDispatcher $eventDispatcher) : self

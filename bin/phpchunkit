@@ -21,7 +21,12 @@ $xmlPath = file_exists($distXmlPath)
     : realpath($xmlPath)
 ;
 
+$sandboxEnabled = array_filter($_SERVER['argv'], function ($arg) {
+    return strpos($arg, 'sandbox') !== false;
+}) ? true : false;
+
 $configuration = Configuration::createFromXmlFile($xmlPath);
+$configuration->setSandboxEnabled($sandboxEnabled);
 
 $testerApplication = new TesterApplication($app, $configuration);
 $testerApplication->run($input, $output);
