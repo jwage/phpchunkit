@@ -51,18 +51,6 @@ class DatabaseSandbox
     }
 
     /**
-     * @param string $database
-     *
-     * @return string
-     */
-    public function getDatabaseName($databaseName)
-    {
-        $this->initialize();
-
-        return $this->databaseNames[$databaseName];
-    }
-
-    /**
      * Gets the original test database names.
      *
      * @return []

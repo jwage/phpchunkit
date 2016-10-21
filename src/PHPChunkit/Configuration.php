@@ -2,6 +2,7 @@
 
 namespace PHPChunkit;
 
+use InvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Configuration
@@ -63,9 +64,15 @@ class Configuration
                 $eventName = (string) $listener->attributes()['event'];
                 $className = (string) $listener->class;
 
-                $listenerInstance = new $className($configuration);
+                $listener = new $className($configuration);
 
-                $eventDispatcher->addListener($eventName, [$listenerInstance, 'execute']);
+                if (!$listener instanceof ListenerInterface) {
+                    throw new InvalidArgumentException(
+                        sprintf('%s does not implement %s', $className, ListenerInterface::class)
+                    );
+                }
+
+                $eventDispatcher->addListener($eventName, [$listener, 'execute']);
             }
         }
 

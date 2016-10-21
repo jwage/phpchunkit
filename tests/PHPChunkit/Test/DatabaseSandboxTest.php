@@ -16,13 +16,6 @@ class DatabaseSandboxTest extends BaseTest
         $this->databaseSandbox = new DatabaseSandboxStub(true, ['mydb']);
     }
 
-    public function testGetDatabaseName()
-    {
-        $databaseName = 'mydb';
-
-        $this->assertEquals('mydb_uniqueid', $this->databaseSandbox->getDatabaseName($databaseName));
-    }
-
     public function testGetTestDatabaseNames()
     {
         $databaseNames = ['mydb' => 'mydb_test'];
