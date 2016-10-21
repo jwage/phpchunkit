@@ -134,6 +134,25 @@ $eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
 });
 ```
 
+## Functional Tests
+
+Currently it is required that functional tests be annotated with `@group functional`. Here is an example:
+
+```php
+<?php
+
+namespace MyProject/Test;
+
+use PHPUnit_Framework_TestCase;
+
+/**
+ * @group functional
+ */
+class MyTest extends PHPUnit_Framework_TestCase
+{
+    // ...
+}
+
 ## Available Commands
 
 Run all tests:
