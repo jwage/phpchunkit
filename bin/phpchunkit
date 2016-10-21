@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 if (file_exists($autoloadPath = __DIR__.'/../vendor/autoload.php')) {
     require_once __DIR__.'/../vendor/autoload.php';
 } else {
-    require_once __DIR__.'/../../vendor/autoload.php';
+    require_once __DIR__.'/../../../../vendor/autoload.php';
 }
 
 $input = new ArgvInput();
