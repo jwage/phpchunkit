@@ -87,7 +87,7 @@ Here is an example `phpchunkit.xml` file. Place this in the root of your project
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpchunkit root-dir="./" tests-dir="./tests" phpunit-path="./vendor/bin/phpunit">
+<phpchunkit bootstrap="./tests/phpchunkit_bootstrap.php" root-dir="./" tests-dir="./tests" phpunit-path="./vendor/bin/phpunit">
     <watch-directories>
         <watch-directory>./src</watch-directory>
         <watch-directory>./tests</watch-directory>
@@ -112,6 +112,44 @@ Here is an example `phpchunkit.xml` file. Place this in the root of your project
         </listener>
     </events>
 </phpchunkit>
+```
+
+The `tests/phpchunkit_bootstrap.php` file is loaded after the XML is loaded
+and gives you the ability to do more advanced things with the `Configuration`.
+Here is an example:
+
+```php
+<?php
+
+use PHPChunkit\Events;
+
+// Manipulate $configuration which is an instance of PHPChunkit\Configuration
+
+$rootDir = $configuration->getRootDir();
+
+$configuration = $configuration
+    ->setWatchDirectories([
+        sprintf('%s/src', $rootDir),
+        sprintf('%s/tests', $rootDir)
+    ])
+    ->setTestsDirectory(sprintf('%s/tests', $rootDir))
+    ->setPhpunitPath(sprintf('%s/vendor/bin/phpunit', $rootDir))
+    ->setDatabaseNames(['testdb1', 'testdb2'])
+;
+
+$eventDispatcher = $configuration->getEventDispatcher();
+
+$eventDispatcher->addListener(Events::SANDBOX_PREPARE, function() {
+    // prepare the sandbox
+});
+
+$eventDispatcher->addListener(Events::SANDBOX_CLEANUP, function() {
+    // cleanup the sandbox
+});
+
+$eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
+    // create databases
+});
 ```
 
 ## Demo Project
