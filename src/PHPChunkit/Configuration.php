@@ -44,25 +44,41 @@ class Configuration
 
     public static function createFromXmlFile(string $path) : self
     {
+        if (!file_exists($path)) {
+            throw new \InvalidArgumentException(sprintf('XML file count not be found at path "%s"', $path));
+        }
+
+        $configuration = new self();
+
         $xml = simplexml_load_file($path);
         $attributes = $xml->attributes();
-        $bootstrapPath = realpath($attributes['bootstrap']);
-        $rootDir = realpath($attributes['root-dir']);
-        $testsDir = realpath($attributes['tests-dir']);
-        $phpunitPath = realpath($attributes['phpunit-path']);
-        $watchDirectories = (array) $xml->{'watch-directories'}->{'watch-directory'};
-        $databaseNames = (array) $xml->{'database-names'}->{'database-name'};
-        $events = (array) $xml->{'events'};
-        $listeners = $events['listener'];
 
-        $configuration = (new self())
-            ->setBootstrapPath($bootstrapPath)
-            ->setRootDir($rootDir)
-            ->setWatchDirectories($watchDirectories)
-            ->setTestsDirectory($testsDir)
-            ->setPhpunitPath($phpunitPath)
-            ->setDatabaseNames($databaseNames)
-        ;
+        if ($rootDir = (string) $attributes['root-dir']) {
+            $configuration->setRootDir($rootDir);
+        }
+
+        if ($bootstrapPath = (string) $attributes['bootstrap']) {
+            $configuration->setBootstrapPath($bootstrapPath);
+        }
+
+        if ($testsDir = (string) $attributes['tests-dir']) {
+            $configuration->setTestsDirectory($testsDir);
+        }
+
+        if ($phpunitPath = (string) $attributes['phpunit-path']) {
+            $configuration->setPhpunitPath($phpunitPath);
+        }
+
+        if ($watchDirectories = (array) $xml->{'watch-directories'}->{'watch-directory'}) {
+            $configuration->setWatchDirectories($watchDirectories);
+        }
+
+        if ($databaseNames = (array) $xml->{'database-names'}->{'database-name'}) {
+            $configuration->setDatabaseNames($databaseNames);
+        }
+
+        $events = (array) $xml->{'events'};
+        $listeners = $events['listener'] ?? null;
 
         if ($listeners) {
             $eventDispatcher = $configuration->getEventDispatcher();
@@ -88,7 +104,13 @@ class Configuration
 
     public function setRootDir(string $rootDir) : self
     {
-        $this->rootDir = $rootDir;
+        if (!is_dir($rootDir)) {
+            throw new \InvalidArgumentException(
+                sprintf('Root directory "%s" does not exist.', $rootDir)
+            );
+        }
+
+        $this->rootDir = realpath($rootDir);
 
         return $this;
     }
@@ -100,6 +122,16 @@ class Configuration
 
     public function setWatchDirectories(array $watchDirectories) : self
     {
+        foreach ($watchDirectories as $key => $watchDirectory) {
+            if (!is_dir($watchDirectory)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Watch directory "%s" does not exist.', $watchDirectory)
+                );
+            }
+
+            $watchDirectories[$key] = realpath($watchDirectory);
+        }
+
         $this->watchDirectories = $watchDirectories;
 
         return $this;
@@ -112,7 +144,13 @@ class Configuration
 
     public function setTestsDirectory(string $testsDirectory) : self
     {
-        $this->testsDirectory = $testsDirectory;
+        if (!is_dir($testsDirectory)) {
+            throw new \InvalidArgumentException(
+                sprintf('Tests directory "%s" does not exist.', $testsDirectory)
+            );
+        }
+
+        $this->testsDirectory = realpath($testsDirectory);
 
         return $this;
     }
@@ -124,7 +162,13 @@ class Configuration
 
     public function setBootstrapPath(string $bootstrapPath) : self
     {
-        $this->bootstrapPath = $bootstrapPath;
+        if (!file_exists($bootstrapPath)) {
+            throw new \InvalidArgumentException(
+                sprintf('Bootstrap path "%s" does not exist.', $bootstrapPath)
+            );
+        }
+
+        $this->bootstrapPath = realpath($bootstrapPath);
 
         return $this;
     }
@@ -136,7 +180,13 @@ class Configuration
 
     public function setPhpunitPath(string $phpunitPath) : self
     {
-        $this->phpunitPath = $phpunitPath;
+        if (!file_exists($phpunitPath)) {
+            throw new \InvalidArgumentException(
+                sprintf('PHPUnit path "%s" does not exist.', $bootstrapPath)
+            );
+        }
+
+        $this->phpunitPath = realpath($phpunitPath);
 
         return $this;
     }
@@ -190,5 +240,26 @@ class Configuration
         }
 
         return $this->eventDispatcher;
+    }
+
+    public function throwExceptionIfConfigurationIncomplete()
+    {
+        if (!$this->rootDir) {
+            throw new \InvalidArgumentException('You must configure a root directory.');
+        }
+
+        if (!$this->watchDirectories) {
+            throw new \InvalidArgumentException('You must configure a watch directory.');
+        }
+
+        if (!$this->testsDirectory) {
+            throw new \InvalidArgumentException('You must configure a tests directory.');
+        }
+
+        if (!$this->phpunitPath) {
+            throw new \InvalidArgumentException('You must configure a phpunit path.');
+        }
+
+        return true;
     }
 }

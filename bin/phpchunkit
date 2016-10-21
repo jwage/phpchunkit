@@ -1,46 +1,25 @@
 #!/usr/bin/env php
 <?php
 
-use PHPChunkit\Configuration;
-use PHPChunkit\TesterApplication;
-use Symfony\Component\Console\Application;
+namespace PHPChunkit;
+
+use PHPChunkit\PHPChunkit;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-if (file_exists($autoloadPath = __DIR__.'/../vendor/autoload.php')) {
-    require_once __DIR__.'/../vendor/autoload.php';
-} else {
-    require_once __DIR__.'/../../../../vendor/autoload.php';
-}
+$rootDir = file_exists(__DIR__.'/../vendor/autoload.php')
+    ? realpath(__DIR__.'/..')
+    : realpath(__DIR__.'/../../../..')
+;
+
+require_once sprintf('%s/vendor/autoload.php', $rootDir);
 
 $input = new ArgvInput();
 $output = new ConsoleOutput();
-$app = new Application();
 
-$distXmlPath = __DIR__.'/../phpchunkit.xml.dist';
-$xmlPath = __DIR__.'/../phpchunkit.xml';
+$phpChunkit = new PHPChunkit($rootDir);
 
-$xmlPath = file_exists($distXmlPath)
-    ? realpath($distXmlPath)
-    : realpath($xmlPath)
-;
+$configuration = $phpChunkit->getConfiguration();
 
-$sandboxEnabled = array_filter($_SERVER['argv'], function ($arg) {
-    return strpos($arg, 'sandbox') !== false;
-}) ? true : false;
-
-$configuration = Configuration::createFromXmlFile($xmlPath);
-$configuration->setSandboxEnabled($sandboxEnabled);
-
-if ($bootstrapPath = $configuration->getBootstrapPath()) {
-    if (!file_exists($bootstrapPath)) {
-        throw new \InvalidArgumentException(
-            sprintf('Bootstrap path "%s" does not exist.', $bootstrapPath)
-        );
-    }
-
-    require_once $bootstrapPath;
-}
-
-$testerApplication = new TesterApplication($app, $configuration);
-$testerApplication->run($input, $output);
+$app = $phpChunkit->getApplication($configuration);
+$app->run($input, $output);
