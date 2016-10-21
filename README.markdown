@@ -152,6 +152,7 @@ class MyTest extends PHPUnit_Framework_TestCase
 {
     // ...
 }
+```
 
 ## Available Commands
 
