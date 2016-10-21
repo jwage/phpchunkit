@@ -11,6 +11,12 @@ TODO:
 - Move command line classes with execute() methods to own namespace.
 - Try to identify and remove assumptions/hardcoded things that won't work for other people.
 
+## Installation
+
+Install with composer:
+
+    composer require jwage/phpchunkit
+
 ## Example Commands
 
 Run all tests:
@@ -76,55 +82,34 @@ database creation and sandbox cleanup processes by adding [EventDispatcher](http
 - `sandbox.cleanup` - Use the `Events::SANDBOX_CLEANUP` constant.
 - `databases.create` - Use the `Events::DATABASES_CREATE` constant.
 
-Here is an example setup:
+Here is an example `phpchunkit.xml` file. Place this in the root of your project:
 
-```php
-#!/usr/bin/env php
-<?php
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
 
-use PHPChunkit\Configuration;
-use PHPChunkit\Events;
-use PHPChunkit\TesterApplication;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
+<phpchunkit root-dir="./" tests-dir="./tests" phpunit-path="./vendor/bin/phpunit">
+    <watch-directories>
+        <watch-directory>./src</watch-directory>
+        <watch-directory>./tests</watch-directory>
+    </watch-directories>
 
-$rootDir = realpath(__DIR__.'/..');
-$sourceDir = sprintf('%s/src', $rootDir);
-$testsDir = sprintf('%s/tests', $rootDir);
-$phpunitPath = sprintf('%s/vendor/bin/phpunit', $rootDir);
+    <database-names>
+        <database-name>testdb1</database-name>
+        <database-name>testdb2</database-name>
+    </database-names>
 
-require_once $rootDir.'/vendor/autoload.php';
+    <events>
+        <listener event="sandbox.prepare">
+            <class>PHPChunkit\Test\Listener\SandboxPrepare</class>
+        </listener>
 
-$input = new ArgvInput();
-$output = new ConsoleOutput();
-$app = new Application();
+        <listener event="sandbox.cleanup">
+            <class>PHPChunkit\Test\Listener\SandboxCleanup</class>
+        </listener>
 
-$configuration = (new Configuration())
-    ->setRootDir($rootDir)
-    ->setWatchDirectories([$sourceDir, $testsDir])
-    ->setTestsDirectory($testsDir)
-    ->setPhpunitPath($phpunitPath)
-;
-
-$eventDispatcher = $configuration->getEventDispatcher();
-
-$eventDispatcher->addListener(Events::SANDBOX_PREPARE, function() {
-    // prepare a sandboxed environment
-    // modify database configuration files here
-});
-
-$eventDispatcher->addListener(Events::SANDBOX_CLEANUP, function() {
-    // cleanup modified database configuration file and cleanup sandboxed databases
-});
-
-$eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
-    // create test databases
-});
-
-$testerApplication = new TesterApplication($app, $configuration);
-$testerApplication->run($input, $output);
+        <listener event="databases.create">
+            <class>PHPChunkit\Test\Listener\DatabasesCreate</class>
+        </listener>
+    </events>
+</phpchunkit>
 ```
-
-Take a look at the example in [bin/phpchunkit](https://github.com/jwage/PHPChunkit/blob/master/bin/phpchunkit)
-which has example listeners using MySQL.
