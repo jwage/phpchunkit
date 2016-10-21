@@ -1,15 +1,42 @@
 # PHPChunkit
 
-This library sits on top of PHPUnit and adds sugar to make it easier to work with large test suites.
-The primary feature is test chunking which gives you the ability to run your tests in parallel chunks.
+PHPChunkit is a library that sits on top of PHPUnit and adds additional
+functionality to make it easier to work with large unit and functional
+test suites. The primary feature is test chunking and database sandboxing
+which gives you the ability to run your tests in parallel chunks on the
+same server or across multiple servers.
 
-![PHPChunkit Screenshot](https://raw.githubusercontent.com/jwage/PHPChunkit/master/docs/phpchunkit.png)
+In order to run functional tests in parallel on the same server, you need to
+have a concept of database sandboxing. You are responsible for implementing
+the sandbox preparation, database creation, and sandbox cleanup. PHPChunkit
+provides a framework for you to hook in to so you can prepare your application
+environment sandbox.
 
-TODO:
+## Parallel Execution Example
 
-- Dependencies need to be cleaned up.
-- Move command line classes with execute() methods to own namespace.
-- Try to identify and remove assumptions/hardcoded things that won't work for other people.
+Imagine you have 100 tests and each test takes 1 second. When the tests are
+ran serially, it will take 100 seconds to complete. But if you split the 100
+tests in to 10 even chunks and run the chunks in parallel, it will in theory
+take only 10 seconds to complete.
+
+Now imagine you have a two node Jenkins cluster. You can spread the run of each
+chunk across the 2 servers with 5 parallel jobs running on each server:
+
+### Jenkins Server #1 with 5 job workers
+
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=1 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=2 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=3 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=4 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=5 --sandbox --create-dbs
+
+### Jenkins Server #2 with 5 job workers
+
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=6 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=7 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=8 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=9 --sandbox --create-dbs
+    ./bin/phpchunkit functional --num-chunks=10 --chunk=10 --sandbox --create-dbs
 
 ## Installation
 
@@ -17,70 +44,24 @@ Install with composer:
 
     composer require jwage/phpchunkit
 
-## Example Commands
-
-Run all tests:
-
-    ./bin/phpchunkit all
-
-Run just unit tests:
-
-    ./bin/phpchunkit unit
-
-Run all functional tests:
-
-    ./bin/phpchunkit functional
-
-Run a specific chunk of functional tests:
-
-    ./bin/phpchunkit functional --chunk=1
-
-Watch your code for changes and run tests:
-
-    ./bin/phpchunkit watch
-
-Run tests that match a filter:
-
-    ./bin/phpchunkit filter BuildSandbox
-
-Run a specific file:
-
-    ./bin/phpchunkit file tests/PHPChunkit/Test/BuildSandboxTest.php
-
-Run tests for changed files:
-
-> Note: This relies on git to know which files have changed.
-
-    ./bin/phpchunkit changed
-
-Create test databases and schema:
-
-    ./bin/phpchunkit create-dbs
-
-With the `chunk`, `num-chunks`, `sandbox` and `create-dbs` options you can run multiple
-chunks in parallel in sandboxed environments across multiple servers or even on a single server.
-Here is an example:
-
-    # Server 1
-    ./bin/phpchunkit functional --num-chunks=4 --chunk=1 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=4 --chunk=2 --sandbox --create-dbs
-
-    # Server 2
-    ./bin/phpchunkit functional --num-chunks=4 --chunk=3 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=4 --chunk=4 --sandbox --create-dbs
-
-Hook this up to something like Jenkins and you can scale your tests and keep them fast!
-At [OpenSky](https://www.opensky.com) our test suite takes 25 to 30 minutes when ran serially
-but when ran across 14 parallel jobs on a single Jenkins server they take ~2 minutes.
-
 ## Setup
 
-It is important to note that you are responsible for implementing the sandbox preparation,
-database creation and sandbox cleanup processes by adding [EventDispatcher](http://symfony.com/doc/current/components/event_dispatcher.html) listeners. You can listen for the following events:
+As mentioned above in the introduction, you are responsible for implementing
+the sandbox preparation, database creation and sandbox cleanup processes
+by adding [EventDispatcher](http://symfony.com/doc/current/components/event_dispatcher.html)
+listeners. You can listen for the following events:
 
 - `sandbox.prepare` - Use the `Events::SANDBOX_PREPARE` constant.
 - `sandbox.cleanup` - Use the `Events::SANDBOX_CLEANUP` constant.
 - `databases.create` - Use the `Events::DATABASES_CREATE` constant.
+
+Take a look at the listeners implemented in this projects test suite for an example:
+
+- [SandboxPrepare.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/SandboxPrepare.php)
+- [DatabasesCreate.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/DatabasesCreate.php)
+- [SandboxCleanup.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/DatabasesCreate.php)
+
+### Configuration
 
 Here is an example `phpchunkit.xml` file. Place this in the root of your project:
 
@@ -115,7 +96,8 @@ Here is an example `phpchunkit.xml` file. Place this in the root of your project
 ```
 
 The `tests/phpchunkit_bootstrap.php` file is loaded after the XML is loaded
-and gives you the ability to do more advanced things with the `Configuration`.
+and gives you the ability to do more advanced things with the [Configuration](https://github.com/jwage/phpchunkit/blob/master/src/PHPChunkit/Configuration.php).
+
 Here is an example:
 
 ```php
@@ -151,6 +133,50 @@ $eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
     // create databases
 });
 ```
+
+## Available Commands
+
+Run all tests:
+
+    ./bin/phpchunkit all
+
+Run just unit tests:
+
+    ./bin/phpchunkit unit
+
+Run all functional tests:
+
+    ./bin/phpchunkit functional
+
+Run a specific chunk of functional tests:
+
+    ./bin/phpchunkit functional --chunk=1
+
+Watch your code for changes and run tests:
+
+    ./bin/phpchunkit watch
+
+Run tests that match a filter:
+
+    ./bin/phpchunkit filter BuildSandbox
+
+Run a specific file:
+
+    ./bin/phpchunkit file tests/PHPChunkit/Test/BuildSandboxTest.php
+
+Run tests for changed files:
+
+> Note: This relies on git to know which files have changed.
+
+    ./bin/phpchunkit changed
+
+Create databases:
+
+    ./bin/phpchunkit create-dbs
+
+## Screenshot
+
+![PHPChunkit Screenshot](https://raw.githubusercontent.com/jwage/PHPChunkit/master/docs/phpchunkit.png)
 
 ## Demo Project
 
