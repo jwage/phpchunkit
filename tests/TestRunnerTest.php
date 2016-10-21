@@ -46,8 +46,8 @@ class TestRunnerTest extends BaseTest
         $this->output = $this->createMock(OutputInterface::class);
         $this->process = $this->createMock(Process::class);
         $this->configuration = (new Configuration())
-            ->setRootDir(realpath(__DIR__.'/../../..'))
-            ->setPhpunitPath(realpath(__DIR__.'/../../../vendor/bin/phpunit'))
+            ->setRootDir(realpath(__DIR__.'/..'))
+            ->setPhpunitPath(realpath(__DIR__.'/../vendor/bin/phpunit'))
         ;
 
         $this->testRunner = new TestRunnerStub(

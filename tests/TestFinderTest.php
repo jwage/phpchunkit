@@ -28,14 +28,14 @@ class TestFinderTest extends BaseTest
         $functionalTestFiles = $this->testFinder->findFunctionalTestFiles();
 
         $this->assertEquals([
-            sprintf('%s/tests/FunctionalTest1Test.php', $this->testsDirectory),
-            sprintf('%s/tests/FunctionalTest2Test.php', $this->testsDirectory),
-            sprintf('%s/tests/FunctionalTest3Test.php', $this->testsDirectory),
-            sprintf('%s/tests/FunctionalTest4Test.php', $this->testsDirectory),
-            sprintf('%s/tests/FunctionalTest5Test.php', $this->testsDirectory),
-            sprintf('%s/tests/FunctionalTest6Test.php', $this->testsDirectory),
-            sprintf('%s/tests/FunctionalTest7Test.php', $this->testsDirectory),
-            sprintf('%s/tests/FunctionalTest8Test.php', $this->testsDirectory),
+            sprintf('%s/FunctionalTest1Test.php', $this->testsDirectory),
+            sprintf('%s/FunctionalTest2Test.php', $this->testsDirectory),
+            sprintf('%s/FunctionalTest3Test.php', $this->testsDirectory),
+            sprintf('%s/FunctionalTest4Test.php', $this->testsDirectory),
+            sprintf('%s/FunctionalTest5Test.php', $this->testsDirectory),
+            sprintf('%s/FunctionalTest6Test.php', $this->testsDirectory),
+            sprintf('%s/FunctionalTest7Test.php', $this->testsDirectory),
+            sprintf('%s/FunctionalTest8Test.php', $this->testsDirectory),
         ], $functionalTestFiles);
     }
 }
