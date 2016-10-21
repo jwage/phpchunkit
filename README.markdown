@@ -113,3 +113,7 @@ Here is an example `phpchunkit.xml` file. Place this in the root of your project
     </events>
 </phpchunkit>
 ```
+
+## Demo Project
+
+Take a look at [jwage/phpchunkit-demo](https://github.com/jwage/phpchunkit-demo) to see how it can be integrated in to an existing PHPUnit project.
