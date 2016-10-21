@@ -182,7 +182,7 @@ class Configuration
     {
         if (!file_exists($phpunitPath)) {
             throw new \InvalidArgumentException(
-                sprintf('PHPUnit path "%s" does not exist.', $bootstrapPath)
+                sprintf('PHPUnit path "%s" does not exist.', $phpunitPath)
             );
         }
 
