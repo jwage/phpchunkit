@@ -10,9 +10,9 @@
         {"name": "Kris Wallsmith", "email": "kris.wallsmith@gmail.com"}
     ],
     "autoload": {
-        "psr-0": {
-            "PHPChunkit": "src/",
-            "PHPChunkit\\Test": "tests/"
+        "psr-4": {
+            "PHPChunkit\\": "src/",
+            "PHPChunkit\\Test\\": "tests/"
         }
     },
     "require": {

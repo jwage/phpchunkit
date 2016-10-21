@@ -22,11 +22,11 @@ abstract class BaseTest extends PHPUnit_Framework_TestCase
 
     protected function getRootDir() : string
     {
-        return realpath(__DIR__.'/../../..');
+        return realpath(__DIR__.'/../../');
     }
 
     protected function getTestsDirectory() : string
     {
-        return realpath(__DIR__.'/../../../tests');
+        return realpath(__DIR__.'/../tests');
     }
 }

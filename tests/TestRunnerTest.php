@@ -79,7 +79,7 @@ class TestRunnerTest extends BaseTest
     public function testGetFilteredFiles()
     {
         $files = [
-            'tests/PHPChunkit/Test/Command/AllTest.php',
+            'tests/Command/AllTest.php',
         ];
 
         $this->assertEquals($files, $this->testRunner->getFilteredFiles('AllTest.php'));
@@ -88,8 +88,8 @@ class TestRunnerTest extends BaseTest
     public function testGeneratePhpunitXml()
     {
         $files = [
-            'tests/PHPChunkit/Test/Command/AllTest.php',
-            'tests/PHPChunkit/Test/TestCounterTest.php',
+            'tests/Command/AllTest.php',
+            'tests/TestCounterTest.php',
         ];
 
         $path = $this->testRunner->generatePhpunitXml($files);
@@ -102,8 +102,8 @@ class TestRunnerTest extends BaseTest
         $suiteFiles = (array) $suite->file;
 
         $expectedFiles = [
-            $this->configuration->getRootDir().'/tests/PHPChunkit/Test/Command/AllTest.php',
-            $this->configuration->getRootDir().'/tests/PHPChunkit/Test/TestCounterTest.php',
+            $this->configuration->getRootDir().'/tests/Command/AllTest.php',
+            $this->configuration->getRootDir().'/tests/TestCounterTest.php',
         ];
 
         $this->assertEquals($expectedFiles, $suiteFiles);
@@ -112,8 +112,8 @@ class TestRunnerTest extends BaseTest
     public function testRunChangedFiles()
     {
         $changedFiles = [
-            'tests/PHPChunkit/Test/AllTest.php',
-            'src/PHPChunkit/All.php',
+            'tests/AllTest.php',
+            'src/All.php',
         ];
 
         $testRunner = $this->buildPartialMock(
@@ -150,7 +150,7 @@ class TestRunnerTest extends BaseTest
     public function testRunFilteredFiles()
     {
         $filteredFiles = [
-            'tests/PHPChunkit/Test/AllTest.php',
+            'tests/AllTest.php',
         ];
 
         $testRunner = $this->buildPartialMock(
@@ -188,8 +188,8 @@ class TestRunnerTest extends BaseTest
     public function testRunTestFiles()
     {
         $files = [
-            'tests/PHPChunkit/Test/AllTest.php',
-            'src/PHPChunkit/All.php',
+            'tests/AllTest.php',
+            'src/All.php',
         ];
 
         $testRunner = $this->buildPartialMock(
