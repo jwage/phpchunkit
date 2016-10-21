@@ -32,5 +32,15 @@ $sandboxEnabled = array_filter($_SERVER['argv'], function ($arg) {
 $configuration = Configuration::createFromXmlFile($xmlPath);
 $configuration->setSandboxEnabled($sandboxEnabled);
 
+if ($bootstrapPath = $configuration->getBootstrapPath()) {
+    if (!file_exists($bootstrapPath)) {
+        throw new \InvalidArgumentException(
+            sprintf('Bootstrap path "%s" does not exist.', $bootstrapPath)
+        );
+    }
+
+    require_once $bootstrapPath;
+}
+
 $testerApplication = new TesterApplication($app, $configuration);
 $testerApplication->run($input, $output);

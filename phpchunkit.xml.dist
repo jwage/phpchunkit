@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpchunkit root-dir="./" tests-dir="./tests" phpunit-path="./vendor/bin/phpunit">
+<phpchunkit bootstrap="./tests/phpchunkit_bootstrap.php" root-dir="./" tests-dir="./tests" phpunit-path="./vendor/bin/phpunit">
     <watch-directories>
         <watch-directory>./src</watch-directory>
         <watch-directory>./tests</watch-directory>

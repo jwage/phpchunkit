@@ -25,6 +25,11 @@ class Configuration
     /**
      * @var string
      */
+    private $bootstrapPath = '';
+
+    /**
+     * @var string
+     */
     private $phpunitPath = '';
 
     /**
@@ -41,6 +46,7 @@ class Configuration
     {
         $xml = simplexml_load_file($path);
         $attributes = $xml->attributes();
+        $bootstrapPath = realpath($attributes['bootstrap']);
         $rootDir = realpath($attributes['root-dir']);
         $testsDir = realpath($attributes['tests-dir']);
         $phpunitPath = realpath($attributes['phpunit-path']);
@@ -50,6 +56,7 @@ class Configuration
         $listeners = $events['listener'];
 
         $configuration = (new self())
+            ->setBootstrapPath($bootstrapPath)
             ->setRootDir($rootDir)
             ->setWatchDirectories($watchDirectories)
             ->setTestsDirectory($testsDir)
@@ -113,6 +120,18 @@ class Configuration
     public function getTestsDirectory() : string
     {
         return $this->testsDirectory;
+    }
+
+    public function setBootstrapPath(string $bootstrapPath) : self
+    {
+        $this->bootstrapPath = $bootstrapPath;
+
+        return $this;
+    }
+
+    public function getBootstrapPath() : string
+    {
+        return $this->bootstrapPath;
     }
 
     public function setPhpunitPath(string $phpunitPath) : self
