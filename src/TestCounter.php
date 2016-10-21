@@ -30,6 +30,7 @@ class TestCounter
 
     public function countNumTestsInFile(string $file) : int
     {
+        // @FIXME This implies PSR-0 loading, does not work if namespace is not completely reflected in path
         $className = str_replace($this->testsDirectory, '', $file);
         $className = str_replace('.php', '', $className);
         $className = str_replace('/', '\\', $className);
