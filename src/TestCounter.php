@@ -2,6 +2,8 @@
 
 namespace PHPChunkit;
 
+use PHP_Token_Stream;
+
 class TestCounter
 {
     /**
@@ -30,12 +32,19 @@ class TestCounter
 
     public function countNumTestsInFile(string $file) : int
     {
-        // @FIXME This implies PSR-0 loading, does not work if namespace is not completely reflected in path
-        $className = str_replace($this->testsDirectory, '', $file);
-        $className = str_replace('.php', '', $className);
-        $className = str_replace('/', '\\', $className);
-
         $numTestsInFile = 0;
+
+        $stream = new PHP_Token_Stream($file);
+        $classes = $stream->getClasses();
+
+        if (!count($classes))
+        {
+            return $numTestsInFile;
+        }
+
+        // @todo Checking first class as per original functionality. Check all classes instead
+        $class = array_keys($classes)[0];
+        $className = $classes[$class]['package']['namespace'] . '\\' . $class;
 
         require_once $file;
 
@@ -76,3 +85,4 @@ class TestCounter
         return $numTestsInFile;
     }
 }
+
