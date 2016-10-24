@@ -37,8 +37,7 @@ class TestCounter
         $stream = new PHP_Token_Stream($file);
         $classes = $stream->getClasses();
 
-        if (!count($classes))
-        {
+        if (!$classes) {
             return $numTestsInFile;
         }
 
