@@ -36,11 +36,11 @@ class TestChunkerTest extends BaseTest
             // chunk 1
             [
                 [
-                    'file' => sprintf('%s/PHPChunkit/Test/FunctionalTest1Test.php', $this->testsDirectory),
+                    'file' => sprintf('%s/FunctionalTest1Test.php', $this->testsDirectory),
                     'numTests' => 4,
                 ],
                 [
-                    'file' => sprintf('%s/PHPChunkit/Test/FunctionalTest2Test.php', $this->testsDirectory),
+                    'file' => sprintf('%s/FunctionalTest2Test.php', $this->testsDirectory),
                     'numTests' => 4,
                 ]
             ],
@@ -48,11 +48,11 @@ class TestChunkerTest extends BaseTest
             // chunk 2
             [
                 [
-                    'file' => sprintf('%s/PHPChunkit/Test/FunctionalTest3Test.php', $this->testsDirectory),
+                    'file' => sprintf('%s/FunctionalTest3Test.php', $this->testsDirectory),
                     'numTests' => 4,
                 ],
                 [
-                    'file' => sprintf('%s/PHPChunkit/Test/FunctionalTest4Test.php', $this->testsDirectory),
+                    'file' => sprintf('%s/FunctionalTest4Test.php', $this->testsDirectory),
                     'numTests' => 4,
                 ]
             ],
@@ -60,11 +60,11 @@ class TestChunkerTest extends BaseTest
             // chunk 3
             [
                 [
-                    'file' => sprintf('%s/PHPChunkit/Test/FunctionalTest5Test.php', $this->testsDirectory),
+                    'file' => sprintf('%s/FunctionalTest5Test.php', $this->testsDirectory),
                     'numTests' => 4,
                 ],
                 [
-                    'file' => sprintf('%s/PHPChunkit/Test/FunctionalTest6Test.php', $this->testsDirectory),
+                    'file' => sprintf('%s/FunctionalTest6Test.php', $this->testsDirectory),
                     'numTests' => 4,
                 ]
             ],
@@ -72,11 +72,11 @@ class TestChunkerTest extends BaseTest
             // chunk 4
             [
                 [
-                    'file' => sprintf('%s/PHPChunkit/Test/FunctionalTest7Test.php', $this->testsDirectory),
+                    'file' => sprintf('%s/FunctionalTest7Test.php', $this->testsDirectory),
                     'numTests' => 4,
                 ],
                 [
-                    'file' => sprintf('%s/PHPChunkit/Test/FunctionalTest8Test.php', $this->testsDirectory),
+                    'file' => sprintf('%s/FunctionalTest8Test.php', $this->testsDirectory),
                     'numTests' => 4,
                 ]
             ]
