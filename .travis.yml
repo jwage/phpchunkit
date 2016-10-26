@@ -1,0 +1,31 @@
+language: php
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+php:
+  - 7.0
+  - 7.1
+  - nightly
+
+before_script:
+  - composer install
+  - git config --global user.name travis-ci
+  - git config --global user.email travis@example.com
+
+script:
+  - ./bin/phpchunkit unit
+  - ./bin/phpchunkit functional --sandbox --create-dbs
+
+git:
+  depth: 1
+
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.net#phpchunkit"
+    on_success: change
+
