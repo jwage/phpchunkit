@@ -29,7 +29,7 @@ class PHPChunkitApplication
         $testRunner = new TestRunner($this->app, $input, $output, $this->configuration);
 
         $this->app->register('filter')
-            ->setDescription('Run tests that match the filter.')
+            ->setDescription('Run tests that match a filter.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter to run.')
             ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode')
             ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for each chunk', '750M')
@@ -41,7 +41,7 @@ class PHPChunkitApplication
         ;
 
         $this->app->register('file')
-            ->setDescription('Run single test file.')
+            ->setDescription('Run a single test file.')
             ->addArgument('file', InputArgument::OPTIONAL, 'File to run.')
             ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode')
             ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for each chunk', '750M')
@@ -53,7 +53,7 @@ class PHPChunkitApplication
         ;
 
         $this->app->register('watch')
-            ->setDescription('Watch for changes and run the tests.')
+            ->setDescription('Watch for changes to files and run the associated tests.')
             ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode')
             ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for each chunk', '750M')
             ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error')
@@ -84,7 +84,7 @@ class PHPChunkitApplication
         ;
 
         $this->app->register('sandbox')
-            ->setDescription('Build a sandbox for a functional test run.')
+            ->setDescription('Build a sandbox for a test run.')
             ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases after building the sandbox.')
             ->setCode([new Command\BuildSandbox($testRunner, $this->configuration->getEventDispatcher()), 'execute'])
         ;
