@@ -4,19 +4,22 @@ namespace PHPChunkit;
 
 use PHP_Token_Stream;
 
+/**
+ * @testClass PHPChunkit\Test\TestCounterTest
+ */
 class TestCounter
 {
     /**
-     * @var string
+     * @var FileClassesHelper
      */
-    private $testsDirectory;
+    private $fileClassesHelper;
 
     /**
-     * @param string $testsDirectory
+     * @param FileClassesHelper $fileClassesHelper
      */
-    public function __construct(string $testsDirectory)
+    public function __construct(FileClassesHelper $fileClassesHelper)
     {
-        $this->testsDirectory = $testsDirectory;
+        $this->fileClassesHelper = $fileClassesHelper;
     }
 
     public function countTotalTestsInFiles(array $files) : int
@@ -34,16 +37,13 @@ class TestCounter
     {
         $numTestsInFile = 0;
 
-        $stream = new PHP_Token_Stream($file);
-        $classes = $stream->getClasses();
+        $classes = $this->fileClassesHelper->getFileClasses($file);
 
         if (!$classes) {
             return $numTestsInFile;
         }
 
-        // @todo Checking first class as per original functionality. Check all classes instead
-        $class = array_keys($classes)[0];
-        $className = $classes[$class]['package']['namespace'] . '\\' . $class;
+        $className = $classes[0];
 
         require_once $file;
 

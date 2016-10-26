@@ -3,6 +3,7 @@
 
 namespace PHPChunkit;
 
+use PHPChunkit\Container;
 use PHPChunkit\PHPChunkit;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -14,12 +15,10 @@ $rootDir = file_exists(__DIR__.'/../vendor/autoload.php')
 
 require_once sprintf('%s/vendor/autoload.php', $rootDir);
 
-$input = new ArgvInput();
-$output = new ConsoleOutput();
-
-$phpChunkit = new PHPChunkit($rootDir);
-
-$configuration = $phpChunkit->getConfiguration();
-
-$app = $phpChunkit->getApplication($configuration);
-$app->run($input, $output);
+(new PHPChunkit($rootDir, new Container()))
+    ->getContainer()['phpchunkit.application']
+    ->run(
+        new ArgvInput(),
+        new ConsoleOutput()
+    )
+;

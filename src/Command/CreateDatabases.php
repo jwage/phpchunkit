@@ -7,7 +7,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class CreateDatabases
+/**
+ * @testClass PHPChunkit\Test\Command\CreateDatabasesTest
+ */
+class CreateDatabases implements CommandInterface
 {
     /**
      * @var EventDispatcher

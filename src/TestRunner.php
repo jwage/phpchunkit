@@ -12,6 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
+/**
+ * @testClass PHPChunkit\Test\TestRunnerTest
+ */
 class TestRunner
 {
     /**
@@ -40,7 +43,11 @@ class TestRunner
      * @param OutputInterface $output
      * @param Configuration   $configuration
      */
-    public function __construct(Application $app, InputInterface $input, OutputInterface $output, Configuration $configuration)
+    public function __construct(
+        Application $app,
+        InputInterface $input,
+        OutputInterface $output,
+        Configuration $configuration)
     {
         $this->app = $app;
         $this->input = $input;
@@ -54,26 +61,6 @@ class TestRunner
     public function getRootDir()
     {
         return $this->configuration->getRootDir();
-    }
-
-    /**
-     * @param string $filter
-     *
-     * @return []
-     */
-    public function getFilteredFiles($filter)
-    {
-        $finder = Finder::create()
-            ->files()
-            ->name('*'.$filter.'*')
-            ->in($this->getRootDir());
-
-        $files = [];
-        foreach ($finder as $file) {
-            $files[] = $file->getRelativePathname();
-        }
-
-        return $files;
     }
 
     /**
@@ -112,19 +99,6 @@ class TestRunner
 
             return $config;
         }
-    }
-
-    /**
-     * @param string $filter
-     * @param array  $env
-     *
-     * @return int
-     */
-    public function runFilteredFiles($filter, array $env = [])
-    {
-        $files = $this->getFilteredFiles($filter);
-
-        return $this->runTestFiles($files, $env);
     }
 
     /**
@@ -228,7 +202,7 @@ class TestRunner
     /**
      * @return string
      */
-    public function flags()
+    private function flags()
     {
         $flags = '-d memory_limit='.escapeshellarg($this->input->getOption('memory-limit'));
 

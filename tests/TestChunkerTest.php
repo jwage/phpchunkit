@@ -3,7 +3,9 @@
 namespace PHPChunkit\Test;
 
 use PHPChunkit\ChunkedTests;
+use PHPChunkit\FileClassesHelper;
 use PHPChunkit\TestChunker;
+use PHPChunkit\TestCounter;
 use PHPChunkit\TestFinder;
 
 class TestChunkerTest extends BaseTest
@@ -14,6 +16,11 @@ class TestChunkerTest extends BaseTest
     private $testsDirectory;
 
     /**
+     * @var TestCounter
+     */
+    private $testCounter;
+
+    /**
      * @var TestRunner
      */
     private $testChunker;
@@ -21,8 +28,8 @@ class TestChunkerTest extends BaseTest
     protected function setUp()
     {
         $this->testsDirectory = $this->getTestsDirectory();
-
-        $this->testChunker = new TestChunker($this->testsDirectory);
+        $this->testCounter = $this->createMock(TestCounter::class);
+        $this->testChunker = new TestChunker($this->testCounter);
     }
 
     public function testChunkFunctionalTests()
@@ -30,6 +37,14 @@ class TestChunkerTest extends BaseTest
         $chunkFunctionalTests = (new ChunkedTests())
             ->setNumChunks(4)
         ;
+
+        $this->testCounter->expects($this->once())
+            ->method('countTotalTestsInFiles')
+            ->willReturn(32);
+
+        $this->testCounter->expects($this->any())
+            ->method('countNumTestsInFile')
+            ->willReturn(4);
 
         $testFiles = (new TestFinder($this->testsDirectory))
             ->findTestFilesInGroups(['functional']);

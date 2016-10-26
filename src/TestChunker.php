@@ -2,6 +2,9 @@
 
 namespace PHPChunkit;
 
+/**
+ * @testClass PHPChunkit\Test\TestChunkerTest
+ */
 class TestChunker
 {
     /**
@@ -10,11 +13,11 @@ class TestChunker
     private $testCounter;
 
     /**
-     * @param string $testsDirectory
+     * @param TestCounter $testCounter
      */
-    public function __construct(string $testsDirectory)
+    public function __construct(TestCounter $testCounter)
     {
-        $this->testCounter = new TestCounter($testsDirectory);
+        $this->testCounter = $testCounter;
     }
 
     public function chunkTestFiles(ChunkedTests $chunkedTests, array $testFiles)

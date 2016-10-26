@@ -5,6 +5,8 @@ namespace PHPChunkit\Test\Command;
 use PHPChunkit\Command\Run;
 use PHPChunkit\Configuration;
 use PHPChunkit\DatabaseSandbox;
+use PHPChunkit\TestChunker;
+use PHPChunkit\TestFinder;
 use PHPChunkit\TestRunner;
 use PHPChunkit\Test\BaseTest;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,10 +35,14 @@ class RunTest extends BaseTest
         $this->configuration = (new Configuration())
             ->setTestsDirectory($this->getTestsDirectory())
         ;
+        $this->testChunker = $this->createMock(TestChunker::class);
+        $this->testFinder = $this->createMock(TestFinder::class);
 
         $this->run = new Run(
             $this->testRunner,
-            $this->configuration
+            $this->configuration,
+            $this->testChunker,
+            $this->testFinder
         );
     }
 
@@ -45,32 +51,46 @@ class RunTest extends BaseTest
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
 
+        $this->testFinder->expects($this->once())
+            ->method('findAllTestFiles')
+            ->willReturn([__FILE__]);
+
         $input->expects($this->at(0))
-            ->method('getOption')
-            ->with('chunk')
-            ->willReturn(null);
-
-        $input->expects($this->at(1))
-            ->method('getOption')
-            ->with('num-chunks')
-            ->willReturn(14);
-
-        $input->expects($this->at(2))
             ->method('getOption')
             ->with('group')
             ->willReturn([]);
 
-        $input->expects($this->at(3))
+        $input->expects($this->at(1))
             ->method('getOption')
             ->with('exclude-group')
             ->willReturn([]);
 
-        $input->expects($this->at(4))
+        $input->expects($this->at(2))
             ->method('getOption')
             ->with('changed')
             ->willReturn(false);
 
+        $input->expects($this->at(3))
+            ->method('getOption')
+            ->with('filter')
+            ->willReturn(null);
+
+        $input->expects($this->at(4))
+            ->method('getOption')
+            ->with('file')
+            ->willReturn(null);
+
         $input->expects($this->at(5))
+            ->method('getOption')
+            ->with('num-chunks')
+            ->willReturn(14);
+
+        $input->expects($this->at(6))
+            ->method('getOption')
+            ->with('chunk')
+            ->willReturn(null);
+
+        $input->expects($this->at(7))
             ->method('getOption')
             ->with('sandbox')
             ->willReturn(true);

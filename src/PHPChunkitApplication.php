@@ -4,64 +4,49 @@ namespace PHPChunkit;
 
 use PHPChunkit\Command;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @testClass PHPChunkit\Test\PHPChunkitApplicationTest
+ */
 class PHPChunkitApplication
 {
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
      * @var Application
      */
-    private $app;
+    private $symfonyApplication;
 
-    public function __construct(Application $app, Configuration $configuration)
+    public function __construct(Container $container)
     {
-        $this->app = $app;
-        $this->configuration = $configuration;
+        $this->container = $container;
+        $this->symfonyApplication = $this->container['phpchunkit.symfony_application'];
     }
 
-    public function run(InputInterface $input, OutputInterface $output)
+    public function run(InputInterface $input, OutputInterface $output) : int
     {
-        $databaseSandbox = new DatabaseSandbox();
-        $testRunner = new TestRunner($this->app, $input, $output, $this->configuration);
+        $this->container['phpchunkit.application.input'] = $input;
+        $this->container['phpchunkit.application.output'] = $output;
 
-        $this->app->register('filter')
-            ->setDescription('Run tests that match a filter.')
-            ->addArgument('filter', InputArgument::OPTIONAL, 'Filter to run.')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
-            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for PHP.', '256M')
-            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error.')
-            ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed.')
-            ->setCode(function($input, $output) use ($testRunner) {
-                return $testRunner->runFilteredFiles($input->getArgument('filter'));
-            })
-        ;
-
-        $this->app->register('file')
-            ->setDescription('Run a single test file.')
-            ->addArgument('file', InputArgument::OPTIONAL, 'File to run.')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
-            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for PHP.', '256M')
-            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error.')
-            ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed.')
-            ->setCode(function($input, $output) use ($testRunner) {
-                return $testRunner->runPhpunit($input->getArgument('file'));
-            })
-        ;
-
-        $this->app->register('watch')
+        $this->register('watch')
             ->setDescription('Watch for changes to files and run the associated tests.')
             ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
             ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for PHP.', '256M')
             ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error.')
             ->addOption('failed', null, InputOption::VALUE_REQUIRED, 'Track tests that have failed.', true)
-            ->setCode([new Command\TestWatcher($testRunner, $this->configuration), 'execute'])
+            ->setCode([$this->container['phpchunkit.command.test_watcher'], 'execute'])
         ;
 
-        $this->app->register('run')
+        $this->register('run')
             ->setDescription('Run tests.')
             ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
             ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for PHP.', '256M')
@@ -74,21 +59,35 @@ class PHPChunkitApplication
             ->addOption('group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests in these groups.')
             ->addOption('exclude-group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests excluding these groups.')
             ->addOption('changed', null, InputOption::VALUE_NONE, 'Run changed tests.')
-            ->setCode([new Command\Run($testRunner, $this->configuration), 'execute'])
+            ->addOption('filter', null, InputOption::VALUE_REQUIRED, 'Run tests that match the given filter.')
+            ->addOption('file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run test file.')
+            ->setCode([$this->container['phpchunkit.command.run'], 'execute'])
         ;
 
-        $this->app->register('create-dbs')
+        $this->register('create-dbs')
             ->setDescription('Create the test databases.')
             ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Prepare sandbox before creating databases.')
-            ->setCode([new Command\CreateDatabases($this->configuration->getEventDispatcher()), 'execute'])
+            ->setCode([$this->container['phpchunkit.command.create_databases'], 'execute'])
         ;
 
-        $this->app->register('sandbox')
+        $this->register('sandbox')
             ->setDescription('Build a sandbox for a test run.')
             ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases after building the sandbox.')
-            ->setCode([new Command\BuildSandbox($testRunner, $this->configuration->getEventDispatcher()), 'execute'])
+            ->setCode([$this->container['phpchunkit.command.build_sandbox'], 'execute'])
         ;
 
-        $this->app->run($input, $output);
+        return $this->runSymfonyApplication($input, $output);
+    }
+
+    protected function runSymfonyApplication(
+        InputInterface $input,
+        OutputInterface $output) : int
+    {
+        return $this->symfonyApplication->run($input, $output);
+    }
+
+    private function register(string $name) : SymfonyCommand
+    {
+        return $this->symfonyApplication->register($name);
     }
 }
