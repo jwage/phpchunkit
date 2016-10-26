@@ -57,22 +57,6 @@ class TestRunner
     }
 
     /**
-     * @return []
-     */
-    public function getChangedFiles()
-    {
-        $command = "git status --porcelain | grep -e '^\(.*\).php$' | cut -c 3-";
-
-        $process = $this->createProcess($command);
-        $process->run();
-
-        $output = $process->getOutput();
-        $files = $output ? array_map('trim', explode("\n", $output)) : [];
-
-        return $files;
-    }
-
-    /**
      * @param string $filter
      *
      * @return []
@@ -128,18 +112,6 @@ class TestRunner
 
             return $config;
         }
-    }
-
-    /**
-     * @param array $env
-     *
-     * @return int
-     */
-    public function runChangedFiles(array $env = [])
-    {
-        $files = $this->getChangedFiles();
-
-        return $this->runTestFiles($files, $env);
     }
 
     /**

@@ -5,11 +5,6 @@ namespace PHPChunkit;
 class TestChunker
 {
     /**
-     * @var TestFinder
-     */
-    private $testFinder;
-
-    /**
      * @var TestCounter
      */
     private $testCounter;
@@ -19,19 +14,13 @@ class TestChunker
      */
     public function __construct(string $testsDirectory)
     {
-        $this->testFinder = new TestFinder($testsDirectory);
         $this->testCounter = new TestCounter($testsDirectory);
     }
 
-    /**
-     * @param ChunkedFunctionalTests $chunkedFunctionalTests
-     */
-    public function chunkFunctionalTests(ChunkedFunctionalTests $chunkedFunctionalTests)
+    public function chunkTestFiles(ChunkedTests $chunkedTests, array $testFiles)
     {
-        $chunk = $chunkedFunctionalTests->getChunk();
-        $numChunks = $chunkedFunctionalTests->getNumChunks();
-
-        $testFiles = $this->testFinder->findFunctionalTestFiles();
+        $chunk = $chunkedTests->getChunk();
+        $numChunks = $chunkedTests->getNumChunks();
 
         $totalTests = $this->testCounter->countTotalTestsInFiles($testFiles);
 
@@ -70,8 +59,8 @@ class TestChunker
             }
         }
 
-        $chunkedFunctionalTests->setChunks($chunks);
-        $chunkedFunctionalTests->setTotalTests($totalTests);
-        $chunkedFunctionalTests->setTestsPerChunk($testsPerChunk);
+        $chunkedTests->setChunks($chunks);
+        $chunkedTests->setTotalTests($totalTests);
+        $chunkedTests->setTestsPerChunk($testsPerChunk);
     }
 }

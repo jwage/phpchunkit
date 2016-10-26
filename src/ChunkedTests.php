@@ -2,7 +2,7 @@
 
 namespace PHPChunkit;
 
-class ChunkedFunctionalTests
+class ChunkedTests
 {
     /**
      * @var int

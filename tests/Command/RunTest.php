@@ -2,7 +2,7 @@
 
 namespace PHPChunkit\Test\Command;
 
-use PHPChunkit\Command\Functional;
+use PHPChunkit\Command\Run;
 use PHPChunkit\Configuration;
 use PHPChunkit\DatabaseSandbox;
 use PHPChunkit\TestRunner;
@@ -10,7 +10,7 @@ use PHPChunkit\Test\BaseTest;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class FunctionalTest extends BaseTest
+class RunTest extends BaseTest
 {
     /**
      * @var TestRunner
@@ -23,9 +23,9 @@ class FunctionalTest extends BaseTest
     private $configuration;
 
     /**
-     * @var Functional
+     * @var Run
      */
-    private $functional;
+    private $run;
 
     protected function setUp()
     {
@@ -34,7 +34,7 @@ class FunctionalTest extends BaseTest
             ->setTestsDirectory($this->getTestsDirectory())
         ;
 
-        $this->functional = new Functional(
+        $this->run = new Run(
             $this->testRunner,
             $this->configuration
         );
@@ -57,6 +57,21 @@ class FunctionalTest extends BaseTest
 
         $input->expects($this->at(2))
             ->method('getOption')
+            ->with('group')
+            ->willReturn([]);
+
+        $input->expects($this->at(3))
+            ->method('getOption')
+            ->with('exclude-group')
+            ->willReturn([]);
+
+        $input->expects($this->at(4))
+            ->method('getOption')
+            ->with('changed')
+            ->willReturn(false);
+
+        $input->expects($this->at(5))
+            ->method('getOption')
             ->with('sandbox')
             ->willReturn(true);
 
@@ -70,9 +85,9 @@ class FunctionalTest extends BaseTest
 
         $this->testRunner->expects($this->any())
             ->method('runPhpunit')
-            ->with('-c test.xml --group functional')
+            ->with('-c test.xml')
             ->willReturn(0);
 
-        $this->assertEquals(0, $this->functional->execute($input, $output));
+        $this->assertEquals(0, $this->run->execute($input, $output));
     }
 }

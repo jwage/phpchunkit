@@ -38,7 +38,9 @@ class TestCounterTest extends BaseTest
     public function testCountTotalTestsInFiles()
     {
         $this->assertEquals(9, $this->testCounter->countTotalTestsInFiles([__FILE__]));
-        $this->assertEquals(32, $this->testCounter->countTotalTestsInFiles($this->testFinder->findFunctionalTestFiles()));
+        $this->assertEquals(32, $this->testCounter->countTotalTestsInFiles(
+            $this->testFinder->findTestFilesInGroups(['functional'])
+        ));
     }
 
     public function testCount1()

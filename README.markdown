@@ -1,5 +1,7 @@
 # PHPChunkit
 
+[![Build Status](https://secure.travis-ci.org/jwage/phpchunkit.png?branch=master)](http://travis-ci.org/jwage/phpchunkit)
+
 PHPChunkit is a library that sits on top of PHPUnit and adds additional
 functionality to make it easier to work with large unit and functional
 test suites. The primary feature is test chunking and database sandboxing
@@ -24,19 +26,19 @@ chunk across the 2 servers with 5 parallel jobs running on each server:
 
 ### Jenkins Server #1 with 5 job workers
 
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=1 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=2 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=3 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=4 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=5 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=1 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=2 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=3 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=4 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=5 --sandbox --create-dbs
 
 ### Jenkins Server #2 with 5 job workers
 
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=6 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=7 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=8 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=9 --sandbox --create-dbs
-    ./bin/phpchunkit functional --num-chunks=10 --chunk=10 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=6 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=7 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=8 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=9 --sandbox --create-dbs
+    ./bin/phpchunkit run --num-chunks=10 --chunk=10 --sandbox --create-dbs
 
 ## Installation
 
@@ -158,19 +160,19 @@ class MyTest extends PHPUnit_Framework_TestCase
 
 Run all tests:
 
-    ./bin/phpchunkit all
+    ./bin/phpchunkit run
 
 Run just unit tests:
 
-    ./bin/phpchunkit unit
+    ./bin/phpchunkit run --exclude-group=functional
 
 Run all functional tests:
 
-    ./bin/phpchunkit functional
+    ./bin/phpchunkit run --group=functional
 
 Run a specific chunk of functional tests:
 
-    ./bin/phpchunkit functional --chunk=1
+    ./bin/phpchunkit run --num-chunks=5 --chunk=1
 
 Watch your code for changes and run tests:
 
@@ -182,13 +184,13 @@ Run tests that match a filter:
 
 Run a specific file:
 
-    ./bin/phpchunkit file tests/PHPChunkit/Test/BuildSandboxTest.php
+    ./bin/phpchunkit file tests/Command/BuildSandboxTest.php
 
 Run tests for changed files:
 
 > Note: This relies on git to know which files have changed.
 
-    ./bin/phpchunkit changed
+    ./bin/phpchunkit run --changed
 
 Create databases:
 

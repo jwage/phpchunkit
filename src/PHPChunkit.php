@@ -3,7 +3,7 @@
 namespace PHPChunkit;
 
 use PHPChunkit\Configuration;
-use PHPChunkit\TesterApplication;
+use PHPChunkit\PHPChunkitApplication;
 use Symfony\Component\Console\Application;
 
 class PHPChunkit
@@ -18,9 +18,9 @@ class PHPChunkit
         $this->rootDir = $rootDir;
     }
 
-    public function getApplication(Configuration $configuration) : TesterApplication
+    public function getApplication(Configuration $configuration) : PHPChunkitApplication
     {
-        return new TesterApplication($this->createSymfonyConsoleApplication(), $configuration);
+        return new PHPChunkitApplication($this->createSymfonyConsoleApplication(), $configuration);
     }
 
     public function getConfiguration() : Configuration

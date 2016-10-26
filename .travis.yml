@@ -17,8 +17,8 @@ before_script:
   - git config --global user.email travis@example.com
 
 script:
-  - ./bin/phpchunkit unit
-  - ./bin/phpchunkit functional --sandbox --create-dbs
+  - ./bin/phpchunkit run --exclude-group=functional
+  - ./bin/phpchunkit run --group=functional --sandbox --create-dbs
 
 git:
   depth: 1

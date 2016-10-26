@@ -4,7 +4,7 @@ namespace PHPChunkit\Test;
 
 use PHPChunkit\Configuration;
 use PHPChunkit\DatabaseSandbox;
-use PHPChunkit\TesterApplication;
+use PHPChunkit\PHPChunkitApplication;
 use PHPChunkit\PHPChunkit;
 
 class PHPChunkitTest extends BaseTest
@@ -46,6 +46,6 @@ class PHPChunkitTest extends BaseTest
         $configuration = $this->phpChunkit->getConfiguration();
         $application = $this->phpChunkit->getApplication($configuration);
 
-        $this->assertInstanceOf(TesterApplication::class, $application);
+        $this->assertInstanceOf(PHPChunkitApplication::class, $application);
     }
 }
