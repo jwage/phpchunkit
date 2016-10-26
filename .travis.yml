@@ -1,0 +1,21 @@
+language: php
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+php:
+  - 7.0
+  - 7.1
+  - nightly
+
+before_script:
+  - composer install
+  - git config --global user.name travis-ci
+  - git config --global user.email travis@example.com
+
+script:
+  - ./vendor/bin/phpunit --colors=always
+
