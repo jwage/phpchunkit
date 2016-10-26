@@ -15,7 +15,9 @@ before_script:
   - composer install
   - git config --global user.name travis-ci
   - git config --global user.email travis@example.com
+  - mysql -e "create database IF NOT EXISTS testdb1_test;" -uroot
+  - mysql -e "create database IF NOT EXISTS testdb2_test;" -uroot
 
 script:
-  - ./vendor/bin/phpunit --colors=always
+  - ./vendor/bin/phpunit
 
