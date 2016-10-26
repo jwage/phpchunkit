@@ -235,7 +235,7 @@ class TestRunnerTest extends BaseTest
 
         $testRunner->expects($this->once())
             ->method('run')
-            ->with(sprintf("php %s --exclude-group=functional -d memory_limit=''", $this->configuration->getPhpunitPath()))
+            ->with(sprintf("%s --exclude-group=functional -d memory_limit=''", $this->configuration->getPhpunitPath()))
             ->will($this->returnValue(0));
 
         $this->assertEquals(0, $testRunner->runPhpunit('--exclude-group=functional'));
