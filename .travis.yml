@@ -25,5 +25,7 @@ git:
 
 notifications:
   irc:
-    - "irc.freenode.net#phpchunkit"
+    channels:
+      - "irc.freenode.net#phpchunkit"
+    on_success: change
 
