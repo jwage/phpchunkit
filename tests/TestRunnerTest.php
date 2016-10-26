@@ -59,30 +59,13 @@ class TestRunnerTest extends BaseTest
         $this->testRunner->process = $this->process;
     }
 
-    public function testGetChangedFiles()
-    {
-        $this->process->expects($this->once())
-            ->method('run');
-
-        $files = [
-            'src/PHPChunkit/All.php',
-            'src/PHPChunkit/BuildSandbox.php',
-        ];
-
-        $this->process->expects($this->once())
-            ->method('getOutput')
-            ->will($this->returnValue(implode("\n", $files)));
-
-        $this->assertEquals($files, $this->testRunner->getChangedFiles());
-    }
-
     public function testGetFilteredFiles()
     {
         $files = [
-            'tests/Command/AllTest.php',
+            'tests/DatabaseSandboxTest.php',
         ];
 
-        $this->assertEquals($files, $this->testRunner->getFilteredFiles('AllTest.php'));
+        $this->assertEquals($files, $this->testRunner->getFilteredFiles('DatabaseSandboxTest.php'));
     }
 
     public function testGeneratePhpunitXml()
@@ -107,44 +90,6 @@ class TestRunnerTest extends BaseTest
         ];
 
         $this->assertEquals($expectedFiles, $suiteFiles);
-    }
-
-    public function testRunChangedFiles()
-    {
-        $changedFiles = [
-            'tests/AllTest.php',
-            'src/All.php',
-        ];
-
-        $testRunner = $this->buildPartialMock(
-            TestRunnerStub::class,
-            [
-                'getChangedFiles',
-                'generatePhpunitXml',
-                'runPhpunit',
-            ],
-            [
-                $this->app,
-                $this->input,
-                $this->output,
-                $this->configuration,
-            ]
-        );
-
-        $testRunner->expects($this->once())
-            ->method('getChangedFiles')
-            ->will($this->returnValue($changedFiles));
-
-        $testRunner->expects($this->once())
-            ->method('generatePhpunitXml')
-            ->will($this->returnValue('/path/to/phpunit.xml'));
-
-        $testRunner->expects($this->once())
-            ->method('runPhpunit')
-            ->with("-c '/path/to/phpunit.xml'")
-            ->will($this->returnValue(0));
-
-        $this->assertEquals(0, $testRunner->runChangedFiles());
     }
 
     public function testRunFilteredFiles()

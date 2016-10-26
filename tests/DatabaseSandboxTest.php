@@ -4,6 +4,9 @@ namespace PHPChunkit\Test;
 
 use PHPChunkit\DatabaseSandbox;
 
+/**
+ * @group test
+ */
 class DatabaseSandboxTest extends BaseTest
 {
     /**

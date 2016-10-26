@@ -2,8 +2,9 @@
 
 namespace PHPChunkit\Test;
 
-use PHPChunkit\ChunkedFunctionalTests;
+use PHPChunkit\ChunkedTests;
 use PHPChunkit\TestChunker;
+use PHPChunkit\TestFinder;
 
 class TestChunkerTest extends BaseTest
 {
@@ -26,11 +27,14 @@ class TestChunkerTest extends BaseTest
 
     public function testChunkFunctionalTests()
     {
-        $chunkFunctionalTests = (new ChunkedFunctionalTests())
+        $chunkFunctionalTests = (new ChunkedTests())
             ->setNumChunks(4)
         ;
 
-        $this->testChunker->chunkFunctionalTests($chunkFunctionalTests);
+        $testFiles = (new TestFinder($this->testsDirectory))
+            ->findTestFilesInGroups(['functional']);
+
+        $this->testChunker->chunkTestFiles($chunkFunctionalTests, $testFiles);
 
         $expectedChunks = [
             // chunk 1

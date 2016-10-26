@@ -2,8 +2,9 @@
 
 namespace PHPChunkit\Command;
 
-use PHPChunkit\ChunkedFunctionalTests;
+use PHPChunkit\ChunkedTests;
 use PHPChunkit\TestChunker;
+use PHPChunkit\TestFinder;
 use PHPChunkit\TestRunner;
 use PHPChunkit\Configuration;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -11,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class Functional
+class Run
 {
     /**
      * @var TestRunner
@@ -42,20 +43,25 @@ class Functional
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $stopwatch = new Stopwatch();
-        $stopwatch->start('Functional Tests');
+        $stopwatch->start('Tests');
 
         $verbose = $output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
 
         $chunk = $input->getOption('chunk');
         $numChunks = $input->getOption('num-chunks');
+        $groups = $input->getOption('group');
+        $excludeGroups = $input->getOption('exclude-group');
+        $changed = $input->getOption('changed');
 
-        $chunkedFunctionalTests = $this->chunkFunctionalTests(
-            $numChunks, $chunk
+        $testFiles = $this->findTestFiles($groups, $excludeGroups, $changed);
+
+        $chunkedTests = $this->chunkTestFiles(
+            $testFiles, $numChunks, $chunk
         );
 
-        $chunks = $chunkedFunctionalTests->getChunks();
-        $testsPerChunk = $chunkedFunctionalTests->getTestsPerChunk();
-        $totalTests = $chunkedFunctionalTests->getTotalTests();
+        $chunks = $chunkedTests->getChunks();
+        $testsPerChunk = $chunkedTests->getTestsPerChunk();
+        $totalTests = $chunkedTests->getTotalTests();
 
         $output->writeln(sprintf('Total Tests: <info>%s</info>', $totalTests));
         $output->writeln(sprintf('Number of Chunks Configured: <info>%s</info>', $numChunks));
@@ -120,7 +126,7 @@ class Functional
             }
         }
 
-        $event = $stopwatch->stop('Functional Tests');
+        $event = $stopwatch->stop('Tests');
 
         $output->writeln('');
         $output->writeln(sprintf('Time: %s seconds, Memory: %s',
@@ -157,32 +163,56 @@ class Functional
             $progressBar, $outputBuffer, $verbose
         );
 
-        $command = $this->createFunctionalChunkCommand($chunk);
+        $command = $this->createChunkCommand($chunk);
 
         return $this->testRunner->runPhpunit($command, $env, $callback);
     }
 
-    private function chunkFunctionalTests(int $numChunks, int $chunk = null) : ChunkedFunctionalTests
+    private function chunkTestFiles(
+        array $testFiles,
+        int $numChunks,
+        int $chunk = null) : ChunkedTests
     {
-        $chunkedFunctionalTests = (new ChunkedFunctionalTests())
+        $chunkedTests = (new ChunkedTests())
             ->setNumChunks($numChunks)
             ->setChunk($chunk)
         ;
 
         $testChunker = new TestChunker($this->configuration->getTestsDirectory());
 
-        $testChunker->chunkFunctionalTests($chunkedFunctionalTests);
+        $testChunker->chunkTestFiles($chunkedTests, $testFiles);
 
-        return $chunkedFunctionalTests;
+        return $chunkedTests;
     }
 
-    private function createFunctionalChunkCommand(array $chunk) : string
+    private function findTestFiles(array $groups, array $excludeGroups, bool $changed)
+    {
+        $testFinder = new TestFinder($this->configuration->getTestsDirectory());
+
+        if ($groups) {
+            $testFiles = $testFinder->findTestFilesInGroups($groups);
+        } elseif ($excludeGroups) {
+            $testFiles = $testFinder->findTestFilesExcludingGroups($excludeGroups);
+        } elseif ($changed) {
+            $testFiles = $testFinder->findChangedFiles();
+        } else {
+            $testFiles = $testFinder->findAllTestFiles();
+        }
+
+        if (!$testFiles) {
+            throw new \InvalidArgumentException('No tests found.');
+        }
+
+        return $testFiles;
+    }
+
+    private function createChunkCommand(array $chunk) : string
     {
         $files = $this->buildFilesFromChunk($chunk);
 
         $config = $this->testRunner->generatePhpunitXml($files);
 
-        return sprintf('-c %s --group functional', $config);
+        return sprintf('-c %s', $config);
     }
 
     private function countNumTestsInChunk(array $chunk) : int

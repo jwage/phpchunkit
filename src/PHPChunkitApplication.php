@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TesterApplication
+class PHPChunkitApplication
 {
     /**
      * @var Application
@@ -27,30 +27,6 @@ class TesterApplication
     {
         $databaseSandbox = new DatabaseSandbox();
         $testRunner = new TestRunner($this->app, $input, $output, $this->configuration);
-
-        $this->app->register('all')
-            ->setDescription('Run the unit and functional test suites.')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode')
-            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for each chunk', '1.5G')
-            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error')
-            ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases before running tests')
-            ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Configure unique names')
-            ->addOption('chunk', null, InputOption::VALUE_REQUIRED, 'Run a specific chunk of tests.')
-            ->addOption('num-chunks', null, InputOption::VALUE_REQUIRED, 'The number of chunks to run tests in.', 14)
-            ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed')
-            ->setCode([new Command\All($testRunner), 'execute'])
-        ;
-
-        $this->app->register('changed')
-            ->setDescription('Run the changed tests.')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
-            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for each chunk', '750M')
-            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error')
-            ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed')
-            ->setCode(function($input, $output) use ($testRunner) {
-                return $testRunner->runChangedFiles();
-            })
-        ;
 
         $this->app->register('filter')
             ->setDescription('Run tests that match the filter.')
@@ -85,28 +61,20 @@ class TesterApplication
             ->setCode([new Command\TestWatcher($testRunner, $this->configuration), 'execute'])
         ;
 
-        $this->app->register('unit')
-            ->setDescription('Run the unit test suite.')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode')
-            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for each chunk', '750M')
-            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error')
-            ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed')
-            ->setCode(function($input, $output) use ($testRunner) {
-                return $testRunner->runPhpunit('--exclude-group functional');
-            })
-        ;
-
-        $this->app->register('functional')
-            ->setDescription('Run the functional test suite.')
+        $this->app->register('run')
+            ->setDescription('Run tests.')
             ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode')
             ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for each chunk', '1.5G')
             ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error')
             ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases before running tests')
             ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Configure unique names')
             ->addOption('chunk', null, InputOption::VALUE_REQUIRED, 'Run a specific chunk of tests.')
-            ->addOption('num-chunks', null, InputOption::VALUE_REQUIRED, 'The number of chunks to run tests in.', 14)
+            ->addOption('num-chunks', null, InputOption::VALUE_REQUIRED, 'The number of chunks to run tests in.', 1)
             ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed')
-            ->setCode([new Command\Functional($testRunner, $this->configuration), 'execute'])
+            ->addOption('group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests in these groups.')
+            ->addOption('exclude-group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests excluding these groups.')
+            ->addOption('changed', null, InputOption::VALUE_NONE, 'Run changed tests.')
+            ->setCode([new Command\Run($testRunner, $this->configuration), 'execute'])
         ;
 
         $this->app->register('create-dbs')
