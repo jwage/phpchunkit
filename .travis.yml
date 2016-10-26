@@ -24,3 +24,7 @@ script:
 git:
   depth: 1
 
+notifications:
+  irc:
+    - "irc.freenode.net#phpchunkit"
+
