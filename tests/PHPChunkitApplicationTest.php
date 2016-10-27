@@ -31,11 +31,12 @@ class PHPChunkitApplicationTest extends BaseTest
 
         $this->assertTrue($phpChunkitApplication->ran);
 
-        $this->assertCount(6, $symfonyApplication->all());
+        $this->assertCount(7, $symfonyApplication->all());
         $this->assertTrue($symfonyApplication->has('watch'));
         $this->assertTrue($symfonyApplication->has('run'));
         $this->assertTrue($symfonyApplication->has('create-dbs'));
         $this->assertTrue($symfonyApplication->has('sandbox'));
+        $this->assertTrue($symfonyApplication->has('generate'));
     }
 }
 

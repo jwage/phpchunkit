@@ -176,6 +176,14 @@ Create databases:
 
     ./bin/phpchunkit create-dbs
 
+Generate a test skeleton from a class:
+
+    ./bin/phpchunkit generate "MyProject\ClassName"
+
+Save the generated test to a file:
+
+    ./bin/phpchunkit generate "MyProject\ClassName" --file=tests/MyProject/Test/ClassNameTest.php
+
 ## Screenshot
 
 ![PHPChunkit Screenshot](https://raw.githubusercontent.com/jwage/PHPChunkit/master/docs/phpchunkit.png)
