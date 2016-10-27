@@ -42,7 +42,7 @@ chunk across the 2 servers with 5 parallel jobs running on each server:
 
 ## Screenshot
 
-![PHPChunkit Screenshot](https://raw.githubusercontent.com/jwage/PHPChunkit/master/docs/phpchunkit.png)
+![PHPChunkit Screenshot](https://raw.githubusercontent.com/jwage/PHPChunkit/master/docs/phpchunkit.png?1)
 
 ## Installation
 
