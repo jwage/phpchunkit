@@ -179,28 +179,37 @@ class Run implements CommandInterface
         }
 
         if ($parallel) {
-            foreach ($processes as $chunkNum => $process) {
-                $process->wait();
+            $runningProcesses = $processes;
 
-                $codes[] = $code = $process->getExitCode();
-
-                if ($code) {
-                    $numChunkFailures++;
-
-                    $output->writeln(sprintf('Chunk #%s <error>FAILED</error>', $chunkNum));
-
-                    $output->writeln('');
-                    $output->write($process->getOutput());
-
-                    if ($input->getOption('stop')) {
-                        return $code;
+            while (count($runningProcesses)) {
+                foreach ($runningProcesses as $chunkNum => $process) {
+                    if ($process->isRunning()) {
+                        continue;
                     }
-                } else {
-                    $output->writeln(sprintf('Chunk #%s <info>PASSED</info>', $chunkNum));
 
-                    if ($verbose) {
+                    // remove chunk process from $runningProcesses
+                    unset($runningProcesses[$chunkNum]);
+
+                    $codes[] = $code = $process->getExitCode();
+
+                    if ($code) {
+                        $numChunkFailures++;
+
+                        $output->writeln(sprintf('Chunk #%s <error>FAILED</error>', $chunkNum));
+
                         $output->writeln('');
                         $output->write($process->getOutput());
+
+                        if ($input->getOption('stop')) {
+                            return $code;
+                        }
+                    } else {
+                        $output->writeln(sprintf('Chunk #%s <info>PASSED</info>', $chunkNum));
+
+                        if ($verbose) {
+                            $output->writeln('');
+                            $output->write($process->getOutput());
+                        }
                     }
                 }
             }
