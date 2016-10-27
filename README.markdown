@@ -40,6 +40,10 @@ chunk across the 2 servers with 5 parallel jobs running on each server:
     ./bin/phpchunkit run --num-chunks=10 --chunk=9 --sandbox --create-dbs
     ./bin/phpchunkit run --num-chunks=10 --chunk=10 --sandbox --create-dbs
 
+## Screenshot
+
+![PHPChunkit Screenshot](https://raw.githubusercontent.com/jwage/PHPChunkit/master/docs/phpchunkit.png)
+
 ## Installation
 
 Install with composer:
@@ -183,10 +187,6 @@ Generate a test skeleton from a class:
 Save the generated test to a file:
 
     ./bin/phpchunkit generate "MyProject\ClassName" --file=tests/MyProject/Test/ClassNameTest.php
-
-## Screenshot
-
-![PHPChunkit Screenshot](https://raw.githubusercontent.com/jwage/PHPChunkit/master/docs/phpchunkit.png)
 
 ## Demo Project
 
