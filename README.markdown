@@ -63,9 +63,9 @@ listeners. You can listen for the following events:
 
 Take a look at the listeners implemented in this projects test suite for an example:
 
-- [SandboxPrepare.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/SandboxPrepare.php)
-- [DatabasesCreate.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/DatabasesCreate.php)
-- [SandboxCleanup.php](https://github.com/jwage/phpchunkit/blob/master/tests/PHPChunkit/Test/Listener/SandboxCleanup.php)
+- [SandboxPrepare.php](https://github.com/jwage/phpchunkit/blob/master/tests/Listener/SandboxPrepare.php)
+- [DatabasesCreate.php](https://github.com/jwage/phpchunkit/blob/master/tests/Listener/DatabasesCreate.php)
+- [SandboxCleanup.php](https://github.com/jwage/phpchunkit/blob/master/tests/Listener/SandboxCleanup.php)
 
 ### Configuration
 
@@ -102,7 +102,7 @@ Here is an example `phpchunkit.xml` file. Place this in the root of your project
 ```
 
 The `tests/phpchunkit_bootstrap.php` file is loaded after the XML is loaded
-and gives you the ability to do more advanced things with the [Configuration](https://github.com/jwage/phpchunkit/blob/master/src/PHPChunkit/Configuration.php).
+and gives you the ability to do more advanced things with the [Configuration](https://github.com/jwage/phpchunkit/blob/master/src/Configuration.php).
 
 Here is an example:
 
