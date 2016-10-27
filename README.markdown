@@ -174,23 +174,23 @@ Run a specific chunk of functional tests:
 
     ./bin/phpchunkit run --num-chunks=5 --chunk=1
 
-Watch your code for changes and run tests:
-
-    ./bin/phpchunkit watch
-
 Run tests that match a filter:
 
-    ./bin/phpchunkit filter BuildSandbox
+    ./bin/phpchunkit run --filter=BuildSandbox
 
 Run a specific file:
 
-    ./bin/phpchunkit file tests/Command/BuildSandboxTest.php
+    ./bin/phpchunkit run --file=tests/Command/BuildSandboxTest.php
 
 Run tests for changed files:
 
 > Note: This relies on git to know which files have changed.
 
     ./bin/phpchunkit run --changed
+
+Watch your code for changes and run tests:
+
+    ./bin/phpchunkit watch
 
 Create databases:
 

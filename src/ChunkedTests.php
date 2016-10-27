@@ -2,6 +2,9 @@
 
 namespace PHPChunkit;
 
+/**
+ * @testClass PHPChunkit\Test\ChunkedTestsTest
+ */
 class ChunkedTests
 {
     /**
@@ -12,7 +15,7 @@ class ChunkedTests
     /**
      * @var int
      */
-    private $numChunks;
+    private $numChunks = 1;
 
     /**
      * @var int
@@ -52,7 +55,7 @@ class ChunkedTests
     /**
      * @return int
      */
-    public function getNumChunks()
+    public function getNumChunks() : int
     {
         return $this->numChunks;
     }
@@ -92,7 +95,7 @@ class ChunkedTests
     /**
      * @return []
      */
-    public function getChunks()
+    public function getChunks() : array
     {
         return $this->chunks;
     }
@@ -112,7 +115,7 @@ class ChunkedTests
     /**
      * @return int
      */
-    public function getTotalTests()
+    public function getTotalTests() : int
     {
         return $this->totalTests;
     }

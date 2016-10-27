@@ -2,45 +2,50 @@
 
 namespace PHPChunkit\Test;
 
+use PHPChunkit\FileClassesHelper;
 use PHPChunkit\TestCounter;
 use PHPChunkit\TestFinder;
 
 class TestCounterTest extends BaseTest
 {
     /**
-     * @var string
+     * @var FileClassesHelper
      */
-    private $testsDirectory;
+    private $fileClassesHelper;
 
     /**
      * @var TestRunner
      */
     private $testCounter;
 
-    /**
-     * @var TestFinder
-     */
-    private $testFinder;
-
     protected function setUp()
     {
-        $this->testsDirectory = $this->getTestsDirectory();
-
-        $this->testCounter = new TestCounter($this->testsDirectory);
-        $this->testFinder = new TestFinder($this->testsDirectory);
+        $this->fileClassesHelper = $this->createMock(FileClassesHelper::class);
+        $this->testCounter = new TestCounter($this->fileClassesHelper);
     }
 
     public function testCountNumTestsInFile()
     {
+        $this->fileClassesHelper->expects($this->once())
+            ->method('getFileClasses')
+            ->with(__FILE__)
+            ->willReturn([
+                TestCounterTest::class
+            ]);
+
         $this->assertEquals(9, $this->testCounter->countNumTestsInFile(__FILE__));
     }
 
     public function testCountTotalTestsInFiles()
     {
+        $this->fileClassesHelper->expects($this->once())
+            ->method('getFileClasses')
+            ->with(__FILE__)
+            ->willReturn([
+                TestCounterTest::class
+            ]);
+
         $this->assertEquals(9, $this->testCounter->countTotalTestsInFiles([__FILE__]));
-        $this->assertEquals(32, $this->testCounter->countTotalTestsInFiles(
-            $this->testFinder->findTestFilesInGroups(['functional'])
-        ));
     }
 
     public function testCount1()

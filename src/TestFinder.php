@@ -2,16 +2,30 @@
 
 namespace PHPChunkit;
 
+/**
+ * @testClass PHPChunkit\Test\TestFinderTest
+ */
 class TestFinder
 {
-    private $testsDirectory = '';
+    private $testsDirectory;
 
     public function __construct(string $testsDirectory)
     {
         $this->testsDirectory = $testsDirectory;
     }
 
-    public function findChangedFiles() : array
+    public function findTestFilesByFilter(string $filter)
+    {
+        $command = sprintf(
+            'find %s -name *%s* | grep "Test.php" | sort',
+            $this->testsDirectory,
+            $filter
+        );
+
+        return $this->shellExecute($command);
+    }
+
+    public function findChangedTestFiles() : array
     {
         $command = "git status --porcelain | grep -e '^\(.*\)Test.php$' | cut -c 3-";
 

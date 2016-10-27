@@ -2,6 +2,9 @@
 
 namespace PHPChunkit;
 
+/**
+ * @testClass PHPChunkit\Test\DatabaseSandboxTest
+ */
 class DatabaseSandbox
 {
     const SANDBOXED_DATABASE_NAME_PATTERN = '%s_%s';

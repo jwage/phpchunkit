@@ -5,6 +5,9 @@ namespace PHPChunkit;
 use InvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * @testClass PHPChunkit\Test\ConfigurationTest
+ */
 class Configuration
 {
     /**

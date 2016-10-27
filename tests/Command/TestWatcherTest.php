@@ -3,6 +3,7 @@
 namespace PHPChunkit\Test\Command;
 
 use PHPChunkit\Configuration;
+use PHPChunkit\FileClassesHelper;
 use PHPChunkit\TestRunner;
 use PHPChunkit\Command\TestWatcher;
 use PHPChunkit\Test\BaseTest;
@@ -32,10 +33,12 @@ class TestWatcherTest extends BaseTest
         $this->configuration = (new Configuration())
             ->setWatchDirectories([realpath(__DIR__.'/../..')])
         ;
+        $this->fileClassesHelper = $this->createMock(FileClassesHelper::class);
 
         $this->testWatcher = new TestWatcherStub(
             $this->testRunner,
-            $this->configuration
+            $this->configuration,
+            $this->fileClassesHelper
         );
     }
 
@@ -58,7 +61,7 @@ class TestWatcherStub extends TestWatcher
     /**
      * @return bool
      */
-    protected function while()
+    protected function while() : bool
     {
         $this->count++;
 

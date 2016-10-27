@@ -12,7 +12,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class Run
+/**
+ * @testClass PHPChunkit\Test\Command\RunTest
+ */
+class Run implements CommandInterface
 {
     /**
      * @var TestRunner
@@ -25,15 +28,31 @@ class Run
     private $configuration;
 
     /**
+     * @var TestChunker
+     */
+    private $testChunker;
+
+    /**
+     * @var TestFinder
+     */
+    private $testFinder;
+
+    /**
      * @param TestRunner      $testRunner
      * @param Configuration   $configuration
+     * @param TestChunker     $testChunker
+     * @param TestFinder      $testFinder
      */
     public function __construct(
         TestRunner $testRunner,
-        Configuration $configuration)
+        Configuration $configuration,
+        TestChunker $testChunker,
+        TestFinder $testFinder)
     {
         $this->testRunner = $testRunner;
         $this->configuration = $configuration;
+        $this->testChunker = $testChunker;
+        $this->testFinder = $testFinder;
     }
 
     /**
@@ -47,28 +66,19 @@ class Run
 
         $verbose = $output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
 
-        $chunk = $input->getOption('chunk');
-        $numChunks = $input->getOption('num-chunks');
-        $groups = $input->getOption('group');
-        $excludeGroups = $input->getOption('exclude-group');
-        $changed = $input->getOption('changed');
-
-        $testFiles = $this->findTestFiles($groups, $excludeGroups, $changed);
-
-        $chunkedTests = $this->chunkTestFiles(
-            $testFiles, $numChunks, $chunk
-        );
+        $chunkedTests = $this->chunkTestFiles($input);
 
         $chunks = $chunkedTests->getChunks();
         $testsPerChunk = $chunkedTests->getTestsPerChunk();
         $totalTests = $chunkedTests->getTotalTests();
+        $numChunks = $chunkedTests->getNumChunks();
 
         $output->writeln(sprintf('Total Tests: <info>%s</info>', $totalTests));
         $output->writeln(sprintf('Number of Chunks Configured: <info>%s</info>', $numChunks));
         $output->writeln(sprintf('Number of Chunks Produced: <info>%s</info>', count($chunks)));
         $output->writeln(sprintf('Tests Per Chunk: <info>~%s</info>', $testsPerChunk));
 
-        if ($chunk) {
+        if ($chunk = $chunkedTests->getChunk()) {
             $output->writeln(sprintf('Chunk: <info>%s</info>', $chunk));
         }
 
@@ -168,35 +178,43 @@ class Run
         return $this->testRunner->runPhpunit($command, $env, $callback);
     }
 
-    private function chunkTestFiles(
-        array $testFiles,
-        int $numChunks,
-        int $chunk = null) : ChunkedTests
+    private function chunkTestFiles(InputInterface $input) : ChunkedTests
     {
+        $testFiles = $this->findTestFiles($input);
+
+        $numChunks = $input->getOption('num-chunks');
+        $chunk = $input->getOption('chunk');
+
         $chunkedTests = (new ChunkedTests())
             ->setNumChunks($numChunks)
             ->setChunk($chunk)
         ;
 
-        $testChunker = new TestChunker($this->configuration->getTestsDirectory());
-
-        $testChunker->chunkTestFiles($chunkedTests, $testFiles);
+        $this->testChunker->chunkTestFiles($chunkedTests, $testFiles);
 
         return $chunkedTests;
     }
 
-    private function findTestFiles(array $groups, array $excludeGroups, bool $changed)
+    private function findTestFiles(InputInterface $input)
     {
-        $testFinder = new TestFinder($this->configuration->getTestsDirectory());
+        $groups = $input->getOption('group');
+        $excludeGroups = $input->getOption('exclude-group');
+        $changed = $input->getOption('changed');
+        $filter = $input->getOption('filter');
+        $files = $input->getOption('file');
 
         if ($groups) {
-            $testFiles = $testFinder->findTestFilesInGroups($groups);
+            $testFiles = $this->testFinder->findTestFilesInGroups($groups);
         } elseif ($excludeGroups) {
-            $testFiles = $testFinder->findTestFilesExcludingGroups($excludeGroups);
+            $testFiles = $this->testFinder->findTestFilesExcludingGroups($excludeGroups);
         } elseif ($changed) {
-            $testFiles = $testFinder->findChangedFiles();
+            $testFiles = $this->testFinder->findChangedTestFiles();
+        } elseif ($filter) {
+            $testFiles = $this->testFinder->findTestFilesByFilter($filter);
+        } elseif ($files) {
+            $testFiles = $files;
         } else {
-            $testFiles = $testFinder->findAllTestFiles();
+            $testFiles = $this->testFinder->findAllTestFiles();
         }
 
         if (!$testFiles) {

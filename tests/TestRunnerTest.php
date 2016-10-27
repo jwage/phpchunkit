@@ -59,15 +59,6 @@ class TestRunnerTest extends BaseTest
         $this->testRunner->process = $this->process;
     }
 
-    public function testGetFilteredFiles()
-    {
-        $files = [
-            'tests/DatabaseSandboxTest.php',
-        ];
-
-        $this->assertEquals($files, $this->testRunner->getFilteredFiles('DatabaseSandboxTest.php'));
-    }
-
     public function testGeneratePhpunitXml()
     {
         $files = [
@@ -90,44 +81,6 @@ class TestRunnerTest extends BaseTest
         ];
 
         $this->assertEquals($expectedFiles, $suiteFiles);
-    }
-
-    public function testRunFilteredFiles()
-    {
-        $filteredFiles = [
-            'tests/AllTest.php',
-        ];
-
-        $testRunner = $this->buildPartialMock(
-            TestRunnerStub::class,
-            [
-                'getFilteredFiles',
-                'generatePhpunitXml',
-                'runPhpunit',
-            ],
-            [
-                $this->app,
-                $this->input,
-                $this->output,
-                $this->configuration,
-            ]
-        );
-
-        $testRunner->expects($this->once())
-            ->method('getFilteredFiles')
-            ->with('AllTest')
-            ->will($this->returnValue($filteredFiles));
-
-        $testRunner->expects($this->once())
-            ->method('generatePhpunitXml')
-            ->will($this->returnValue('/path/to/phpunit.xml'));
-
-        $testRunner->expects($this->once())
-            ->method('runPhpunit')
-            ->with("-c '/path/to/phpunit.xml'")
-            ->will($this->returnValue(0));
-
-        $this->assertEquals(0, $testRunner->runFilteredFiles('AllTest'));
     }
 
     public function testRunTestFiles()
@@ -220,36 +173,6 @@ class TestRunnerTest extends BaseTest
             ->willReturn(0);
 
         $this->assertEquals(0, $this->testRunner->runTestCommand('test', ['test' => true]));
-    }
-
-    public function testFlags()
-    {
-        $this->input->expects($this->at(0))
-            ->method('getOption')
-            ->with('memory-limit')
-            ->will($this->returnValue('256M'));
-
-        $this->input->expects($this->at(1))
-            ->method('getOption')
-            ->with('stop')
-            ->will($this->returnValue(true));
-
-        $this->input->expects($this->at(2))
-            ->method('getOption')
-            ->with('debug')
-            ->will($this->returnValue(true));
-
-        $this->output->expects($this->once())
-            ->method('getVerbosity')
-            ->will($this->returnValue(Output::VERBOSITY_DEBUG));
-
-        $this->output->expects($this->once())
-            ->method('isDecorated')
-            ->will($this->returnValue(true));
-
-        $expectedFlags = sprintf("-d memory_limit='256M' --stop-on-failure --stop-on-error --verbose --debug --colors", $this->configuration->getRootDir());
-
-        $this->assertEquals($expectedFlags, $this->testRunner->flags());
     }
 }
 
