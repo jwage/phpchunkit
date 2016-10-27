@@ -3,6 +3,7 @@
 namespace PHPChunkit;
 
 use PHPChunkit\Command;
+use PHPChunkit\GenerateTestClass;
 use Pimple\Container as PimpleContainer;
 use Symfony\Component\Console\Application;
 
@@ -83,6 +84,10 @@ class Container extends PimpleContainer
                 $this['phpchunkit.test_runner'],
                 $this['phpchunkit.event_dispatcher']
             );
+        };
+
+        $this['phpchunkit.command.generate_test'] = function() {
+            return new Command\Generate(new GenerateTestClass());
         };
 
         $this['phpchunkit.file_classes_helper'] = function() {

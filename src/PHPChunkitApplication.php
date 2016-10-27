@@ -76,6 +76,13 @@ class PHPChunkitApplication
             ->setCode([$this->container['phpchunkit.command.build_sandbox'], 'execute'])
         ;
 
+        $this->register('generate')
+            ->setDescription('Generate a test skeleton from a class.')
+            ->addArgument('class', InputArgument::REQUIRED, 'Class to generate test for.')
+            ->addOption('file', null, InputOption::VALUE_REQUIRED, 'File path to write test to.')
+            ->setCode([$this->container['phpchunkit.command.generate_test'], 'execute'])
+        ;
+
         return $this->runSymfonyApplication($input, $output);
     }
 

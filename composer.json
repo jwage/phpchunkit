@@ -24,7 +24,9 @@
         "symfony/finder": "^3.1",
         "symfony/event-dispatcher": "^3.1",
         "phpunit/php-token-stream": "^1.4",
-        "pimple/pimple": "^3.0"
+        "pimple/pimple": "^3.0",
+        "doctrine/inflector": "^1.1",
+        "twig/twig": "^1.27"
     },
     "require-dev": {
         "ext-pdo": "*",
