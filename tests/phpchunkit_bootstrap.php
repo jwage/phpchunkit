@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
 use PHPChunkit\Events;
 
 // Manipulate $configuration which is an instance of PHPChunkit\Configuration

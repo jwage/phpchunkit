@@ -8,32 +8,36 @@ use PHPChunkit\PHPChunkit;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class RootDirFinder
+class AutoloaderFinder
 {
     const AUTOLOADER_PATH = 'vendor/autoload.php';
 
-    public function findRootDir()
+    public function findAutoloaderPath()
     {
-        $path = getcwd();
+        $directories = [
+            __DIR__.'/..',
+            __DIR__.'/../../../..',
+            getcwd()
+        ];
 
-        if ($this->isAutoloaderPresent($path)) {
-            return $path;
+        foreach ($directories as $directory) {
+            $autoloadPath = sprintf('%s/%s', $directory, self::AUTOLOADER_PATH);
+
+            if (file_exists($autoloadPath)) {
+                return $autoloadPath;
+            }
         }
 
         throw new \RuntimeException(sprintf('Could not find path to vendor/autoload.php'));
     }
-
-    private function isAutoloaderPresent(string $path) : bool
-    {
-        return file_exists(sprintf('%s/%s', $path, self::AUTOLOADER_PATH));
-    }
 }
 
-$rootDir = (new RootDirFinder())->findRootDir();
+$autoloaderPath = (new AutoloaderFinder())
+    ->findAutoloaderPath();
 
-require_once sprintf('%s/%s', $rootDir, RootDirFinder::AUTOLOADER_PATH);
+require_once $autoloaderPath;
 
-(new PHPChunkit($rootDir, new Container()))
+(new PHPChunkit(getcwd(), new Container()))
     ->getContainer()['phpchunkit.application']
     ->run(
         new ArgvInput(),
