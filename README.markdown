@@ -150,6 +150,10 @@ Run just unit tests:
 
     ./bin/phpchunkit run --exclude-group=functional
 
+Run test chunks in parallel:
+
+    ./bin/phpchunkit run --exclude-group=functional --num-chunks=4 --parallel
+
 Run all functional tests:
 
     ./bin/phpchunkit run --group=functional

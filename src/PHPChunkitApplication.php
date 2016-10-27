@@ -59,6 +59,7 @@ class PHPChunkitApplication
             ->addOption('group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests in these groups.')
             ->addOption('exclude-group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests excluding these groups.')
             ->addOption('changed', null, InputOption::VALUE_NONE, 'Run changed tests.')
+            ->addOption('parallel', null, InputOption::VALUE_NONE, 'Run test chunks in parallel.')
             ->addOption('filter', null, InputOption::VALUE_REQUIRED, 'Run tests that match the given filter.')
             ->addOption('file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run test file.')
             ->setCode([$this->container['phpchunkit.command.run'], 'execute'])
