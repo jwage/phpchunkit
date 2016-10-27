@@ -10,6 +10,7 @@ use PHPChunkit\Configuration;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -65,6 +66,8 @@ class Run implements CommandInterface
         $stopwatch->start('Tests');
 
         $verbose = $output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
+        $parallel = $input->getOption('parallel');
+        $showProgressBar = !$verbose && !$parallel;
 
         $chunkedTests = $this->chunkTestFiles($input);
 
@@ -98,11 +101,11 @@ class Run implements CommandInterface
         }
 
         $codes = [];
+        $processes = [];
+        $numChunkFailures = 0;
 
         foreach ($chunks as $i => $chunk) {
             $chunkNum = $i + 1;
-
-            $output->writeln(sprintf('Running chunk <info>#%s</info>', $chunkNum));
 
             // drop and recreate dbs before running this chunk of tests
             if ($input->getOption('create-dbs')) {
@@ -111,30 +114,99 @@ class Run implements CommandInterface
                 ]);
             }
 
-            $outputBuffer = '';
 
-            $progressBar = !$verbose ? $this->createChunkProgressBar($output, $chunk) : null;
+            $progressBar = $showProgressBar
+                ? $this->createChunkProgressBar($output, $chunk)
+                : null
+            ;
 
-            $codes[] = $code = $this->runChunk(
-                $progressBar, $chunk, $outputBuffer, $verbose, $env
+            if ($showProgressBar) {
+                $progressBar = $this->createChunkProgressBar($output, $chunk);
+
+                $callback = $this->createProgressCallback($progressBar);
+            } else {
+                if ($verbose) {
+                    $callback = function($type, $out) use ($output) {
+                        $output->write($out);
+                    };
+                } else {
+                    $callback = null;
+                }
+            }
+
+            $processes[$chunkNum] = $process = $this->getChunkProcess(
+                $chunk, $env
             );
 
-            if ($code && $input->getOption('stop')) {
-                $output->writeln('');
-                $output->writeln($outputBuffer);
+            if ($parallel) {
+                $output->writeln(sprintf('Starting chunk <info>#%s</info>', $chunkNum));
 
-                return $code;
-            }
+                $process->start($callback);
 
-            if (!$verbose) {
-                $progressBar->finish();
-                $output->writeln('');
-            }
+            } else {
+                if ($verbose) {
+                    $output->writeln('');
+                    $output->writeln(sprintf('Running chunk <info>#%s</info>', $chunkNum));
+                }
 
-            if ($code) {
-                $output->writeln($outputBuffer);
+                $codes[] = $code = $process->run($callback);
+
+                if ($code) {
+                    $numChunkFailures++;
+
+                    if ($verbose) {
+                        $output->writeln(sprintf('Chunk #%s <error>FAILED</error>', $chunkNum));
+                    }
+
+                    if ($input->getOption('stop')) {
+                        $output->writeln('');
+                        $output->writeln($process->getOutput());
+
+                        return $code;
+                    }
+                }
+
+                if (!$verbose) {
+                    $progressBar->finish();
+                    $output->writeln('');
+                }
+
+                if ($code) {
+                    $output->writeln('');
+                    $output->writeln($process->getOutput());
+                }
             }
         }
+
+        if ($parallel) {
+            foreach ($processes as $chunkNum => $process) {
+                $process->wait();
+
+                $codes[] = $code = $process->getExitCode();
+
+                if ($code) {
+                    $numChunkFailures++;
+
+                    $output->writeln(sprintf('Chunk #%s <error>FAILED</error>', $chunkNum));
+
+                    $output->writeln('');
+                    $output->write($process->getOutput());
+
+                    if ($input->getOption('stop')) {
+                        return $code;
+                    }
+                } else {
+                    $output->writeln(sprintf('Chunk #%s <info>PASSED</info>', $chunkNum));
+
+                    if ($verbose) {
+                        $output->writeln('');
+                        $output->write($process->getOutput());
+                    }
+                }
+            }
+        }
+
+        $failed = array_sum($codes) ? true : false;
 
         $event = $stopwatch->stop('Tests');
 
@@ -145,9 +217,14 @@ class Run implements CommandInterface
         ));
 
         $output->writeln('');
-        $output->writeln(sprintf('OK (%s chunks, %s tests)', $numChunks, $totalTests));
+        $output->writeln(sprintf('%s (%s chunks, %s tests%s)',
+            $failed ? '<error>FAILED</error>' : '<info>PASSED</info>',
+            $numChunks,
+            $totalTests,
+            $failed ? sprintf(', Failed chunks: %s', $numChunkFailures) : ''
+        ));
 
-        return array_sum($codes) ? 1 : 0;
+        return $failed ? 1 : 0;
     }
 
     private function formatBytes($size, $precision = 2)
@@ -162,20 +239,11 @@ class Run implements CommandInterface
         return round(pow(1024, $base - floor($base)), $precision).$suffixes[floor($base)];
     }
 
-    private function runChunk(
-        ProgressBar $progressBar = null,
-        array $chunk,
-        &$outputBuffer,
-        bool $verbose,
-        array $env) : int
+    private function getChunkProcess(array $chunk, array $env) : Process
     {
-        $callback = $this->createProgressCallback(
-            $progressBar, $outputBuffer, $verbose
-        );
-
         $command = $this->createChunkCommand($chunk);
 
-        return $this->testRunner->runPhpunit($command, $env, $callback);
+        return $this->testRunner->getPhpunitProcess($command, $env);
     }
 
     private function chunkTestFiles(InputInterface $input) : ChunkedTests
@@ -258,14 +326,10 @@ class Run implements CommandInterface
         return $progressBar;
     }
 
-    private function createProgressCallback(ProgressBar $progressBar = null, &$outputBuffer, $verbose)
+    private function createProgressCallback(ProgressBar $progressBar)
     {
-        return function ($buffer) use ($progressBar, &$outputBuffer, $verbose) {
-            if ($verbose) {
-                echo $buffer;
-            } else {
-                $outputBuffer .= $buffer;
-
+        return function ($type, $buffer) use ($progressBar) {
+            if ($progressBar) {
                 if (in_array($buffer, ['F', 'E'])) {
                     $progressBar->setBarCharacter('<fg=red>=</>');
                 }

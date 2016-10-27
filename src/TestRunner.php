@@ -145,6 +145,23 @@ class TestRunner
 
     /**
      * @param string $command
+     * @param array  $env
+     *
+     * @return Process
+     */
+    public function getPhpunitProcess($command, array $env = []) : Process
+    {
+        $command = sprintf('%s %s %s',
+            $this->configuration->getPhpunitPath(),
+            $command,
+            $this->flags($this->input, $this->output)
+        );
+
+        return $this->getProcess($command, $env);
+    }
+
+    /**
+     * @param string $command
      * @param bool   $throw
      * @param []     $env
      *
@@ -152,21 +169,7 @@ class TestRunner
      */
     public function run($command, $throw = true, array $env = [], \Closure $callback = null)
     {
-        foreach ($env as $key => $value) {
-            $command = sprintf('export %s=%s && %s', $key, $value, $command);
-        }
-
-        $pretty = str_replace(
-            [__DIR__, ' --colors', ' --ansi'],
-            [basename(__DIR__), '', ''],
-            $command
-        );
-
-        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-            $this->output->writeln('+ <comment>'.$pretty.'</comment>');
-        }
-
-        $process = $this->createProcess($command);
+        $process = $this->getProcess($command, $env);
 
         if ($callback === null) {
             $callback = function ($output) {
@@ -183,6 +186,19 @@ class TestRunner
         }
 
         return $process->getExitCode();
+    }
+
+    public function getProcess($command, array $env = []) : Process
+    {
+        foreach ($env as $key => $value) {
+            $command = sprintf('export %s=%s && %s', $key, $value, $command);
+        }
+
+        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+            $this->output->writeln('+ <comment>'.$command.'</comment>');
+        }
+
+        return $this->createProcess($command);
     }
 
     /**
