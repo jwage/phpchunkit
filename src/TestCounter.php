@@ -48,6 +48,8 @@ class TestCounter
         $classes = $this->fileClassesHelper->getFileClasses($file);
 
         if (!$classes) {
+            $this->cache[$cacheKey] = $numTestsInFile;
+
             return $numTestsInFile;
         }
 
