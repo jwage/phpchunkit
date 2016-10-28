@@ -22,10 +22,3 @@ script:
 
 git:
   depth: 1
-
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.net#phpchunkit"
-    on_success: change
-
