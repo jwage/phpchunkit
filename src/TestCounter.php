@@ -15,15 +15,34 @@ class TestCounter
     private $fileClassesHelper;
 
     /**
+     * @var array
+     */
+    private $cache = [];
+
+    /**
+     * @var string
+     */
+    private $cachePath = '';
+
+    /**
      * @param FileClassesHelper $fileClassesHelper
      */
     public function __construct(FileClassesHelper $fileClassesHelper)
     {
         $this->fileClassesHelper = $fileClassesHelper;
+        $this->cachePath = sprintf('%s/testcounter.cache', sys_get_temp_dir());
+
+        $this->loadCache();
     }
 
     public function countNumTestsInFile(string $file) : int
     {
+        $cacheKey = $file.@filemtime($file);
+
+        if (isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
+
         $numTestsInFile = 0;
 
         $classes = $this->fileClassesHelper->getFileClasses($file);
@@ -70,7 +89,31 @@ class TestCounter
             }
         }
 
+        $this->cache[$cacheKey] = $numTestsInFile;
+
         return $numTestsInFile;
     }
-}
 
+    public function clearCache()
+    {
+        @unlink($this->cachePath);
+        $this->cache = [];
+    }
+
+    protected function loadCache()
+    {
+        if (file_exists($this->cachePath)) {
+            $this->cache = include($this->cachePath);
+        }
+    }
+
+    protected function writeCache()
+    {
+        file_put_contents($this->cachePath, '<?php return '.var_export($this->cache, true).';');
+    }
+
+    public function __destruct()
+    {
+        $this->writeCache();
+    }
+}
