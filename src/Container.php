@@ -97,6 +97,33 @@ class Container extends PimpleContainer
 
         $this->loadPHPChunkitBootstrap($configuration);
 
+        // try to guess watch directories
+        if (!$configuration->getWatchDirectories()) {
+            $paths = [
+                sprintf('%s/src', $configuration->getRootDir()),
+                sprintf('%s/lib', $configuration->getRootDir()),
+                sprintf('%s/tests', $configuration->getRootDir()),
+            ];
+
+            $watchDirectories = [];
+            foreach ($paths as $path) {
+                if (is_dir($path)) {
+                    $watchDirectories[] = $path;
+                }
+            }
+
+            $configuration->setWatchDirectories($watchDirectories);
+        }
+
+        // try to guess tests directory
+        if (!$configuration->getTestsDirectory()) {
+            $testsDirectory = sprintf('%s/tests', $configuration->getRootDir());
+
+            if (is_dir($testsDirectory)) {
+                $configuration->setTestsDirectory($testsDirectory);
+            }
+        }
+
         $configuration->throwExceptionIfConfigurationIncomplete();
 
         return $configuration;
@@ -151,6 +178,8 @@ class Container extends PimpleContainer
             }
 
             require_once $bootstrapPath;
+        } else {
+            require_once sprintf('%s/vendor/autoload.php', $configuration->getRootDir());
         }
     }
 }

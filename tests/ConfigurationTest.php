@@ -92,7 +92,7 @@ class ConfigurationTest extends BaseTest
 
     public function testSetGetPhpunitPath()
     {
-        $this->assertEquals('', $this->configuration->getPhpunitPath());
+        $this->assertEquals('vendor/bin/phpunit', $this->configuration->getPhpunitPath());
 
         $this->configuration->setPhpunitPath(__FILE__);
 

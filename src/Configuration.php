@@ -33,7 +33,7 @@ class Configuration
     /**
      * @var string
      */
-    private $phpunitPath = '';
+    private $phpunitPath = 'vendor/bin/phpunit';
 
     /**
      * @var null|EventDispatcher
