@@ -25,15 +25,16 @@ class TestChunker
         $chunk = $chunkedTests->getChunk();
         $numChunks = $chunkedTests->getNumChunks();
 
-        $totalTests = $this->testCounter->countTotalTestsInFiles($testFiles);
+        $fileTestCounts = $this->getTestFileCounts($testFiles);
 
+        $totalTests = array_sum($fileTestCounts);
         $testsPerChunk = round($totalTests / $numChunks);
 
         $chunks = [[]];
 
         $numTestsInChunk = 0;
         foreach ($testFiles as $file) {
-            $numTestsInFile = $this->testCounter->countNumTestsInFile($file);
+            $numTestsInFile = $fileTestCounts[$file];
 
             $chunkFile = [
                 'file' => $file,
@@ -65,5 +66,16 @@ class TestChunker
         $chunkedTests->setChunks($chunks);
         $chunkedTests->setTotalTests($totalTests);
         $chunkedTests->setTestsPerChunk($testsPerChunk);
+    }
+
+    private function getTestFileCounts(array $testFiles) : array
+    {
+        $fileTestCounts = [];
+
+        foreach ($testFiles as $file) {
+            $fileTestCounts[$file] = $this->testCounter->countNumTestsInFile($file);
+        }
+
+        return $fileTestCounts;
     }
 }

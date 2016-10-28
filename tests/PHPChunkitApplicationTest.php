@@ -21,6 +21,8 @@ class PHPChunkitApplicationTest extends BaseTest
         $container['phpchunkit.command.test_watcher'] = $this->createMock(CommandInterface::class);
         $container['phpchunkit.command.run'] = $this->createMock(CommandInterface::class);
         $container['phpchunkit.command.build_sandbox'] = $this->createMock(CommandInterface::class);
+        $container['phpchunkit.command.create_databases'] = $this->createMock(CommandInterface::class);
+        $container['phpchunkit.command.generate_test'] = $this->createMock(CommandInterface::class);
 
         $phpChunkitApplication =  new PHPChunkitApplicationStub($container);
 

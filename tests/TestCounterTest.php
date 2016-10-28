@@ -33,19 +33,7 @@ class TestCounterTest extends BaseTest
                 TestCounterTest::class
             ]);
 
-        $this->assertEquals(9, $this->testCounter->countNumTestsInFile(__FILE__));
-    }
-
-    public function testCountTotalTestsInFiles()
-    {
-        $this->fileClassesHelper->expects($this->once())
-            ->method('getFileClasses')
-            ->with(__FILE__)
-            ->willReturn([
-                TestCounterTest::class
-            ]);
-
-        $this->assertEquals(9, $this->testCounter->countTotalTestsInFiles([__FILE__]));
+        $this->assertEquals(8, $this->testCounter->countNumTestsInFile(__FILE__));
     }
 
     public function testCount1()

@@ -9,13 +9,9 @@ use Symfony\Component\Console\Application;
 
 class Container extends PimpleContainer
 {
-    public function __construct(array $values = array())
+    public function initialize()
     {
-        parent::__construct($values);
-
-        $this['phpchunkit.configuration'] = function() {
-            return $this->loadConfiguration();
-        };
+        $this['phpchunkit.configuration'] = $this->getConfiguration();
 
         $this['phpchunkit.symfony_application'] = function() {
             return new Application();
@@ -95,6 +91,17 @@ class Container extends PimpleContainer
         };
     }
 
+    private function getConfiguration() : Configuration
+    {
+        $configuration = $this->loadConfiguration();
+
+        $this->loadPHPChunkitBootstrap($configuration);
+
+        $configuration->throwExceptionIfConfigurationIncomplete();
+
+        return $configuration;
+    }
+
     private function loadConfiguration() : Configuration
     {
         $xmlPath = $this->findPHPChunkitXmlPath();
@@ -118,17 +125,6 @@ class Container extends PimpleContainer
         return array_filter($_SERVER['argv'], function ($arg) {
             return strpos($arg, 'sandbox') !== false;
         }) ? true : false;
-    }
-
-    private function getConfiguration() : Configuration
-    {
-        $configuration = $this->loadConfiguration();
-
-        $this->loadPHPChunkitBootstrap($configuration);
-
-        $configuration->throwExceptionIfConfigurationIncomplete();
-
-        return $configuration;
     }
 
     /**

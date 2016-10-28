@@ -32,6 +32,21 @@ class AutoloaderFinder
     }
 }
 
+// default to the run command
+if (isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] !== 'run' && $_SERVER['argv'][1][0] === '-') {
+    $args = $_SERVER['argv'];
+
+    $_SERVER['argv'] = [$args[0], 'run'];
+
+    unset($args[0]);
+
+    foreach ($args as $arg) {
+        $_SERVER['argv'][] = $arg;
+    }
+} elseif (!isset($_SERVER['argv'][1])) {
+    $_SERVER['argv'][1] = 'run';
+}
+
 $autoloaderPath = (new AutoloaderFinder())
     ->findAutoloaderPath();
 

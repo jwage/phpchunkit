@@ -45,6 +45,16 @@ class Configuration
      */
     private $databaseSandbox;
 
+    /**
+     * @var string
+     */
+    private $memoryLimit = '256M';
+
+    /**
+     * @var int
+     */
+    private $numChunks = 1;
+
     public static function createFromXmlFile(string $path) : self
     {
         if (!file_exists($path)) {
@@ -70,6 +80,14 @@ class Configuration
 
         if ($phpunitPath = (string) $attributes['phpunit-path']) {
             $configuration->setPhpunitPath($phpunitPath);
+        }
+
+        if ($memoryLimit = (string) $attributes['memory-limit']) {
+            $configuration->setMemoryLimit($memoryLimit);
+        }
+
+        if ($numChunks = (int) $attributes['num-chunks']) {
+            $configuration->setNumChunks($numChunks);
         }
 
         if ($watchDirectories = (array) $xml->{'watch-directories'}->{'watch-directory'}) {
@@ -227,6 +245,30 @@ class Configuration
         $this->getDatabaseSandbox()->setSandboxEnabled($sandboxEnabled);
 
         return $this;
+    }
+
+    public function setMemoryLimit(string $memoryLimit) : self
+    {
+        $this->memoryLimit = $memoryLimit;
+
+        return $this;
+    }
+
+    public function getMemoryLimit() : string
+    {
+        return $this->memoryLimit;
+    }
+
+    public function setNumChunks(int $numChunks) : self
+    {
+        $this->numChunks = $numChunks;
+
+        return $this;
+    }
+
+    public function getNumChunks() : int
+    {
+        return $this->numChunks;
     }
 
     public function setEventDispatcher(EventDispatcher $eventDispatcher) : self

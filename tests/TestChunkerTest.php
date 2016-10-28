@@ -38,10 +38,6 @@ class TestChunkerTest extends BaseTest
             ->setNumChunks(4)
         ;
 
-        $this->testCounter->expects($this->once())
-            ->method('countTotalTestsInFiles')
-            ->willReturn(32);
-
         $this->testCounter->expects($this->any())
             ->method('countNumTestsInFile')
             ->willReturn(4);
