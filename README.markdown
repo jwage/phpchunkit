@@ -26,19 +26,19 @@ chunk across the 2 servers with 5 parallel jobs running on each server:
 
 ### Jenkins Server #1 with 5 job workers
 
-    ./bin/phpchunkit run --num-chunks=10 --chunk=1 --sandbox --create-dbs
-    ./bin/phpchunkit run --num-chunks=10 --chunk=2 --sandbox --create-dbs
-    ./bin/phpchunkit run --num-chunks=10 --chunk=3 --sandbox --create-dbs
-    ./bin/phpchunkit run --num-chunks=10 --chunk=4 --sandbox --create-dbs
-    ./bin/phpchunkit run --num-chunks=10 --chunk=5 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=1 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=2 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=3 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=4 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=5 --sandbox --create-dbs
 
 ### Jenkins Server #2 with 5 job workers
 
-    ./bin/phpchunkit run --num-chunks=10 --chunk=6 --sandbox --create-dbs
-    ./bin/phpchunkit run --num-chunks=10 --chunk=7 --sandbox --create-dbs
-    ./bin/phpchunkit run --num-chunks=10 --chunk=8 --sandbox --create-dbs
-    ./bin/phpchunkit run --num-chunks=10 --chunk=9 --sandbox --create-dbs
-    ./bin/phpchunkit run --num-chunks=10 --chunk=10 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=6 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=7 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=8 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=9 --sandbox --create-dbs
+    ./bin/phpchunkit --num-chunks=10 --chunk=10 --sandbox --create-dbs
 
 ## Screenshot
 
@@ -144,37 +144,37 @@ $eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
 
 Run all tests:
 
-    ./bin/phpchunkit run
+    ./bin/phpchunkit
 
 Run just unit tests:
 
-    ./bin/phpchunkit run --exclude-group=functional
+    ./bin/phpchunkit --exclude-group=functional
 
 Run test chunks in parallel:
 
-    ./bin/phpchunkit run --exclude-group=functional --num-chunks=4 --parallel
+    ./bin/phpchunkit --exclude-group=functional --num-chunks=4 --parallel
 
 Run all functional tests:
 
-    ./bin/phpchunkit run --group=functional
+    ./bin/phpchunkit --group=functional
 
 Run a specific chunk of functional tests:
 
-    ./bin/phpchunkit run --num-chunks=5 --chunk=1
+    ./bin/phpchunkit --num-chunks=5 --chunk=1
 
 Run tests that match a filter:
 
-    ./bin/phpchunkit run --filter=BuildSandbox
+    ./bin/phpchunkit --filter=BuildSandbox
 
 Run a specific file:
 
-    ./bin/phpchunkit run --file=tests/Command/BuildSandboxTest.php
+    ./bin/phpchunkit --file=tests/Command/BuildSandboxTest.php
 
 Run tests for changed files:
 
 > Note: This relies on git to know which files have changed.
 
-    ./bin/phpchunkit run --changed
+    ./bin/phpchunkit --changed
 
 Watch your code for changes and run tests:
 

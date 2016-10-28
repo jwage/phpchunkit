@@ -56,7 +56,7 @@ class TestWatcher implements CommandInterface
         $lastTime = time();
 
         while ($this->while()) {
-            sleep(.5);
+            $this->sleep();
 
             $finder = $this->createFinder();
 
@@ -64,6 +64,11 @@ class TestWatcher implements CommandInterface
                 $lastTime = $this->checkFile($file, $lastTime);
             }
         }
+    }
+
+    protected function sleep()
+    {
+        sleep(.5);
     }
 
     protected function while() : bool

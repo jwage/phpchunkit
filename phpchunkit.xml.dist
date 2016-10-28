@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpchunkit bootstrap="./tests/phpchunkit_bootstrap.php" root-dir="./" tests-dir="./tests" phpunit-path="./vendor/bin/phpunit">
+<phpchunkit
+    bootstrap="./tests/phpchunkit_bootstrap.php"
+    root-dir="./"
+    tests-dir="./tests"
+    phpunit-path="./vendor/bin/phpunit"
+    memory-limit="512M"
+    num-chunks="1"
+>
     <watch-directories>
         <watch-directory>./src</watch-directory>
         <watch-directory>./tests</watch-directory>

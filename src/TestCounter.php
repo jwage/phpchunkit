@@ -22,17 +22,6 @@ class TestCounter
         $this->fileClassesHelper = $fileClassesHelper;
     }
 
-    public function countTotalTestsInFiles(array $files) : int
-    {
-        $totalTests = 0;
-
-        foreach ($files as $file) {
-            $totalTests += $this->countNumTestsInFile($file);
-        }
-
-        return $totalTests;
-    }
-
     public function countNumTestsInFile(string $file) : int
     {
         $numTestsInFile = 0;

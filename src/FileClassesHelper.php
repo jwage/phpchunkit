@@ -11,19 +11,32 @@ class FileClassesHelper
 {
     public function getFileClasses(string $file) : array
     {
-        $stream = new PHP_Token_Stream($file);
-        $classes = $stream->getClasses();
+        // TODO: Figure out a better and/or faster way to do this.
+        // using php tokens to parse the information out is significantly slower.
+        $code = @file_get_contents($file);
 
-        if (!$classes) {
+        if (!$code) {
             return [];
         }
 
-        $fileClasses = [];
+        preg_match_all('/namespace\s(.*);/', $code, $namespaces);
 
-        foreach ($classes as $className => $classInfo) {
-            $fileClasses[] = $classInfo['package']['namespace'] . '\\' . $className;
+        if (isset($namespaces[1][0])) {
+            $namespace = $namespaces[1][0];
         }
 
-        return $fileClasses;
+        if (!isset($namespace)) {
+            throw new \RuntimeException(sprintf('%s is missing a PHP namespace.'));
+        }
+
+        preg_match_all('/class\s([a-zA-Z0-9_]+)/', $code, $classes);
+
+        if (isset($classes[1])) {
+            foreach ($classes[1] as $className) {
+                $classNames[] = $namespace.'\\'.$className;
+            }
+        }
+
+        return $classNames;
     }
 }

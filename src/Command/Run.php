@@ -103,6 +103,8 @@ class Run implements CommandInterface
         $codes = [];
         $processes = [];
         $numChunkFailures = 0;
+        $totalTestsRan = 0;
+        $numProcesses = $parallel;
 
         foreach ($chunks as $i => $chunk) {
             $chunkNum = $i + 1;
@@ -114,15 +116,16 @@ class Run implements CommandInterface
                 ]);
             }
 
+            $numTests = $this->countNumTestsInChunk($chunk);
+
+            $totalTestsRan += $numTests;
 
             $progressBar = $showProgressBar
-                ? $this->createChunkProgressBar($output, $chunk)
+                ? $this->createChunkProgressBar($output, $chunk, $numTests)
                 : null
             ;
 
             if ($showProgressBar) {
-                $progressBar = $this->createChunkProgressBar($output, $chunk);
-
                 $callback = $this->createProgressCallback($progressBar);
             } else {
                 if ($verbose) {
@@ -142,6 +145,17 @@ class Run implements CommandInterface
                 $output->writeln(sprintf('Starting chunk <info>#%s</info>', $chunkNum));
 
                 $process->start($callback);
+
+                if (count($processes) >= $numProcesses) {
+                    $this->waitForProcesses(
+                        $processes,
+                        $input,
+                        $output,
+                        $verbose,
+                        $codes,
+                        $numChunkFailures
+                    );
+                }
 
             } else {
                 if ($verbose) {
@@ -173,46 +187,23 @@ class Run implements CommandInterface
 
                 if ($code) {
                     $output->writeln('');
-                    $output->writeln($process->getOutput());
+
+                    if (!$verbose) {
+                        $output->writeln($process->getOutput());
+                    }
                 }
             }
         }
 
         if ($parallel) {
-            $runningProcesses = $processes;
-
-            while (count($runningProcesses)) {
-                foreach ($runningProcesses as $chunkNum => $process) {
-                    if ($process->isRunning()) {
-                        continue;
-                    }
-
-                    // remove chunk process from $runningProcesses
-                    unset($runningProcesses[$chunkNum]);
-
-                    $codes[] = $code = $process->getExitCode();
-
-                    if ($code) {
-                        $numChunkFailures++;
-
-                        $output->writeln(sprintf('Chunk #%s <error>FAILED</error>', $chunkNum));
-
-                        $output->writeln('');
-                        $output->write($process->getOutput());
-
-                        if ($input->getOption('stop')) {
-                            return $code;
-                        }
-                    } else {
-                        $output->writeln(sprintf('Chunk #%s <info>PASSED</info>', $chunkNum));
-
-                        if ($verbose) {
-                            $output->writeln('');
-                            $output->write($process->getOutput());
-                        }
-                    }
-                }
-            }
+            $this->waitForProcesses(
+                $processes,
+                $input,
+                $output,
+                $verbose,
+                $codes,
+                $numChunkFailures
+            );
         }
 
         $failed = array_sum($codes) ? true : false;
@@ -228,12 +219,53 @@ class Run implements CommandInterface
         $output->writeln('');
         $output->writeln(sprintf('%s (%s chunks, %s tests%s)',
             $failed ? '<error>FAILED</error>' : '<info>PASSED</info>',
-            $numChunks,
-            $totalTests,
+            count($chunks),
+            $totalTestsRan,
             $failed ? sprintf(', Failed chunks: %s', $numChunkFailures) : ''
         ));
 
         return $failed ? 1 : 0;
+    }
+
+    private function waitForProcesses(
+        array &$processes,
+        InputInterface $input,
+        OutputInterface $output,
+        bool $verbose,
+        &$codes,
+        &$numChunkFailures)
+    {
+        while (count($processes)) {
+            foreach ($processes as $chunkNum => $process) {
+                if ($process->isRunning()) {
+                    continue;
+                }
+
+                unset($processes[$chunkNum]);
+
+                $codes[] = $code = $process->getExitCode();
+
+                if ($code) {
+                    $numChunkFailures++;
+
+                    $output->writeln(sprintf('Chunk #%s <error>FAILED</error>', $chunkNum));
+
+                    $output->writeln('');
+                    $output->write($process->getOutput());
+
+                    if ($input->getOption('stop')) {
+                        return $code;
+                    }
+                } else {
+                    $output->writeln(sprintf('Chunk #%s <info>PASSED</info>', $chunkNum));
+
+                    if ($verbose) {
+                        $output->writeln('');
+                        $output->write($process->getOutput());
+                    }
+                }
+            }
+        }
     }
 
     private function formatBytes($size, $precision = 2)
@@ -259,7 +291,8 @@ class Run implements CommandInterface
     {
         $testFiles = $this->findTestFiles($input);
 
-        $numChunks = $input->getOption('num-chunks');
+        $numChunks = $input->getOption('num-chunks')
+            ?: $this->configuration->getNumChunks() ?: 1;
         $chunk = $input->getOption('chunk');
 
         $chunkedTests = (new ChunkedTests())
@@ -324,10 +357,11 @@ class Run implements CommandInterface
         }, $chunk);
     }
 
-    private function createChunkProgressBar(OutputInterface $output, array $chunk) : ProgressBar
+    private function createChunkProgressBar(
+        OutputInterface $output,
+        array $chunk,
+        int $numTests) : ProgressBar
     {
-        $numTests = $this->countNumTestsInChunk($chunk);
-
         $progressBar = new ProgressBar($output, $numTests);
         $progressBar->setBarCharacter('<fg=green>=</>');
         $progressBar->setProgressCharacter("\xF0\x9F\x8C\xAD");

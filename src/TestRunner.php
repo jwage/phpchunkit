@@ -220,7 +220,10 @@ class TestRunner
      */
     private function flags()
     {
-        $flags = '-d memory_limit='.escapeshellarg($this->input->getOption('memory-limit'));
+        $memoryLimit = $this->input->getOption('memory-limit')
+            ?: $this->configuration->getMemoryLimit();
+
+        $flags = '-d memory_limit='.escapeshellarg($memoryLimit);
 
         if ($this->input->getOption('stop')) {
             $flags .= ' --stop-on-failure --stop-on-error';

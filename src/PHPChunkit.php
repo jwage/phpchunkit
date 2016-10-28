@@ -16,6 +16,7 @@ class PHPChunkit
         $this->container = $container ?: new Container();
         $this->container['phpchunkit'] = $this;
         $this->container['phpchunkit.root_dir'] = $rootDir;
+        $this->container->initialize();
     }
 
     public function getContainer() : Container

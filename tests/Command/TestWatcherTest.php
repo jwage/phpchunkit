@@ -58,6 +58,10 @@ class TestWatcherStub extends TestWatcher
      */
     private $count = 0;
 
+    protected function sleep()
+    {
+    }
+
     /**
      * @return bool
      */
@@ -65,6 +69,6 @@ class TestWatcherStub extends TestWatcher
     {
         $this->count++;
 
-        return $this->count < 3;
+        return $this->count < 1;
     }
 }
