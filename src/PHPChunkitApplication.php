@@ -28,6 +28,14 @@ class PHPChunkitApplication
      */
     private $symfonyApplication;
 
+    private static $commands = [
+        'phpchunkit.command.build_sandbox',
+        'phpchunkit.command.create_databases',
+        'phpchunkit.command.test_watcher',
+        'phpchunkit.command.run',
+        'phpchunkit.command.generate_test',
+    ];
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -39,25 +47,22 @@ class PHPChunkitApplication
         $this->container['phpchunkit.application.input'] = $input;
         $this->container['phpchunkit.application.output'] = $output;
 
-        $commands = [
-            'sandbox' => 'phpchunkit.command.build_sandbox',
-            'create-dbs' => 'phpchunkit.command.create_databases',
-            'watch' => 'phpchunkit.command.test_watcher',
-            'run' => 'phpchunkit.command.run',
-            'generate' => 'phpchunkit.command.generate_test',
-        ];
-
-        foreach ($commands as $name => $service) {
-            $service = $this->container[$service];
-
-            $symfonyCommand = $this->register($name);
-
-            $service->configure($symfonyCommand);
-
-            $symfonyCommand->setCode([$service, 'execute']);
+        foreach (self::$commands as $serviceName) {
+            $this->registerCommand($serviceName);
         }
 
         return $this->runSymfonyApplication($input, $output);
+    }
+
+    public function registerCommand(string $serviceName)
+    {
+        $service = $this->container[$serviceName];
+
+        $symfonyCommand = $this->register($service->getName());
+
+        $service->configure($symfonyCommand);
+
+        $symfonyCommand->setCode([$service, 'execute']);
     }
 
     protected function runSymfonyApplication(

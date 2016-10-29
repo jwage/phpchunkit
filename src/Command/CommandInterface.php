@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 interface CommandInterface
 {
+    public function getName() : string;
     public function configure(Command $command);
     public function execute(InputInterface $input, OutputInterface $output);
 }

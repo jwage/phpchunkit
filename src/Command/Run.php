@@ -22,6 +22,8 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class Run implements CommandInterface
 {
+    const NAME = 'run';
+
     /**
      * @var TestRunner
      */
@@ -52,6 +54,11 @@ class Run implements CommandInterface
         $this->configuration = $configuration;
         $this->testChunker = $testChunker;
         $this->testFinder = $testFinder;
+    }
+
+    public function getName() : string
+    {
+        return self::NAME;
     }
 
     public function configure(Command $command)

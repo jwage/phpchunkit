@@ -17,6 +17,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class BuildSandbox implements CommandInterface
 {
+    const NAME = 'sandbox';
+
     /**
      * @var TestRunner
      */
@@ -31,6 +33,11 @@ class BuildSandbox implements CommandInterface
     {
         $this->testRunner = $testRunner;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function getName() : string
+    {
+        return self::NAME;
     }
 
     public function configure(Command $command)

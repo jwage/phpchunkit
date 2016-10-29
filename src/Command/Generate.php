@@ -15,6 +15,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Generate implements CommandInterface
 {
+    const NAME = 'generate';
+
     /**
      * @var GenerateTestClass
      */
@@ -23,6 +25,11 @@ class Generate implements CommandInterface
     public function __construct(GenerateTestClass $generateTestClass)
     {
         $this->generateTestClass = $generateTestClass;
+    }
+
+    public function getName() : string
+    {
+        return self::NAME;
     }
 
     public function configure(Command $command)

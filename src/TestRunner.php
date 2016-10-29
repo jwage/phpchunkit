@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types = 1);
-declare(ticks = 1);
 
 namespace PHPChunkit;
 
@@ -71,11 +70,6 @@ class TestRunner
 
         register_shutdown_function(function() use ($config) {
             unlink($config);
-        });
-
-        pcntl_signal(SIGINT, function() use ($config) {
-            unlink($config);
-            exit;
         });
 
         unset($xml->testsuites[0]->testsuite);

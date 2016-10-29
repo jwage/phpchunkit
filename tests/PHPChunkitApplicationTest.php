@@ -14,7 +14,17 @@ class PHPChunkitApplicationTest extends BaseTest
 {
     public function testRun()
     {
-        $symfonyApplication = new Application();
+        $symfonyApplication = $this->createMock(Application::class);
+
+        $command = $this->createMock(Command::class);
+
+        $command->expects($this->any())
+            ->method('setCode');
+
+        $symfonyApplication->expects($this->any())
+            ->method('register')
+            ->willReturn($command);
+
         $container = new Container();
         $container['phpchunkit.root_dir'] = $this->getRootDir();
         $container['phpchunkit.symfony_application'] = $symfonyApplication;
@@ -32,13 +42,6 @@ class PHPChunkitApplicationTest extends BaseTest
         $phpChunkitApplication->run($input, $output);
 
         $this->assertTrue($phpChunkitApplication->ran);
-
-        $this->assertCount(7, $symfonyApplication->all());
-        $this->assertTrue($symfonyApplication->has('watch'));
-        $this->assertTrue($symfonyApplication->has('run'));
-        $this->assertTrue($symfonyApplication->has('create-dbs'));
-        $this->assertTrue($symfonyApplication->has('sandbox'));
-        $this->assertTrue($symfonyApplication->has('generate'));
     }
 }
 

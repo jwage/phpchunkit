@@ -16,6 +16,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class CreateDatabases implements CommandInterface
 {
+    const NAME = 'create-dbs';
+
     /**
      * @var EventDispatcher
      */
@@ -24,6 +26,11 @@ class CreateDatabases implements CommandInterface
     public function __construct(EventDispatcher $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function getName() : string
+    {
+        return self::NAME;
     }
 
     public function configure(Command $command)

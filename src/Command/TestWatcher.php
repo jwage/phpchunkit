@@ -19,6 +19,8 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class TestWatcher implements CommandInterface
 {
+    const NAME = 'watch';
+
     /**
      * @var TestRunner
      */
@@ -42,6 +44,11 @@ class TestWatcher implements CommandInterface
         $this->testRunner = $testRunner;
         $this->configuration = $configuration;
         $this->fileClassesHelper = $fileClassesHelper;
+    }
+
+    public function getName() : string
+    {
+        return self::NAME;
     }
 
     public function configure(Command $command)
