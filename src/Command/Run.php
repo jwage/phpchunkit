@@ -334,7 +334,7 @@ class Run implements CommandInterface
             $testFiles = $this->testFinder->findChangedTestFiles();
         } elseif ($filter) {
             $testFiles = $this->testFinder->findTestFilesByFilter($filter);
-        } elseif ($files) {
+        } elseif (!empty($files)) {
             $testFiles = $files;
         } else {
             $testFiles = $this->testFinder->findAllTestFiles();

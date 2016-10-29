@@ -109,7 +109,7 @@ class TestRunner
     {
         $config = $this->generatePhpunitXml($files);
 
-        if ($config) {
+        if ($config !== null) {
             $this->output->writeln('');
 
             foreach ($files as $file) {
@@ -179,7 +179,7 @@ class TestRunner
             $callback($output);
         });
 
-        if ($process->getExitCode() && $throw) {
+        if ($process->getExitCode() > 0 && $throw) {
             throw new RuntimeException('The command did not exit successfully.');
         }
 
