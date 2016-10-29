@@ -69,7 +69,7 @@ class Run implements CommandInterface
         $parallel = $input->getOption('parallel');
         $showProgressBar = !$verbose && !$parallel;
 
-        $chunkedTests = $this->chunkTestFiles($input, $output);
+        $chunkedTests = $this->chunkTestFiles($input);
 
         $chunks = $chunkedTests->getChunks();
         $testsPerChunk = $chunkedTests->getTestsPerChunk();
@@ -127,7 +127,7 @@ class Run implements CommandInterface
             $totalTestsRan += $numTests;
 
             $progressBar = $showProgressBar
-                ? $this->createChunkProgressBar($output, $chunk, $numTests)
+                ? $this->createChunkProgressBar($output, $numTests)
                 : null
             ;
 
@@ -368,7 +368,6 @@ class Run implements CommandInterface
 
     private function createChunkProgressBar(
         OutputInterface $output,
-        array $chunk,
         int $numTests) : ProgressBar
     {
         $progressBar = new ProgressBar($output, $numTests);
