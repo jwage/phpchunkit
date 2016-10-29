@@ -105,7 +105,6 @@ EOF;
 
     /**
      * @param string $className
-     * @param string $srcDir
      *
      * @return string
      */
@@ -304,7 +303,6 @@ EOF;
     }
 
     /**
-     * @param ReflectionClass $this->reflectionClass
      *
      * @return string
      */
@@ -342,7 +340,7 @@ EOF;
 
         $dependencies = array_unique($dependencies);
 
-        $useStatementsCode = array_map(function ($dependency) {
+        $useStatementsCode = array_map(function($dependency) {
             return sprintf('use %s;', $dependency);
         }, $dependencies);
 

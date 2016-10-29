@@ -2,10 +2,6 @@
 
 namespace PHPChunkit;
 
-use PHPChunkit\Configuration;
-use PHPChunkit\PHPChunkitApplication;
-use Symfony\Component\Console\Application;
-
 /**
  * @testClass PHPChunkit\Test\PHPChunkitTest
  */

@@ -149,7 +149,7 @@ class Container extends PimpleContainer
 
     private function isSandboxEnabled() : bool
     {
-        return array_filter($_SERVER['argv'], function ($arg) {
+        return array_filter($_SERVER['argv'], function($arg) {
             return strpos($arg, 'sandbox') !== false;
         }) ? true : false;
     }
