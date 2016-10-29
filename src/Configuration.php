@@ -126,7 +126,8 @@ class Configuration
             foreach ($listeners as $listener) {
                 $configuration->addListener(
                     (string) $listener->attributes()['event'],
-                    (string) $listener->class
+                    (string) $listener->class,
+                    0
                 );
             }
         }

@@ -155,7 +155,7 @@ EOF;
                     $testPropertiesCode[] = '    /**';
                     $testPropertiesCode[] = '     * @var '.$parameterClass->getShortName();
                     $testPropertiesCode[] = '     */';
-                    $testPropertiesCode[] = '    private $'.$parameter->getName().';';
+                    $testPropertiesCode[] = '    private $'.$parameter->name.';';
 
                     if (!$isLast) {
                         $testPropertiesCode[] = '';
@@ -164,7 +164,7 @@ EOF;
                     $testPropertiesCode[] = '    /**';
                     $testPropertiesCode[] = '     * @var TODO';
                     $testPropertiesCode[] = '     */';
-                    $testPropertiesCode[] = '    private $'.$parameter->getName().';';
+                    $testPropertiesCode[] = '    private $'.$parameter->name.';';
 
                     if (!$isLast) {
                         $testPropertiesCode[] = '';
@@ -201,12 +201,12 @@ EOF;
             foreach ($parameters as $parameter) {
                 if ($parameterClass = $parameter->getClass()) {
                     $setUpCode[] = sprintf('        $this->%s = $this->createMock(%s::class);',
-                        $parameter->getName(),
+                        $parameter->name,
                         $parameterClass->getShortName()
                     );
                 } else {
                     $setUpCode[] = sprintf("        \$this->%s = ''; // TODO",
-                        $parameter->getName()
+                        $parameter->name
                     );
                 }
             }
@@ -217,7 +217,7 @@ EOF;
             // arguments for class being tested
             $setUpCodeArguments = [];
             foreach ($parameters as $parameter) {
-                $setUpCodeArguments[] = sprintf('            $this->%s', $parameter->getName());
+                $setUpCodeArguments[] = sprintf('            $this->%s', $parameter->name);
             }
             $setUpCode[] = implode(",\n", $setUpCodeArguments);
 
@@ -279,9 +279,9 @@ EOF;
         if (!empty($parameters)) {
             foreach ($parameters as $parameter) {
                 if ($parameterClass = $parameter->getClass()) {
-                    $testMethodBodyCode[] = sprintf('        $%s = $this->createMock(%s::class);', $parameter->getName(), $parameterClass->getShortName());
+                    $testMethodBodyCode[] = sprintf('        $%s = $this->createMock(%s::class);', $parameter->name, $parameterClass->getShortName());
                 } else {
-                    $testMethodBodyCode[] = sprintf("        \$%s = '';", $parameter->getName());
+                    $testMethodBodyCode[] = sprintf("        \$%s = '';", $parameter->name);
                 }
             }
 
@@ -290,7 +290,7 @@ EOF;
 
             $testMethodParameters = [];
             foreach ($parameters as $parameter) {
-                $testMethodParameters[] = sprintf('$%s', $parameter->getName());
+                $testMethodParameters[] = sprintf('$%s', $parameter->name);
             }
 
             $testMethodBodyCode[] = '            '.implode(",\n            ", $testMethodParameters);

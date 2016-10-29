@@ -82,7 +82,7 @@ class TestRunner
         unset($xml->testsuites[0]->testsuite);
         $suite = $xml->testsuites[0]->addChild('testsuite');
 
-        if ($files) {
+        if (!empty($files)) {
             $files = array_unique($files);
 
             foreach ($files as $file) {
