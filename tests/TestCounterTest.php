@@ -22,6 +22,7 @@ class TestCounterTest extends BaseTest
     {
         $this->fileClassesHelper = $this->createMock(FileClassesHelper::class);
         $this->testCounter = new TestCounterStub($this->fileClassesHelper);
+        $this->testCounter->clearCache();
     }
 
     public function testCountNumTestsInFileCache()
@@ -33,7 +34,8 @@ class TestCounterTest extends BaseTest
             ->method('getFileClasses')
             ->with(__FILE__)
             ->willReturn([
-                TestCounterTest::class
+                TestCounterTest::class,
+                AbstractTest::class
             ]);
 
         $this->assertEquals(9, $testCounter->countNumTestsInFile(__FILE__));
@@ -46,7 +48,8 @@ class TestCounterTest extends BaseTest
             ->method('getFileClasses')
             ->with(__FILE__)
             ->willReturn([
-                TestCounterTest::class
+                TestCounterTest::class,
+                AbstractTest::class
             ]);
 
         $this->assertEquals(9, $this->testCounter->countNumTestsInFile(__FILE__));
@@ -107,6 +110,13 @@ class TestCounterStub extends TestCounter
     }
 
     protected function writeCache()
+    {
+    }
+}
+
+abstract class AbstractTest extends BaseTest
+{
+    public function testSomething()
     {
     }
 }

@@ -2,6 +2,8 @@
 
 namespace PHPChunkit;
 
+use ReflectionClass;
+
 /**
  * @testClass PHPChunkit\Test\TestCounterTest
  */
@@ -33,6 +35,11 @@ class TestCounter
         $this->loadCache();
     }
 
+    public function __destruct()
+    {
+        $this->writeCache();
+    }
+
     public function countNumTestsInFile(string $file) : int
     {
         $cacheKey = $file.@filemtime($file);
@@ -55,38 +62,8 @@ class TestCounter
 
         require_once $file;
 
-        $reflectionClass = new \ReflectionClass($className);
-
-        $methods = $reflectionClass->getMethods();
-
-        foreach ($methods as $method) {
-            if (strpos($method->name, 'test') === 0) {
-                $docComment = $method->getDocComment();
-
-                if ($docComment) {
-                    preg_match_all('/@dataProvider\s([a-zA-Z0-9_]+)/', $docComment, $dataProvider);
-
-                    if (isset($dataProvider[1][0])) {
-                        $providerMethod = $dataProvider[1][0];
-
-                        $test = new $className();
-
-                        $numTestsInFile = $numTestsInFile + count($test->$providerMethod());
-
-                        continue;
-                    }
-                }
-
-                $numTestsInFile++;
-            } else {
-                $docComment = $method->getDocComment();
-
-                preg_match_all('/@test/', $docComment, $tests);
-
-                if ($tests[0]) {
-                    $numTestsInFile = $numTestsInFile + count($tests[0]);
-                }
-            }
+        foreach ($classes as $className) {
+            $numTestsInFile += $this->countNumTestsInClass($className);
         }
 
         $this->cache[$cacheKey] = $numTestsInFile;
@@ -115,8 +92,48 @@ class TestCounter
         file_put_contents($this->cachePath, '<?php return '.var_export($this->cache, true).';');
     }
 
-    public function __destruct()
+    private function countNumTestsInClass(string $className) : int
     {
-        $this->writeCache();
+        $reflectionClass = new ReflectionClass($className);
+
+        if ($reflectionClass->isAbstract()) {
+            return 0;
+        }
+
+        $numTests = 0;
+
+        $methods = $reflectionClass->getMethods();
+
+        foreach ($methods as $method) {
+            if (strpos($method->name, 'test') === 0) {
+                $docComment = $method->getDocComment();
+
+                if ($docComment) {
+                    preg_match_all('/@dataProvider\s([a-zA-Z0-9_]+)/', $docComment, $dataProvider);
+
+                    if (isset($dataProvider[1][0])) {
+                        $providerMethod = $dataProvider[1][0];
+
+                        $test = new $className();
+
+                        $numTests = $numTests + count($test->$providerMethod());
+
+                        continue;
+                    }
+                }
+
+                $numTests++;
+            } else {
+                $docComment = $method->getDocComment();
+
+                preg_match_all('/@test/', $docComment, $tests);
+
+                if ($tests[0]) {
+                    $numTests = $numTests + count($tests[0]);
+                }
+            }
+        }
+
+        return $numTests;
     }
 }
