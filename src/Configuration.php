@@ -126,8 +126,7 @@ class Configuration
             foreach ($listeners as $listener) {
                 $configuration->addListener(
                     (string) $listener->attributes()['event'],
-                    (string) $listener->class,
-                    0
+                    (string) $listener->class
                 );
             }
         }
@@ -149,7 +148,7 @@ class Configuration
         }
 
         $this->getEventDispatcher()->addListener(
-            $eventName, [$listener, 'execute']
+            $eventName, [$listener, 'execute'], $priority
         );
 
         return $listener;
