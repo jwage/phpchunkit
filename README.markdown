@@ -3,7 +3,6 @@
 [![Build Status](https://secure.travis-ci.org/jwage/phpchunkit.png?branch=master)](http://travis-ci.org/jwage/phpchunkit)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jwage/phpchunkit/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jwage/phpchunkit/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/jwage/phpchunkit/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jwage/phpchunkit/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/jwage/phpchunkit/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jwage/phpchunkit/build-status/master)
 
 PHPChunkit is a library that sits on top of PHPUnit and adds additional
 functionality to make it easier to work with large unit and functional
