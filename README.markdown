@@ -90,7 +90,14 @@ Here is an example `phpchunkit.xml` file. Place this in the root of your project
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpchunkit bootstrap="./tests/phpchunkit_bootstrap.php" root-dir="./" tests-dir="./tests" phpunit-path="./vendor/bin/phpunit">
+<phpchunkit
+    bootstrap="./tests/phpchunkit_bootstrap.php"
+    root-dir="./"
+    tests-dir="./tests"
+    phpunit-path="./vendor/bin/phpunit"
+    memory-limit="512M"
+    num-chunks="2"
+>
     <watch-directories>
         <watch-directory>./src</watch-directory>
         <watch-directory>./tests</watch-directory>
@@ -115,6 +122,7 @@ Here is an example `phpchunkit.xml` file. Place this in the root of your project
         </listener>
     </events>
 </phpchunkit>
+
 ```
 
 The `tests/phpchunkit_bootstrap.php` file is loaded after the XML is loaded
@@ -139,6 +147,8 @@ $configuration = $configuration
     ->setTestsDirectory(sprintf('%s/tests', $rootDir))
     ->setPhpunitPath(sprintf('%s/vendor/bin/phpunit', $rootDir))
     ->setDatabaseNames(['testdb1', 'testdb2'])
+    ->setMemoryLimit('256M')
+    ->setNumChunks(2)
 ;
 
 $eventDispatcher = $configuration->getEventDispatcher();
