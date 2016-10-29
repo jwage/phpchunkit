@@ -46,9 +46,21 @@ chunk across the 2 servers with 5 parallel jobs running on each server:
 
 ## Installation
 
-Install with composer:
+Install in your project with composer:
 
-    composer require jwage/phpchunkit
+    $ composer require jwage/phpchunkit
+    $ ./vendor/bin/phpchunkit
+
+Install globally with composer:
+
+    $ composer global require jwage/phpchunkit
+    $ ln -s /home/youruser/.composer/vendor/bin/phpchunkit /usr/local/bin/phpchunkit
+
+Install Phar:
+
+    $ wget https://github.com/jwage/phpchunkit/raw/master/phpchunkit.phar
+    $ chmod +x phpchunkit.phar
+    $ sudo mv phpchunkit.phar /usr/local/bin/phpchunkit
 
 ## Setup
 
