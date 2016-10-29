@@ -17,7 +17,7 @@ class TestFinder
     public function findTestFilesByFilter(string $filter)
     {
         $command = sprintf(
-            'find %s -name *%s* | grep "Test.php" | sort',
+            'find %s -wholename "*%s*" | grep "Test.php" | sort',
             $this->testsDirectory,
             $filter
         );
