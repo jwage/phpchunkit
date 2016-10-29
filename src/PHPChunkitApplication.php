@@ -62,6 +62,7 @@ class PHPChunkitApplication
             ->addOption('parallel', null, InputOption::VALUE_REQUIRED, 'Run test chunks in parallel.')
             ->addOption('filter', null, InputOption::VALUE_REQUIRED, 'Run tests that match the given filter.')
             ->addOption('file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run test file.')
+            ->addOption('phpunit-opt', null, InputOption::VALUE_REQUIRED, 'Pass through phpunit options.')
             ->setCode([$this->container['phpchunkit.command.run'], 'execute'])
         ;
 
