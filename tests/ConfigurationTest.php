@@ -48,6 +48,15 @@ class ConfigurationTest extends BaseTest
         $this->assertCount(3, $configuration->getEventDispatcher()->getListeners());
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage XML file count not be found at path "invalid"
+     */
+    public function testCreateFromXmlFileThrowsInvalidArgumentException()
+    {
+        Configuration::createFromXmlFile('invalid');
+    }
+
     public function testSetGetRootDir()
     {
         $this->assertEquals('', $this->configuration->getRootDir());

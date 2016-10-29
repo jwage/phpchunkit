@@ -66,61 +66,88 @@ class Configuration
         $xml = simplexml_load_file($path);
         $attributes = $xml->attributes();
 
-        if ($rootDir = (string) $attributes['root-dir']) {
-            $configuration->setRootDir($rootDir);
-        }
+        $xmlMappings = [
+            'root-dir' => [
+                'type' => 'string',
+                'setter' => 'setRootDir'
+            ],
+            'bootstrap' => [
+                'type' => 'string',
+                'setter' => 'setBootstrapPath'
+            ],
+            'tests-dir' => [
+                'type' => 'string',
+                'setter' => 'setTestsDirectory'
+            ],
+            'phpunit-path' => [
+                'type' => 'string',
+                'setter' => 'setPhpunitPath'
+            ],
+            'memory-limit' => [
+                'type' => 'string',
+                'setter' => 'setMemoryLimit'
+            ],
+            'num-chunks' => [
+                'type' => 'integer',
+                'setter' => 'setNumChunks'
+            ],
+            'watch-directories' => [
+                'type' => 'array',
+                'setter' => 'setWatchDirectories',
+                'xmlName' => 'watch-directory',
+            ],
+            'database-names' => [
+                'type' => 'array',
+                'setter' => 'setDatabaseNames',
+                'xmlName' => 'database-name',
+            ],
+        ];
 
-        if ($bootstrapPath = (string) $attributes['bootstrap']) {
-            $configuration->setBootstrapPath($bootstrapPath);
-        }
+        foreach ($xmlMappings as $name => $mapping) {
+            if ($mapping['type'] === 'array') {
+                $value = (array) $xml->{$name}->{$mapping['xmlName']};
+            } elseif (isset($attributes[$name])) {
+                $value = $attributes[$name];
 
-        if ($testsDir = (string) $attributes['tests-dir']) {
-            $configuration->setTestsDirectory($testsDir);
-        }
+                settype($value, $mapping['type']);
+            }
 
-        if ($phpunitPath = (string) $attributes['phpunit-path']) {
-            $configuration->setPhpunitPath($phpunitPath);
-        }
-
-        if ($memoryLimit = (string) $attributes['memory-limit']) {
-            $configuration->setMemoryLimit($memoryLimit);
-        }
-
-        if ($numChunks = (int) $attributes['num-chunks']) {
-            $configuration->setNumChunks($numChunks);
-        }
-
-        if ($watchDirectories = (array) $xml->{'watch-directories'}->{'watch-directory'}) {
-            $configuration->setWatchDirectories($watchDirectories);
-        }
-
-        if ($databaseNames = (array) $xml->{'database-names'}->{'database-name'}) {
-            $configuration->setDatabaseNames($databaseNames);
+            $configuration->{$mapping['setter']}($value);
         }
 
         $events = (array) $xml->{'events'};
         $listeners = $events['listener'] ?? null;
 
         if ($listeners) {
-            $eventDispatcher = $configuration->getEventDispatcher();
-
             foreach ($listeners as $listener) {
-                $eventName = (string) $listener->attributes()['event'];
-                $className = (string) $listener->class;
-
-                $listener = new $className($configuration);
-
-                if (!$listener instanceof ListenerInterface) {
-                    throw new InvalidArgumentException(
-                        sprintf('%s does not implement %s', $className, ListenerInterface::class)
-                    );
-                }
-
-                $eventDispatcher->addListener($eventName, [$listener, 'execute']);
+                $configuration->addListener(
+                    (string) $listener->attributes()['event'],
+                    (string) $listener->class
+                );
             }
         }
 
         return $configuration;
+    }
+
+    public function addListener(
+        string $eventName,
+        string $className,
+        int $priority = 0) : ListenerInterface
+    {
+        $listener = new $className($this);
+
+        if (!$listener instanceof ListenerInterface) {
+            throw new InvalidArgumentException(
+                sprintf('%s does not implement %s', $className, ListenerInterface::class)
+            );
+        }
+
+        $this->getEventDispatcher()->addListener(
+            $eventName, [$listener, 'execute']
+        );
+
+        return $listener;
     }
 
     public function setRootDir(string $rootDir) : self
