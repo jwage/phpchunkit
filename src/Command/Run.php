@@ -69,12 +69,18 @@ class Run implements CommandInterface
         $parallel = $input->getOption('parallel');
         $showProgressBar = !$verbose && !$parallel;
 
-        $chunkedTests = $this->chunkTestFiles($input);
+        $chunkedTests = $this->chunkTestFiles($input, $output);
 
         $chunks = $chunkedTests->getChunks();
         $testsPerChunk = $chunkedTests->getTestsPerChunk();
         $totalTests = $chunkedTests->getTotalTests();
         $numChunks = $chunkedTests->getNumChunks();
+
+        if (!$totalTests) {
+            $output->writeln('<error>No tests found to run.</error>');
+
+            return;
+        }
 
         $output->writeln(sprintf('Total Tests: <info>%s</info>', $totalTests));
         $output->writeln(sprintf('Number of Chunks Configured: <info>%s</info>', $numChunks));
@@ -300,6 +306,10 @@ class Run implements CommandInterface
             ->setChunk($chunk)
         ;
 
+        if (!$testFiles) {
+            return $chunkedTests;
+        }
+
         $this->testChunker->chunkTestFiles($chunkedTests, $testFiles);
 
         return $chunkedTests;
@@ -325,10 +335,6 @@ class Run implements CommandInterface
             $testFiles = $files;
         } else {
             $testFiles = $this->testFinder->findAllTestFiles();
-        }
-
-        if (!$testFiles) {
-            throw new \InvalidArgumentException('No tests found.');
         }
 
         return $testFiles;

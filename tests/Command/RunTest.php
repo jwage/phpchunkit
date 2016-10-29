@@ -2,6 +2,7 @@
 
 namespace PHPChunkit\Test\Command;
 
+use PHPChunkit\ChunkedTests;
 use PHPChunkit\Command\Run;
 use PHPChunkit\Configuration;
 use PHPChunkit\DatabaseSandbox;
@@ -99,6 +100,12 @@ class RunTest extends BaseTest
             ->method('getOption')
             ->with('sandbox')
             ->willReturn(true);
+
+        $this->testChunker->expects($this->once())
+             ->method('chunkTestFiles')
+             ->will($this->returnCallback(function(ChunkedTests $chunkedTests) {
+                $chunkedTests->setTotalTests(1);
+            }));
 
         $this->testRunner->expects($this->once())
             ->method('runTestCommand')
