@@ -190,13 +190,21 @@ Run a specific chunk of functional tests:
 
     phpchunkit --num-chunks=5 --chunk=1
 
-Run tests that match a filter:
+Run test paths that match a filter:
 
     phpchunkit --filter=BuildSandbox
 
 Run a specific file:
 
     phpchunkit --file=tests/Command/BuildSandboxTest.php
+
+Run tests that contain the given content:
+
+    phpchunkit --contains="SOME_CONSTANT_NAME"
+
+Run tests that do not contain the given content:
+
+    phpchunkit --group=functional --not-contains="SOME_CONSTANT_NAME"
 
 Run tests for changed files:
 

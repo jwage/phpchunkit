@@ -1,84 +1,155 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPChunkit;
+
+use Symfony\Component\Finder\Finder;
 
 /**
  * @testClass PHPChunkit\Test\TestFinderTest
  */
 class TestFinder
 {
+    /**
+     * @var string
+     */
     private $testsDirectory;
+
+    /**
+     * @var bool
+     */
+    private $changed = false;
+
+    /**
+     * @var Finder
+     */
+    private $finder;
 
     public function __construct(string $testsDirectory)
     {
         $this->testsDirectory = $testsDirectory;
+
+        $this->finder = Finder::create()
+            ->files()
+            ->name('*Test.php')
+            ->in($this->testsDirectory)
+            ->sortByName();
     }
 
-    public function findTestFilesByFilter(string $filter)
+    public function changed(bool $changed = true) : self
     {
-        $command = sprintf(
-            'find %s -wholename "*%s*" | grep "Test.php" | sort',
-            $this->testsDirectory,
-            $filter
-        );
+        $this->changed = $changed;
 
-        return $this->shellExecute($command);
+        return $this;
+    }
+
+    public function filter(string $filter = null) : self
+    {
+        $this->finder->path($filter);
+
+        return $this;
+    }
+
+    public function contains(string $contains = null) : self
+    {
+        $this->finder->contains($contains);
+
+        return $this;
+    }
+
+    public function notContains(string $notContains = null) : self
+    {
+        $this->finder->notContains($notContains);
+
+        return $this;
+    }
+
+    public function inGroup(string $group = null) : self
+    {
+        $this->finder->contains(sprintf('@group %s', $group));
+
+        return $this;
+    }
+
+    public function inGroups(array $groups = []) : self
+    {
+        foreach ($groups as $group) {
+            $this->inGroup($group);
+        }
+
+        return $this;
+    }
+
+    public function notInGroup(string $group = null) : self
+    {
+        $this->finder->notContains(sprintf('@group %s', $group));
+
+        return $this;
+    }
+
+    public function notInGroups(array $groups = []) : self
+    {
+        foreach ($groups as $group) {
+            $this->notInGroup($group);
+        }
+
+        return $this;
+    }
+
+    public function findTestFilesByFilter(string $filter) : array
+    {
+        $this->filter($filter);
+
+        return $this->buildFilesArrayFromFinder();
+    }
+
+    public function findTestFilesInGroups(array $groups) : array
+    {
+        $this->inGroups($groups);
+
+        return $this->buildFilesArrayFromFinder();
+    }
+
+    public function findTestFilesExcludingGroups(array $excludeGroups) : array
+    {
+        $this->notInGroups($excludeGroups);
+
+        return $this->buildFilesArrayFromFinder();
+    }
+
+    public function findAllTestFiles() : array
+    {
+        return $this->buildFilesArrayFromFinder();
     }
 
     public function findChangedTestFiles() : array
     {
         $command = "git status --porcelain | grep -e '^\(.*\)Test.php$' | cut -c 3-";
 
-        $output = trim(shell_exec($command));
-
-        $files = $output ? array_map('trim', explode("\n", $output)) : [];
-
-        return $files;
+        return $this->buildFilesArrayFromFindCommand($command);
     }
 
-    public function findTestFilesInGroups(array $groups) : array
+    public function getFiles() : array
     {
-        $command = sprintf(
-            'find %s -name *Test.php -print0 | xargs -0 egrep -l "%s" | sort',
-            $this->testsDirectory,
-            $this->prepareGroupParts($groups)
-        );
+        if ($this->changed) {
+            return $this->findChangedTestFiles();
+        }
 
-        return $this->shellExecute($command);
+        return $this->buildFilesArrayFromFinder();
     }
 
-    public function findTestFilesExcludingGroups(array $excludeGroups) : array
+    private function buildFilesArrayFromFinder() : array
     {
-        $command = sprintf(
-            'find %s -name *Test.php -print0 | xargs -0 egrep -L "%s" | sort',
-            $this->testsDirectory,
-            $this->prepareGroupParts($excludeGroups)
-        );
-
-        return $this->shellExecute($command);
+        return array_values(array_map(function($file) {
+            return $file->getPathName();
+        }, iterator_to_array($this->finder)));
     }
 
-    public function findAllTestFiles() : array
-    {
-        $command = sprintf(
-            'find %s -name *Test.php | sort',
-            $this->testsDirectory
-        );
-
-        return $this->shellExecute($command);
-    }
-
-    private function prepareGroupParts(array $groups) : string
-    {
-        return implode('|', array_map(function(string $group) {
-            return sprintf('@group %s', $group);
-        }, $groups));
-    }
-
-    private function shellExecute($command)
+    private function buildFilesArrayFromFindCommand(string $command) : array
     {
         $output = trim(shell_exec($command));
 
-        return $output ? explode("\n", $output) : [];
+        return $output ? array_map('trim', explode("\n", $output)) : [];
     }
 }

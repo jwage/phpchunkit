@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPChunkit\Command;
 
 use PHPChunkit\FileClassesHelper;
 use PHPChunkit\TestRunner;
 use PHPChunkit\Configuration;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -30,11 +34,6 @@ class TestWatcher implements CommandInterface
      */
     private $fileClassesHelper;
 
-    /**
-     * @param TestRunner     $testRunner
-     * @param Configuration  $configuration
-     * @param FileClassesHelper  $fileClassesHelper
-     */
     public function __construct(
         TestRunner $testRunner,
         Configuration $configuration,
@@ -45,10 +44,17 @@ class TestWatcher implements CommandInterface
         $this->fileClassesHelper = $fileClassesHelper;
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
+    public function configure(Command $command)
+    {
+        $command
+            ->setDescription('Watch for changes to files and run the associated tests.')
+            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
+            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for PHP.')
+            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error.')
+            ->addOption('failed', null, InputOption::VALUE_REQUIRED, 'Track tests that have failed.', true)
+        ;
+    }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<info>Watching for changes to your code.</info>');
@@ -68,7 +74,7 @@ class TestWatcher implements CommandInterface
 
     protected function sleep()
     {
-        sleep(.5);
+        usleep(300000);
     }
 
     protected function while () : bool

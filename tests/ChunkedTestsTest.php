@@ -36,7 +36,7 @@ class ChunkedTestsTest extends BaseTest
 
     public function testSetGetTestsPerChunk()
     {
-        $this->assertNull($this->chunkedTests->getTestsPerChunk());
+        $this->assertEquals(0, $this->chunkedTests->getTestsPerChunk());
 
         $this->assertSame($this->chunkedTests, $this->chunkedTests->setTestsPerChunk(1));
 

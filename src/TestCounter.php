@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPChunkit;
 
 use ReflectionClass;
@@ -24,9 +26,6 @@ class TestCounter
      */
     private $cachePath = '';
 
-    /**
-     * @param FileClassesHelper $fileClassesHelper
-     */
     public function __construct(FileClassesHelper $fileClassesHelper)
     {
         $this->fileClassesHelper = $fileClassesHelper;
@@ -126,10 +125,12 @@ class TestCounter
             } else {
                 $docComment = $method->getDocComment();
 
-                preg_match_all('/@test/', $docComment, $tests);
+                if ($docComment) {
+                    preg_match_all('/@test/', $docComment, $tests);
 
-                if ($tests[0]) {
-                    $numTests = $numTests + count($tests[0]);
+                    if ($tests[0]) {
+                        $numTests = $numTests + count($tests[0]);
+                    }
                 }
             }
         }

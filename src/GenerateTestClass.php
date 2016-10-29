@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPChunkit;
 
 use Doctrine\Common\Inflector\Inflector;
@@ -103,12 +105,7 @@ EOF;
      */
     private $testMethodsCode;
 
-    /**
-     * @param string $className
-     *
-     * @return string
-     */
-    public function generate($className)
+    public function generate(string $className) : string
     {
         $this->reflectionClass = new ReflectionClass($className);
 
@@ -140,10 +137,7 @@ EOF;
         ]);
     }
 
-    /**
-     * @return string
-     */
-    private function generateClassProperties()
+    private function generateClassProperties() : string
     {
         $testPropertiesCode = [];
 
@@ -185,10 +179,7 @@ EOF;
         return implode("\n", $testPropertiesCode);
     }
 
-    /**
-     * @return string
-     */
-    private function generateSetUp()
+    private function generateSetUp() : string
     {
         $classShortName = $this->reflectionClass->getShortName();
         $classCamelCaseName = Inflector::camelize($classShortName);
@@ -231,10 +222,7 @@ EOF;
         return implode("\n", $setUpCode);
     }
 
-    /**
-     * @return array
-     */
-    private function getConstructorParameters()
+    private function getConstructorParameters() : array
     {
         $constructor = $this->reflectionClass->getConstructor();
 
@@ -245,10 +233,7 @@ EOF;
         return [];
     }
 
-    /**
-     * @return string
-     */
-    private function generateTestMethods()
+    private function generateTestMethods() : string
     {
         $testMethodsCode = [];
 
@@ -267,10 +252,7 @@ EOF;
         return '    '.trim(implode("\n", $testMethodsCode));
     }
 
-    /**
-     * @return string
-     */
-    private function generateTestMethodBody(ReflectionMethod $method)
+    private function generateTestMethodBody(ReflectionMethod $method) : string
     {
         $parameters = $method->getParameters();
 
@@ -302,11 +284,7 @@ EOF;
         return implode("\n", $testMethodBodyCode);
     }
 
-    /**
-     *
-     * @return string
-     */
-    private function generateUseStatements()
+    private function generateUseStatements() : string
     {
         $dependencies = [];
         $dependencies[] = $this->reflectionClass->name;
@@ -347,12 +325,7 @@ EOF;
         return implode("\n", $useStatementsCode);
     }
 
-    /**
-     * @param ReflectionMethod $method
-     *
-     * @return bool
-     */
-    private function isMethodTestable(ReflectionMethod $method)
+    private function isMethodTestable(ReflectionMethod $method) : bool
     {
         if ($this->reflectionClass->name !== $method->class) {
             return false;

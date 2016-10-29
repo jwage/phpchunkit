@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPChunkit\Command;
 
 use PHPChunkit\ChunkedTests;
@@ -7,8 +9,10 @@ use PHPChunkit\TestChunker;
 use PHPChunkit\TestFinder;
 use PHPChunkit\TestRunner;
 use PHPChunkit\Configuration;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -38,12 +42,6 @@ class Run implements CommandInterface
      */
     private $testFinder;
 
-    /**
-     * @param TestRunner      $testRunner
-     * @param Configuration   $configuration
-     * @param TestChunker     $testChunker
-     * @param TestFinder      $testFinder
-     */
     public function __construct(
         TestRunner $testRunner,
         Configuration $configuration,
@@ -56,10 +54,30 @@ class Run implements CommandInterface
         $this->testFinder = $testFinder;
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
+    public function configure(Command $command)
+    {
+        $command
+            ->setDescription('Run tests.')
+            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
+            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for PHP.')
+            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error.')
+            ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed.')
+            ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases before running tests.')
+            ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Configure unique names.')
+            ->addOption('chunk', null, InputOption::VALUE_REQUIRED, 'Run a specific chunk of tests.')
+            ->addOption('num-chunks', null, InputOption::VALUE_REQUIRED, 'The number of chunks to run tests in.')
+            ->addOption('group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests in these groups.')
+            ->addOption('exclude-group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests excluding these groups.')
+            ->addOption('changed', null, InputOption::VALUE_NONE, 'Run changed tests.')
+            ->addOption('parallel', null, InputOption::VALUE_REQUIRED, 'Run test chunks in parallel.')
+            ->addOption('filter', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Filter tests by path/file name and run them.')
+            ->addOption('contains', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run tests that match the given content.')
+            ->addOption('not-contains', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run tests that do not match the given content.')
+            ->addOption('file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run test file.')
+            ->addOption('phpunit-opt', null, InputOption::VALUE_REQUIRED, 'Pass through phpunit options.')
+        ;
+    }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $stopwatch = new Stopwatch();
@@ -274,10 +292,7 @@ class Run implements CommandInterface
         }
     }
 
-    /**
-     * @param integer $size
-     */
-    private function formatBytes($size, $precision = 2)
+    private function formatBytes(int $size, int $precision = 2) : string
     {
         if (!$size) {
             return 0;
@@ -300,9 +315,9 @@ class Run implements CommandInterface
     {
         $testFiles = $this->findTestFiles($input);
 
-        $numChunks = $input->getOption('num-chunks')
+        $numChunks = (int) $input->getOption('num-chunks')
             ?: $this->configuration->getNumChunks() ?: 1;
-        $chunk = $input->getOption('chunk');
+        $chunk = (int) $input->getOption('chunk');
 
         $chunkedTests = (new ChunkedTests())
             ->setNumChunks($numChunks)
@@ -320,27 +335,38 @@ class Run implements CommandInterface
 
     private function findTestFiles(InputInterface $input)
     {
+        $files = $input->getOption('file');
+
+        if (!empty($files)) {
+            return $files;
+        }
+
         $groups = $input->getOption('group');
         $excludeGroups = $input->getOption('exclude-group');
         $changed = $input->getOption('changed');
-        $filter = $input->getOption('filter');
-        $files = $input->getOption('file');
+        $filters = $input->getOption('filter');
+        $contains = $input->getOption('contains');
+        $notContains = $input->getOption('not-contains');
 
-        if ($groups) {
-            $testFiles = $this->testFinder->findTestFilesInGroups($groups);
-        } elseif ($excludeGroups) {
-            $testFiles = $this->testFinder->findTestFilesExcludingGroups($excludeGroups);
-        } elseif ($changed) {
-            $testFiles = $this->testFinder->findChangedTestFiles();
-        } elseif ($filter) {
-            $testFiles = $this->testFinder->findTestFilesByFilter($filter);
-        } elseif (!empty($files)) {
-            $testFiles = $files;
-        } else {
-            $testFiles = $this->testFinder->findAllTestFiles();
+        $this->testFinder
+            ->inGroups($groups)
+            ->notInGroups($excludeGroups)
+            ->changed($changed)
+        ;
+
+        foreach ($filters as $filter) {
+            $this->testFinder->filter($filter);
         }
 
-        return $testFiles;
+        foreach ($contains as $contain) {
+            $this->testFinder->contains($contain);
+        }
+
+        foreach ($notContains as $notContain) {
+            $this->testFinder->notContains($notContain);
+        }
+
+        return $this->testFinder->getFiles();
     }
 
     private function createChunkCommand(array $chunk) : string

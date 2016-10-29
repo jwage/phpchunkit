@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPChunkit;
 
 use PHPChunkit\Command;
@@ -175,6 +177,9 @@ class Container extends PimpleContainer
         }
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     private function loadPHPChunkitBootstrap(Configuration $configuration)
     {
         if ($bootstrapPath = $configuration->getBootstrapPath()) {

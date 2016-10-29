@@ -33,10 +33,7 @@ class DatabaseSandboxTest extends BaseTest
 
 class DatabaseSandboxStub extends DatabaseSandbox
 {
-    /**
-     * @return string
-     */
-    protected function generateUniqueId()
+    protected function generateUniqueId() : string
     {
         return 'uniqueid';
     }

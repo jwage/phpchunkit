@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPChunkit;
 
 /**
@@ -20,7 +22,7 @@ class ChunkedTests
     /**
      * @var int
      */
-    private $testsPerChunk;
+    private $testsPerChunk = 0;
 
     /**
      * @var array
@@ -32,100 +34,60 @@ class ChunkedTests
      */
     private $totalTests = 0;
 
-    /**
-     * @return int
-     */
     public function getChunk()
     {
         return $this->chunk;
     }
 
-    /**
-     * @param int $chunk
-     *
-     * @return self
-     */
-    public function setChunk($chunk)
+    public function setChunk(int $chunk) : self
     {
         $this->chunk = $chunk;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getNumChunks() : int
     {
         return $this->numChunks;
     }
 
-    /**
-     * @param int $numChunks
-     *
-     * @return self
-     */
-    public function setNumChunks($numChunks)
+    public function setNumChunks(int $numChunks) : self
     {
         $this->numChunks = $numChunks;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getTestsPerChunk()
+    public function getTestsPerChunk() : int
     {
         return $this->testsPerChunk;
     }
 
-    /**
-     * @param int $testsPerChunk
-     *
-     * @return self
-     */
-    public function setTestsPerChunk($testsPerChunk)
+    public function setTestsPerChunk(int $testsPerChunk) : self
     {
         $this->testsPerChunk = $testsPerChunk;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getChunks() : array
     {
         return $this->chunks;
     }
 
-    /**
-     * @param array $chunks
-     *
-     * @return self
-     */
-    public function setChunks(array $chunks)
+    public function setChunks(array $chunks) : self
     {
         $this->chunks = $chunks;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getTotalTests() : int
     {
         return $this->totalTests;
     }
 
-    /**
-     * @param int $totalTests
-     *
-     * @return self
-     */
-    public function setTotalTests($totalTests)
+    public function setTotalTests(int $totalTests) : self
     {
         $this->totalTests = $totalTests;
 
