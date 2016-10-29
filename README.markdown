@@ -28,19 +28,19 @@ chunk across the 2 servers with 5 parallel jobs running on each server:
 
 ### Jenkins Server #1 with 5 job workers
 
-    ./bin/phpchunkit --num-chunks=10 --chunk=1 --sandbox --create-dbs
-    ./bin/phpchunkit --num-chunks=10 --chunk=2 --sandbox --create-dbs
-    ./bin/phpchunkit --num-chunks=10 --chunk=3 --sandbox --create-dbs
-    ./bin/phpchunkit --num-chunks=10 --chunk=4 --sandbox --create-dbs
-    ./bin/phpchunkit --num-chunks=10 --chunk=5 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=1 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=2 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=3 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=4 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=5 --sandbox --create-dbs
 
 ### Jenkins Server #2 with 5 job workers
 
-    ./bin/phpchunkit --num-chunks=10 --chunk=6 --sandbox --create-dbs
-    ./bin/phpchunkit --num-chunks=10 --chunk=7 --sandbox --create-dbs
-    ./bin/phpchunkit --num-chunks=10 --chunk=8 --sandbox --create-dbs
-    ./bin/phpchunkit --num-chunks=10 --chunk=9 --sandbox --create-dbs
-    ./bin/phpchunkit --num-chunks=10 --chunk=10 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=6 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=7 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=8 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=9 --sandbox --create-dbs
+    phpchunkit --num-chunks=10 --chunk=10 --sandbox --create-dbs
 
 ## Screenshot
 
