@@ -47,7 +47,7 @@ class BuildSandbox implements CommandInterface
             ]);
         }
 
-        register_shutdown_function(function () use ($output) {
+        register_shutdown_function(function() use ($output) {
             $output->writeln('<info>Cleaning up sandbox...</info>');
 
             $this->eventDispatcher->dispatch(Events::SANDBOX_CLEANUP);

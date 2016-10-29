@@ -2,14 +2,12 @@
 
 namespace PHPChunkit;
 
-use PHPUnit_Framework_TestCase;
 use RuntimeException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
 /**
@@ -77,7 +75,7 @@ class TestRunner
 
         // temp config file
         $config = tempnam('/tmp', 'phpunitxml');
-        register_shutdown_function(function () use ($config) {
+        register_shutdown_function(function() use ($config) {
             unlink($config);
         });
 
@@ -172,12 +170,12 @@ class TestRunner
         $process = $this->getProcess($command, $env);
 
         if ($callback === null) {
-            $callback = function ($output) {
+            $callback = function($output) {
                 echo $output;
             };
         }
 
-        $process->run(function ($type, $output) use ($callback) {
+        $process->run(function($type, $output) use ($callback) {
             $callback($output);
         });
 
@@ -188,6 +186,9 @@ class TestRunner
         return $process->getExitCode();
     }
 
+    /**
+     * @param string $command
+     */
     public function getProcess($command, array $env = []) : Process
     {
         foreach ($env as $key => $value) {

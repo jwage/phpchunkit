@@ -71,7 +71,7 @@ class TestWatcher implements CommandInterface
         sleep(.5);
     }
 
-    protected function while() : bool
+    protected function while () : bool
     {
         return true;
     }

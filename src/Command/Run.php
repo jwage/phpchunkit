@@ -274,6 +274,9 @@ class Run implements CommandInterface
         }
     }
 
+    /**
+     * @param integer $size
+     */
     private function formatBytes($size, $precision = 2)
     {
         if (!$size) {
@@ -351,14 +354,14 @@ class Run implements CommandInterface
 
     private function countNumTestsInChunk(array $chunk) : int
     {
-        return array_sum(array_map(function (array $chunkFile) {
+        return array_sum(array_map(function(array $chunkFile) {
             return $chunkFile['numTests'];
         }, $chunk));
     }
 
     private function buildFilesFromChunk(array $chunk) : array
     {
-        return array_map(function (array $chunkFile) {
+        return array_map(function(array $chunkFile) {
             return $chunkFile['file'];
         }, $chunk);
     }
@@ -377,7 +380,7 @@ class Run implements CommandInterface
 
     private function createProgressCallback(ProgressBar $progressBar)
     {
-        return function ($type, $buffer) use ($progressBar) {
+        return function($type, $buffer) use ($progressBar) {
             if ($progressBar) {
                 if (in_array($buffer, ['F', 'E'])) {
                     $progressBar->setBarCharacter('<fg=red>=</>');
