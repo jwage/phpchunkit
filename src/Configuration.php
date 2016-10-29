@@ -104,6 +104,8 @@ class Configuration
         ];
 
         foreach ($xmlMappings as $name => $mapping) {
+            $value = null;
+
             if ($mapping['type'] === 'array') {
                 $value = (array) $xml->{$name}->{$mapping['xmlName']};
             } elseif (isset($attributes[$name])) {
@@ -112,7 +114,9 @@ class Configuration
                 settype($value, $mapping['type']);
             }
 
-            $configuration->{$mapping['setter']}($value);
+            if ($value !== null) {
+                $configuration->{$mapping['setter']}($value);
+            }
         }
 
         $events = (array) $xml->{'events'};
