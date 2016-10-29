@@ -117,10 +117,17 @@ class Container extends PimpleContainer
 
         // try to guess tests directory
         if (!$configuration->getTestsDirectory()) {
-            $testsDirectory = sprintf('%s/tests', $configuration->getRootDir());
+            $paths = [
+                sprintf('%s/src', $configuration->getRootDir()),
+                sprintf('%s/lib', $configuration->getRootDir()),
+                sprintf('%s/tests', $configuration->getRootDir()),
+            ];
 
-            if (is_dir($testsDirectory)) {
-                $configuration->setTestsDirectory($testsDirectory);
+            foreach ($paths as $path) {
+                if (is_dir($path)) {
+                    $configuration->setTestsDirectory($path);
+                    break;
+                }
             }
         }
 
