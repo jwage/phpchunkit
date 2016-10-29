@@ -56,7 +56,7 @@ class DatabaseSandbox
     /**
      * Gets the original test database names.
      *
-     * @return []
+     * @return array
      */
     public function getTestDatabaseNames()
     {
@@ -74,7 +74,7 @@ class DatabaseSandbox
     /**
      * Gets all the sandboxed database names.
      *
-     * @return []
+     * @return array
      */
     public function getSandboxedDatabaseNames()
     {
@@ -96,7 +96,7 @@ class DatabaseSandbox
      */
     private function initialize()
     {
-        if (!$this->sandboxDatabaseNames) {
+        if (empty($this->sandboxDatabaseNames)) {
             $this->sandboxDatabaseNames = $this->generateDatabaseNames();
         }
     }
@@ -104,7 +104,7 @@ class DatabaseSandbox
     /**
      * Generate sandboxed test database names.
      *
-     * @return []
+     * @return array
      */
     private function generateDatabaseNames()
     {

@@ -135,7 +135,7 @@ class TestRunner
         $command = sprintf('%s %s %s',
             $this->configuration->getPhpunitPath(),
             $command,
-            $this->flags($this->input, $this->output)
+            $this->flags()
         );
 
         return $this->run($command, false, $env, $callback);
@@ -152,7 +152,7 @@ class TestRunner
         $command = sprintf('%s %s %s',
             $this->configuration->getPhpunitPath(),
             $command,
-            $this->flags($this->input, $this->output)
+            $this->flags()
         );
 
         return $this->getProcess($command, $env);

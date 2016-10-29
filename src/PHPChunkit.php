@@ -7,6 +7,11 @@ namespace PHPChunkit;
  */
 class PHPChunkit
 {
+    /**
+     * @var Container
+     */
+    private $container;
+
     public function __construct(string $rootDir, Container $container = null)
     {
         $this->container = $container ?: new Container();

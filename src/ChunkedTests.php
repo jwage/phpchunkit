@@ -93,7 +93,7 @@ class ChunkedTests
     }
 
     /**
-     * @return []
+     * @return array
      */
     public function getChunks() : array
     {

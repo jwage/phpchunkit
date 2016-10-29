@@ -173,7 +173,7 @@ EOF;
             }
         }
 
-        if ($parameters) {
+        if (!empty($parameters)) {
             $testPropertiesCode[] = '';
         }
 
@@ -202,7 +202,7 @@ EOF;
                 if ($parameterClass = $parameter->getClass()) {
                     $setUpCode[] = sprintf('        $this->%s = $this->createMock(%s::class);',
                         $parameter->getName(),
-                        $parameter->getClass()->getShortName()
+                        $parameterClass->getShortName()
                     );
                 } else {
                     $setUpCode[] = sprintf("        \$this->%s = ''; // TODO",
@@ -232,7 +232,7 @@ EOF;
     }
 
     /**
-     * @return []
+     * @return array
      */
     private function getConstructorParameters()
     {
@@ -276,7 +276,7 @@ EOF;
 
         $testMethodBodyCode = [];
 
-        if ($parameters) {
+        if (!empty($parameters)) {
             foreach ($parameters as $parameter) {
                 if ($parameterClass = $parameter->getClass()) {
                     $testMethodBodyCode[] = sprintf('        $%s = $this->createMock(%s::class);', $parameter->getName(), $parameterClass->getShortName());

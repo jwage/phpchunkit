@@ -293,7 +293,7 @@ class Configuration
             throw new \InvalidArgumentException('You must configure a root directory.');
         }
 
-        if (!$this->watchDirectories) {
+        if (empty($this->watchDirectories)) {
             throw new \InvalidArgumentException('You must configure a watch directory.');
         }
 

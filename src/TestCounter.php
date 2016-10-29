@@ -96,7 +96,10 @@ class TestCounter
 
     public function clearCache()
     {
-        @unlink($this->cachePath);
+        if (file_exists($this->cachePath)) {
+            unlink($this->cachePath);
+        }
+
         $this->cache = [];
     }
 
