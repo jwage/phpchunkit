@@ -55,12 +55,16 @@ Install globally with composer:
 
     $ composer global require jwage/phpchunkit
     $ ln -s /home/youruser/.composer/vendor/bin/phpchunkit /usr/local/bin/phpchunkit
+    $ cd /path/to/your/project
+    $ phpchunkit
 
 Install Phar:
 
     $ wget https://github.com/jwage/phpchunkit/raw/master/phpchunkit.phar
     $ chmod +x phpchunkit.phar
     $ sudo mv phpchunkit.phar /usr/local/bin/phpchunkit
+    $ cd /path/to/your/project
+    $ phpchunkit
 
 ## Setup
 
