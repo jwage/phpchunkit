@@ -67,7 +67,6 @@ class Run implements CommandInterface
 
         $verbose = $output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
         $parallel = $input->getOption('parallel');
-        $phpunitOptions = (string) $input->getOption('phpunit-opt');
         $showProgressBar = !$verbose && !$parallel;
 
         $chunkedTests = $this->chunkTestFiles($input, $output);
@@ -145,7 +144,7 @@ class Run implements CommandInterface
             }
 
             $processes[$chunkNum] = $process = $this->getChunkProcess(
-                $chunk, $env, $phpunitOptions
+                $chunk, $env
             );
 
             if ($parallel) {
@@ -287,9 +286,9 @@ class Run implements CommandInterface
         return round(pow(1024, $base - floor($base)), $precision).$suffixes[floor($base)];
     }
 
-    private function getChunkProcess(array $chunk, array $env, string $phpunitOptions) : Process
+    private function getChunkProcess(array $chunk, array $env) : Process
     {
-        $command = $this->createChunkCommand($chunk, $phpunitOptions);
+        $command = $this->createChunkCommand($chunk);
 
         return $this->testRunner->getPhpunitProcess($command, $env);
     }
@@ -341,13 +340,13 @@ class Run implements CommandInterface
         return $testFiles;
     }
 
-    private function createChunkCommand(array $chunk, string $phpunitOptions) : string
+    private function createChunkCommand(array $chunk) : string
     {
         $files = $this->buildFilesFromChunk($chunk);
 
         $config = $this->testRunner->generatePhpunitXml($files);
 
-        return sprintf('-c %s %s', $config, $phpunitOptions);
+        return sprintf('-c %s', $config);
     }
 
     private function countNumTestsInChunk(array $chunk) : int
