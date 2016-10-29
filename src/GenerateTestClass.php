@@ -309,7 +309,7 @@ EOF;
     private function generateUseStatements()
     {
         $dependencies = [];
-        $dependencies[] = $this->reflectionClass->getName();
+        $dependencies[] = $this->reflectionClass->name;
         $dependencies[] = PHPUnit_Framework_TestCase::class;
 
         if ($parameters = $this->getConstructorParameters()) {
@@ -354,7 +354,7 @@ EOF;
      */
     private function isMethodTestable(ReflectionMethod $method)
     {
-        if ($this->reflectionClass->getName() !== $method->getDeclaringClass()->getName()) {
+        if ($this->reflectionClass->name !== $method->class) {
             return false;
         }
 
