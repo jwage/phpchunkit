@@ -112,10 +112,10 @@ class TestRunner
         $config = $this->generatePhpunitXml($files);
 
         if ($config) {
-            $this->output->writeln(sprintf('Executing %s test(s)', count($files)));
+            $this->output->writeln('');
 
             foreach ($files as $file) {
-                $this->output->writeln(sprintf(' <info>%s</info>', $file));
+                $this->output->writeln(sprintf(' - Executing <comment>%s</comment>', $file));
             }
 
             $this->output->writeln('');

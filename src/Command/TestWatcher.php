@@ -51,7 +51,7 @@ class TestWatcher implements CommandInterface
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Watching for PHP changes to run the tests for.');
+        $output->writeln('<info>Watching for changes to your code.</info>');
 
         $lastTime = time();
 
