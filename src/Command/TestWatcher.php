@@ -92,7 +92,7 @@ class TestWatcher implements CommandInterface
 
                 $files = $this->findAssociatedTestFiles($file);
 
-                if (!$files) {
+                if (empty($files)) {
                     return $lastTime;
                 }
             } else {

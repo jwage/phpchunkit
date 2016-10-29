@@ -45,7 +45,7 @@ class TestCounter
 
         $classes = $this->fileClassesHelper->getFileClasses($file);
 
-        if (!$classes) {
+        if (empty($classes)) {
             $this->cache[$cacheKey] = $numTestsInFile;
 
             return $numTestsInFile;
@@ -60,7 +60,7 @@ class TestCounter
         $methods = $reflectionClass->getMethods();
 
         foreach ($methods as $method) {
-            if (strpos($method->getName(), 'test') === 0) {
+            if (strpos($method->name, 'test') === 0) {
                 $docComment = $method->getDocComment();
 
                 if ($docComment) {

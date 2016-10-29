@@ -102,7 +102,7 @@ class Run implements CommandInterface
         // environment vars
         $env = [];
 
-        if (!$chunks) {
+        if (empty($chunks)) {
             $output->writeln('<error>No tests to run.</error>');
         }
 
@@ -171,7 +171,7 @@ class Run implements CommandInterface
 
                 $codes[] = $code = $process->run($callback);
 
-                if ($code) {
+                if ($code > 0) {
                     $numChunkFailures++;
 
                     if ($verbose) {
@@ -191,7 +191,7 @@ class Run implements CommandInterface
                     $output->writeln('');
                 }
 
-                if ($code) {
+                if ($code > 0) {
                     $output->writeln('');
 
                     if (!$verbose) {
@@ -251,7 +251,7 @@ class Run implements CommandInterface
 
                 $codes[] = $code = $process->getExitCode();
 
-                if ($code) {
+                if ($code > 0) {
                     $numChunkFailures++;
 
                     $output->writeln(sprintf('Chunk #%s <error>FAILED</error>', $chunkNum));
@@ -377,7 +377,7 @@ class Run implements CommandInterface
         return $progressBar;
     }
 
-    private function createProgressCallback(ProgressBar $progressBar)
+    private function createProgressCallback(ProgressBar $progressBar = null)
     {
         return function($type, $buffer) use ($progressBar) {
             if ($progressBar) {

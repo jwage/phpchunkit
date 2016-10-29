@@ -257,7 +257,7 @@ EOF;
                 continue;
             }
 
-            $testMethodsCode[] = sprintf('    public function test%s()', ucfirst($method->getName()));
+            $testMethodsCode[] = sprintf('    public function test%s()', ucfirst($method->name));
             $testMethodsCode[] = '    {';
             $testMethodsCode[] = $this->generateTestMethodBody($method);
             $testMethodsCode[] = '    }';
@@ -286,7 +286,7 @@ EOF;
             }
 
             $testMethodBodyCode[] = '';
-            $testMethodBodyCode[] = sprintf('        $this->%s->%s(', $this->classCamelCaseName, $method->getName());
+            $testMethodBodyCode[] = sprintf('        $this->%s->%s(', $this->classCamelCaseName, $method->name);
 
             $testMethodParameters = [];
             foreach ($parameters as $parameter) {
@@ -296,7 +296,7 @@ EOF;
             $testMethodBodyCode[] = '            '.implode(",\n            ", $testMethodParameters);
             $testMethodBodyCode[] = '        );';
         } else {
-            $testMethodBodyCode[] = sprintf('        $this->%s->%s();', $this->classCamelCaseName, $method->getName());
+            $testMethodBodyCode[] = sprintf('        $this->%s->%s();', $this->classCamelCaseName, $method->name);
         }
 
         return implode("\n", $testMethodBodyCode);
@@ -358,6 +358,6 @@ EOF;
             return false;
         }
 
-        return substr($method->getName(), 0, 2) !== '__' && $method->isPublic();
+        return substr($method->name, 0, 2) !== '__' && $method->isPublic();
     }
 }
