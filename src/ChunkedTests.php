@@ -23,7 +23,7 @@ class ChunkedTests
     private $testsPerChunk;
 
     /**
-     * @var []
+     * @var array
      */
     private $chunks = [];
 
@@ -101,7 +101,7 @@ class ChunkedTests
     }
 
     /**
-     * @param [] $chunks
+     * @param array $chunks
      *
      * @return self
      */

@@ -62,7 +62,7 @@ class TestRunner
     }
 
     /**
-     * @param [] $files
+     * @param array $files
      *
      * @return string $path
      */
@@ -161,7 +161,7 @@ class TestRunner
     /**
      * @param string $command
      * @param bool   $throw
-     * @param []     $env
+     * @param array     $env
      *
      * @return int
      */

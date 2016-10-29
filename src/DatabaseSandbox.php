@@ -15,12 +15,12 @@ class DatabaseSandbox
     private $sandboxEnabled = true;
 
     /**
-     * @var []
+     * @var array
      */
     private $databaseNames = [];
 
     /**
-     * @var []
+     * @var array
      */
     private $sandboxDatabaseNames = [];
 
