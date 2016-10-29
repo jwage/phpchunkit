@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PHPChunkit;
 
 use RuntimeException;
@@ -35,12 +37,6 @@ class TestRunner
      */
     private $configuration;
 
-    /**
-     * @param Application     $app
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param Configuration   $configuration
-     */
     public function __construct(
         Application $app,
         InputInterface $input,
@@ -53,28 +49,25 @@ class TestRunner
         $this->configuration = $configuration;
     }
 
-    /**
-     * @return string
-     */
-    public function getRootDir()
+    public function getRootDir() : string
     {
         return $this->configuration->getRootDir();
     }
 
-    /**
-     * @param array $files
-     *
-     * @return string $path
-     */
-    public function generatePhpunitXml(array &$files)
+    public function generatePhpunitXml(array &$files) : string
     {
         // load the config into memory
-        $phpunitXmlDistPath = is_file($file = $this->getRootDir().'/phpunit.xml') ? $file : $this->getRootDir().'/phpunit.xml.dist';
+        $phpunitXmlDistPath = is_file($file = $this->getRootDir().'/phpunit.xml')
+            ? $file
+            : $this->getRootDir().'/phpunit.xml.dist'
+        ;
+
         $src = file_get_contents($phpunitXmlDistPath);
         $xml = simplexml_load_string(str_replace('./', $this->getRootDir().'/', $src));
 
         // temp config file
-        $config = tempnam('/tmp', 'phpunitxml');
+        $config = tempnam($this->getRootDir(), 'phpunitxml');
+
         register_shutdown_function(function() use ($config) {
             unlink($config);
         });
@@ -97,15 +90,11 @@ class TestRunner
 
             return $config;
         }
+
+        return '';
     }
 
-    /**
-     * @param array $files
-     * @param array $env
-     *
-     * @return int $code
-     */
-    public function runTestFiles(array $files, array $env = [])
+    public function runTestFiles(array $files, array $env = []) : int
     {
         $config = $this->generatePhpunitXml($files);
 
@@ -121,16 +110,12 @@ class TestRunner
             return $this->runPhpunit(sprintf('-c %s', escapeshellarg($config)), $env);
         } else {
             $this->output->writeln('No tests to run.');
+
+            return 1;
         }
     }
 
-    /**
-     * @param string $command
-     * @param array  $env
-     *
-     * @return int
-     */
-    public function runPhpunit($command, array $env = [], \Closure $callback = null)
+    public function runPhpunit(string $command, array $env = [], \Closure $callback = null) : int
     {
         $command = sprintf('%s %s %s',
             $this->configuration->getPhpunitPath(),
@@ -141,13 +126,7 @@ class TestRunner
         return $this->run($command, false, $env, $callback);
     }
 
-    /**
-     * @param string $command
-     * @param array  $env
-     *
-     * @return Process
-     */
-    public function getPhpunitProcess($command, array $env = []) : Process
+    public function getPhpunitProcess(string $command, array $env = []) : Process
     {
         $command = sprintf('%s %s %s',
             $this->configuration->getPhpunitPath(),
@@ -159,13 +138,9 @@ class TestRunner
     }
 
     /**
-     * @param string $command
-     * @param bool   $throw
-     * @param array     $env
-     *
-     * @return int
+     * @throws RuntimeException
      */
-    public function run($command, $throw = true, array $env = [], \Closure $callback = null)
+    public function run(string $command, bool $throw = true, array $env = [], \Closure $callback = null) : int
     {
         $process = $this->getProcess($command, $env);
 
@@ -186,10 +161,7 @@ class TestRunner
         return $process->getExitCode();
     }
 
-    /**
-     * @param string $command
-     */
-    public function getProcess($command, array $env = []) : Process
+    public function getProcess(string $command, array $env = []) : Process
     {
         foreach ($env as $key => $value) {
             $command = sprintf('export %s=%s && %s', $key, $value, $command);
@@ -202,13 +174,7 @@ class TestRunner
         return $this->createProcess($command);
     }
 
-    /**
-     * @param string $command
-     * @param array  $input
-     *
-     * @return int
-     */
-    public function runTestCommand($command, array $input = []) : int
+    public function runTestCommand(string $command, array $input = []) : int
     {
         $input['command'] = $command;
 
@@ -216,10 +182,7 @@ class TestRunner
             ->run(new ArrayInput($input), $this->output);
     }
 
-    /**
-     * @return string
-     */
-    private function flags()
+    private function flags() : string
     {
         $memoryLimit = $this->input->getOption('memory-limit')
             ?: $this->configuration->getMemoryLimit();
@@ -250,13 +213,7 @@ class TestRunner
         return $flags;
     }
 
-    /**
-     * @param string
-     * @param string $command
-     *
-     * @return Process
-     */
-    protected function createProcess($command)
+    protected function createProcess(string $command) : Process
     {
         return new Process($command, null, null, null, null);
     }

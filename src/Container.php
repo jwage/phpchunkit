@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PHPChunkit;
 
 use PHPChunkit\Command;
@@ -118,9 +120,9 @@ class Container extends PimpleContainer
         // try to guess tests directory
         if (!$configuration->getTestsDirectory()) {
             $paths = [
+                sprintf('%s/tests', $configuration->getRootDir()),
                 sprintf('%s/src', $configuration->getRootDir()),
                 sprintf('%s/lib', $configuration->getRootDir()),
-                sprintf('%s/tests', $configuration->getRootDir()),
             ];
 
             foreach ($paths as $path) {
@@ -175,6 +177,9 @@ class Container extends PimpleContainer
         }
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     private function loadPHPChunkitBootstrap(Configuration $configuration)
     {
         if ($bootstrapPath = $configuration->getBootstrapPath()) {

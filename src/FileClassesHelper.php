@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PHPChunkit;
 
 use PHP_Token_Stream;

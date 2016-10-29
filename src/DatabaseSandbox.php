@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PHPChunkit;
 
 /**
@@ -24,9 +26,6 @@ class DatabaseSandbox
      */
     private $sandboxDatabaseNames = [];
 
-    /**
-     * @param bool
-     */
     public function __construct(bool $sandboxEnabled = false, array $databaseNames = [])
     {
         $this->sandboxEnabled = $sandboxEnabled;
@@ -53,12 +52,7 @@ class DatabaseSandbox
         $this->databaseNames = $databaseNames;
     }
 
-    /**
-     * Gets the original test database names.
-     *
-     * @return array
-     */
-    public function getTestDatabaseNames()
+    public function getTestDatabaseNames() : array
     {
         $databaseNames = [];
 
@@ -71,29 +65,18 @@ class DatabaseSandbox
         return $databaseNames;
     }
 
-    /**
-     * Gets all the sandboxed database names.
-     *
-     * @return array
-     */
-    public function getSandboxedDatabaseNames()
+    public function getSandboxedDatabaseNames() : array
     {
         $this->initialize();
 
         return $this->sandboxDatabaseNames;
     }
 
-    /**
-     * @return string
-     */
-    protected function generateUniqueId()
+    protected function generateUniqueId() : string
     {
         return uniqid();
     }
 
-    /**
-     * Initialize database names.
-     */
     private function initialize()
     {
         if (empty($this->sandboxDatabaseNames)) {
@@ -101,12 +84,7 @@ class DatabaseSandbox
         }
     }
 
-    /**
-     * Generate sandboxed test database names.
-     *
-     * @return array
-     */
-    private function generateDatabaseNames()
+    private function generateDatabaseNames() : array
     {
         $databaseNames = [];
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PHPChunkit;
 
 /**
@@ -12,9 +14,6 @@ class TestChunker
      */
     private $testCounter;
 
-    /**
-     * @param TestCounter $testCounter
-     */
     public function __construct(TestCounter $testCounter)
     {
         $this->testCounter = $testCounter;
@@ -28,7 +27,7 @@ class TestChunker
         $fileTestCounts = $this->getTestFileCounts($testFiles);
 
         $totalTests = array_sum($fileTestCounts);
-        $testsPerChunk = round($totalTests / $numChunks);
+        $testsPerChunk = (int) round($totalTests / $numChunks, 0);
 
         $chunks = [[]];
 

@@ -141,6 +141,10 @@ class TestRunnerTest extends BaseTest
 
     public function testRun()
     {
+        $this->process->expects($this->any())
+            ->method('getExitCode')
+            ->willReturn(0);
+
         $this->testRunner->passthruResponse = 0;
         $this->assertEquals(0, $this->testRunner->run('ls -la'));
     }
@@ -188,7 +192,7 @@ class TestRunnerStub extends TestRunner
      *
      * @return Process
      */
-    protected function createProcess($command)
+    protected function createProcess(string $command) : Process
     {
         return $this->process;
     }

@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PHPChunkit\Command;
 
 use PHPChunkit\Events;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -12,23 +16,31 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class CreateDatabases implements CommandInterface
 {
+    const NAME = 'create-dbs';
+
     /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
 
-    /**
-     * @param EventDispatcher $eventDispatcher
-     */
     public function __construct(EventDispatcher $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
+    public function getName() : string
+    {
+        return self::NAME;
+    }
+
+    public function configure(Command $command)
+    {
+        $command
+            ->setDescription('Create the test databases.')
+            ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Prepare sandbox before creating databases.')
+        ;
+    }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->eventDispatcher->dispatch(Events::DATABASES_CREATE);

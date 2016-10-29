@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PHPChunkit\Command;
 
 use PHPChunkit\Events;
 use PHPChunkit\TestRunner;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -13,6 +17,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class BuildSandbox implements CommandInterface
 {
+    const NAME = 'sandbox';
+
     /**
      * @var TestRunner
      */
@@ -23,20 +29,25 @@ class BuildSandbox implements CommandInterface
      */
     private $eventDispatcher;
 
-    /**
-     * @param TestRunner      $testRunner
-     * @param EventDispatcher $eventDispatcher
-     */
     public function __construct(TestRunner $testRunner, EventDispatcher $eventDispatcher)
     {
         $this->testRunner = $testRunner;
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
+    public function getName() : string
+    {
+        return self::NAME;
+    }
+
+    public function configure(Command $command)
+    {
+        $command
+            ->setDescription('Build a sandbox for a test run.')
+            ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases after building the sandbox.')
+        ;
+    }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->eventDispatcher->dispatch(Events::SANDBOX_PREPARE);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PHPChunkit;
 
 use PHPChunkit\Command;
@@ -26,6 +28,14 @@ class PHPChunkitApplication
      */
     private $symfonyApplication;
 
+    private static $commands = [
+        'phpchunkit.command.build_sandbox',
+        'phpchunkit.command.create_databases',
+        'phpchunkit.command.test_watcher',
+        'phpchunkit.command.run',
+        'phpchunkit.command.generate_test',
+    ];
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -37,55 +47,22 @@ class PHPChunkitApplication
         $this->container['phpchunkit.application.input'] = $input;
         $this->container['phpchunkit.application.output'] = $output;
 
-        $this->register('watch')
-            ->setDescription('Watch for changes to files and run the associated tests.')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
-            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for PHP.')
-            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error.')
-            ->addOption('failed', null, InputOption::VALUE_REQUIRED, 'Track tests that have failed.', true)
-            ->setCode([$this->container['phpchunkit.command.test_watcher'], 'execute'])
-        ;
-
-        $this->register('run')
-            ->setDescription('Run tests.')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Run tests in debug mode.')
-            ->addOption('memory-limit', null, InputOption::VALUE_REQUIRED, 'Memory limit for PHP.')
-            ->addOption('stop', null, InputOption::VALUE_NONE, 'Stop on failure or error.')
-            ->addOption('failed', null, InputOption::VALUE_NONE, 'Track tests that have failed.')
-            ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases before running tests.')
-            ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Configure unique names.')
-            ->addOption('chunk', null, InputOption::VALUE_REQUIRED, 'Run a specific chunk of tests.')
-            ->addOption('num-chunks', null, InputOption::VALUE_REQUIRED, 'The number of chunks to run tests in.')
-            ->addOption('group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests in these groups.')
-            ->addOption('exclude-group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run all tests excluding these groups.')
-            ->addOption('changed', null, InputOption::VALUE_NONE, 'Run changed tests.')
-            ->addOption('parallel', null, InputOption::VALUE_REQUIRED, 'Run test chunks in parallel.')
-            ->addOption('filter', null, InputOption::VALUE_REQUIRED, 'Run tests that match the given filter.')
-            ->addOption('file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run test file.')
-            ->addOption('phpunit-opt', null, InputOption::VALUE_REQUIRED, 'Pass through phpunit options.')
-            ->setCode([$this->container['phpchunkit.command.run'], 'execute'])
-        ;
-
-        $this->register('create-dbs')
-            ->setDescription('Create the test databases.')
-            ->addOption('sandbox', null, InputOption::VALUE_NONE, 'Prepare sandbox before creating databases.')
-            ->setCode([$this->container['phpchunkit.command.create_databases'], 'execute'])
-        ;
-
-        $this->register('sandbox')
-            ->setDescription('Build a sandbox for a test run.')
-            ->addOption('create-dbs', null, InputOption::VALUE_NONE, 'Create the test databases after building the sandbox.')
-            ->setCode([$this->container['phpchunkit.command.build_sandbox'], 'execute'])
-        ;
-
-        $this->register('generate')
-            ->setDescription('Generate a test skeleton from a class.')
-            ->addArgument('class', InputArgument::REQUIRED, 'Class to generate test for.')
-            ->addOption('file', null, InputOption::VALUE_REQUIRED, 'File path to write test to.')
-            ->setCode([$this->container['phpchunkit.command.generate_test'], 'execute'])
-        ;
+        foreach (self::$commands as $serviceName) {
+            $this->registerCommand($serviceName);
+        }
 
         return $this->runSymfonyApplication($input, $output);
+    }
+
+    public function registerCommand(string $serviceName)
+    {
+        $service = $this->container[$serviceName];
+
+        $symfonyCommand = $this->register($service->getName());
+
+        $service->configure($symfonyCommand);
+
+        $symfonyCommand->setCode([$service, 'execute']);
     }
 
     protected function runSymfonyApplication(
