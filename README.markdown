@@ -1,6 +1,8 @@
 # PHPChunkit
 
 [![Build Status](https://secure.travis-ci.org/jwage/phpchunkit.png?branch=master)](http://travis-ci.org/jwage/phpchunkit)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/jwage/phpchunkit/badges/quality-score.png?s=7e0e1d4b5d7f6be61a3cd804dba556a0e4d1141d)](https://scrutinizer-ci.com/g/jwage/phpchunkit/)
+[![Code Coverage](https://scrutinizer-ci.com/g/jwage/phpchunkit/badges/coverage.png?s=a02332bc4d6a32df3171f2ba714e4583a70c0154)](https://scrutinizer-ci.com/g/jwage/phpchunkit/)
 
 PHPChunkit is a library that sits on top of PHPUnit and adds additional
 functionality to make it easier to work with large unit and functional
@@ -170,53 +172,57 @@ $eventDispatcher->addListener(Events::DATABASES_CREATE, function() {
 
 Run all tests:
 
-    ./bin/phpchunkit
+    phpchunkit
 
 Run just unit tests:
 
-    ./bin/phpchunkit --exclude-group=functional
+    phpchunkit --exclude-group=functional
 
 Run 4 chunks of tests across 2 parallel processes:
 
-    ./bin/phpchunkit --exclude-group=functional --num-chunks=4 --parallel=2
+    phpchunkit --exclude-group=functional --num-chunks=4 --parallel=2
 
 Run all functional tests:
 
-    ./bin/phpchunkit --group=functional
+    phpchunkit --group=functional
 
 Run a specific chunk of functional tests:
 
-    ./bin/phpchunkit --num-chunks=5 --chunk=1
+    phpchunkit --num-chunks=5 --chunk=1
 
 Run tests that match a filter:
 
-    ./bin/phpchunkit --filter=BuildSandbox
+    phpchunkit --filter=BuildSandbox
 
 Run a specific file:
 
-    ./bin/phpchunkit --file=tests/Command/BuildSandboxTest.php
+    phpchunkit --file=tests/Command/BuildSandboxTest.php
 
 Run tests for changed files:
 
 > Note: This relies on git to know which files have changed.
 
-    ./bin/phpchunkit --changed
+    phpchunkit --changed
 
 Watch your code for changes and run tests:
 
-    ./bin/phpchunkit watch
+    phpchunkit watch
 
 Create databases:
 
-    ./bin/phpchunkit create-dbs
+    phpchunkit create-dbs
 
 Generate a test skeleton from a class:
 
-    ./bin/phpchunkit generate "MyProject\ClassName"
+    phpchunkit generate "MyProject\ClassName"
 
 Save the generated test to a file:
 
-    ./bin/phpchunkit generate "MyProject\ClassName" --file=tests/MyProject/Test/ClassNameTest.php
+    phpchunkit generate "MyProject\ClassName" --file=tests/MyProject/Test/ClassNameTest.php
+
+Pass through options to PHPUnit when running tests:
+
+    phpchunkit --phpunit-opt="--coverage-html /path/to/save/coverage"
 
 ## Demo Project
 
