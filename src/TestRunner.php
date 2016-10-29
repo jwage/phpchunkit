@@ -251,6 +251,7 @@ class TestRunner
 
     /**
      * @param string
+     * @param string $command
      *
      * @return Process
      */
