@@ -242,7 +242,8 @@ class TestRunner
             $flags .= ' --colors';
         }
 
-        if ($phpunitOptions = $this->input->getOption('phpunit-opt')) {
+        if ($this->input->hasOption('phpunit-opt')
+            && $phpunitOptions = $this->input->getOption('phpunit-opt')) {
             $flags .= ' '.$phpunitOptions;
         }
 

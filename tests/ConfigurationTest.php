@@ -18,6 +18,36 @@ class ConfigurationTest extends BaseTest
         $this->configuration = new Configuration();
     }
 
+    public function testCreateFromXmlFile()
+    {
+        $configuration = Configuration::createFromXmlFile(
+            sprintf('%s/phpchunkit.xml.dist', $this->getRootDir())
+        );
+
+        $this->assertEquals($this->getRootDir(), $configuration->getRootDir());
+        $this->assertEquals(sprintf('%s/tests', $this->getRootDir()), $configuration->getTestsDirectory());
+
+        $this->assertEquals([
+            sprintf('%s/src', $this->getRootDir()),
+            sprintf('%s/tests', $this->getRootDir())
+        ], $configuration->getWatchDirectories());
+
+        $this->assertEquals(
+            sprintf('%s/vendor/phpunit/phpunit/phpunit', $this->getRootDir()),
+            $configuration->getPhpunitPath()
+        );
+
+        $this->assertEquals(
+            sprintf('%s/tests/phpchunkit_bootstrap.php', $this->getRootDir()),
+            $configuration->getBootstrapPath()
+        );
+
+        $this->assertEquals('512M', $configuration->getMemoryLimit());
+        $this->assertEquals('1', $configuration->getNumChunks());
+        $this->assertEquals(['testdb1', 'testdb2'], $configuration->getDatabaseSandbox()->getDatabaseNames());
+        $this->assertCount(3, $configuration->getEventDispatcher()->getListeners());
+    }
+
     public function testSetGetRootDir()
     {
         $this->assertEquals('', $this->configuration->getRootDir());
