@@ -2,8 +2,6 @@
 
 namespace PHPChunkit;
 
-use PHP_Token_Stream;
-
 /**
  * @testClass PHPChunkit\Test\TestCounterTest
  */

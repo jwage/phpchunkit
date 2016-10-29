@@ -68,7 +68,7 @@ class FileClassesHelper
 
         for ($i = 0, $len = count($matches['type']); $i < $len; $i++) {
             if (!empty($matches['ns'][$i])) {
-                $namespace = str_replace(array(' ', "\t", "\r", "\n"), '', $matches['nsname'][$i]) . '\\';
+                $namespace = str_replace(array(' ', "\t", "\r", "\n"), '', $matches['nsname'][$i]).'\\';
             } else {
                 $name = $matches['name'][$i];
                 // skip anon classes extending/implementing
@@ -85,7 +85,7 @@ class FileClassesHelper
                     // the class name.
                     $name = rtrim($name, ':');
                 }
-                $classes[] = ltrim($namespace . $name, '\\');
+                $classes[] = ltrim($namespace.$name, '\\');
             }
         }
 
