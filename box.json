@@ -1,0 +1,20 @@
+{
+    "alias": "phpchunkit.phar",
+    "chmod": "0755",
+    "directories": ["src"],
+    "files": [
+        "LICENSE",
+        "bin/phpchunkit"
+    ],
+    "finder": [
+        {
+            "name": "*.php",
+            "exclude": ["Tests"],
+            "in": "vendor"
+        }
+    ],
+    "git-version": "dev-master",
+    "main": "bin/phpchunkit",
+    "output": "phpchunkit.phar",
+    "stub": true
+}

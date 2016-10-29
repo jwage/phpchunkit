@@ -18,7 +18,7 @@
     "require": {
         "php": ">=7.0.0",
         "phpunit/phpunit": "5.5.*",
-        "symfony/console": "^3.1",
+        "symfony/console": "^2.1",
         "symfony/process": "^3.1",
         "symfony/stopwatch": "^3.1",
         "symfony/finder": "^3.1",
@@ -26,7 +26,8 @@
         "phpunit/php-token-stream": "^1.4",
         "pimple/pimple": "^3.0",
         "doctrine/inflector": "^1.1",
-        "twig/twig": "^1.27"
+        "twig/twig": "^1.27",
+        "kherge/box": "^2.7"
     },
     "require-dev": {
         "ext-pdo": "*",
