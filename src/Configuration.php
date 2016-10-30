@@ -290,19 +290,17 @@ class Configuration
 
     public function isSetup()
     {
+        $setup = true;
+
         if (!$this->rootDir) {
-            return false;
+            $setup = false;
         }
 
         if (!$this->testsDirectory) {
-            return false;
+            $setup = false;
         }
 
-        if (!$this->phpunitPath) {
-            return false;
-        }
-
-        return true;
+        return $setup;
     }
 
     private function setPath(string $name, string $path) : self

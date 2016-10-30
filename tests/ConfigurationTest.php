@@ -158,6 +158,38 @@ class ConfigurationTest extends BaseTest
         $this->assertSame($databaseSandbox, $this->configuration->getDatabaseSandbox());
     }
 
+    public function testSetSandboxEnabled()
+    {
+        $this->assertFalse($this->configuration->getDatabaseSandbox()->getSandboxEnabled());
+
+        $this->configuration->setSandboxEnabled(true);
+
+        $this->assertTrue($this->configuration->getDatabaseSandbox()->getSandboxEnabled());
+
+        $this->configuration->setSandboxEnabled(false);
+
+        $this->assertFalse($this->configuration->getDatabaseSandbox()->getSandboxEnabled());
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage PHPChunkit\Test\ConfigurationTest does not implement PHPChunkit\ListenerInterface
+     */
+    public function testAddListenerThrowsInvalidArgumentException()
+    {
+        $this->configuration->addListener('test', self::class);
+    }
+
+    public function testIsSetup()
+    {
+        $this->assertFalse($this->configuration->isSetup());
+
+        $this->configuration->setRootDir(__DIR__);
+        $this->configuration->setTestsDirectory(__DIR__);
+
+        $this->assertTrue($this->configuration->isSetup());
+    }
+
     public function testSetDatabaseNames()
     {
         $databaseNames = ['testdb1', 'testdb2'];
