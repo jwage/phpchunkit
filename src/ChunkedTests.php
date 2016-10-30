@@ -93,4 +93,9 @@ class ChunkedTests
 
         return $this;
     }
+
+    public function hasTests() : bool
+    {
+        return $this->totalTests ? true : false;
+    }
 }

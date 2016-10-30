@@ -63,48 +63,48 @@ class RunTest extends BaseTest
 
         $input->expects($this->at(1))
             ->method('getOption')
+            ->with('num-chunks')
+            ->willReturn(14);
+
+        $input->expects($this->at(2))
+            ->method('getOption')
+            ->with('chunk')
+            ->willReturn(null);
+
+        $input->expects($this->at(3))
+            ->method('getOption')
             ->with('file')
             ->willReturn(null);
 
-        $input->expects($this->at(2))
+        $input->expects($this->at(4))
             ->method('getOption')
             ->with('group')
             ->willReturn([]);
 
-        $input->expects($this->at(3))
+        $input->expects($this->at(5))
             ->method('getOption')
             ->with('exclude-group')
             ->willReturn([]);
 
-        $input->expects($this->at(4))
+        $input->expects($this->at(6))
             ->method('getOption')
             ->with('changed')
             ->willReturn(false);
 
-        $input->expects($this->at(5))
+        $input->expects($this->at(7))
             ->method('getOption')
             ->with('filter')
             ->willReturn([]);
 
-        $input->expects($this->at(6))
+        $input->expects($this->at(8))
             ->method('getOption')
             ->with('contains')
             ->willReturn([]);
 
-        $input->expects($this->at(7))
+        $input->expects($this->at(9))
             ->method('getOption')
             ->with('not-contains')
             ->willReturn([]);
-
-        $input->expects($this->at(8))
-            ->method('getOption')
-            ->with('num-chunks')
-            ->willReturn(14);
-
-        $input->expects($this->at(9))
-            ->method('getOption')
-            ->with('chunk')
-            ->willReturn(null);
 
         $input->expects($this->at(10))
             ->method('getOption')
