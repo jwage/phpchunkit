@@ -204,7 +204,8 @@ class Run implements CommandInterface
         $this->input = $input;
         $this->output = $output;
         $this->verbose = $output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
-        $this->parallel = (bool) $this->input->getOption('parallel');
+        $this->numParallelProcesses = (int) $this->input->getOption('parallel');
+        $this->parallel = $this->numParallelProcesses > 1;
         $this->showProgressBar = !$this->verbose && !$this->parallel;
         $this->numChunks = $this->getNumChunks();
         $this->chunk = (int) $this->input->getOption('chunk');
