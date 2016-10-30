@@ -158,15 +158,7 @@ class Configuration
 
     public function setRootDir(string $rootDir) : self
     {
-        if (!is_dir($rootDir)) {
-            throw new \InvalidArgumentException(
-                sprintf('Root directory "%s" does not exist.', $rootDir)
-            );
-        }
-
-        $this->rootDir = realpath($rootDir);
-
-        return $this;
+        return $this->setPath('rootDir', $rootDir);
     }
 
     public function getRootDir() : string
@@ -198,15 +190,7 @@ class Configuration
 
     public function setTestsDirectory(string $testsDirectory) : self
     {
-        if (!is_dir($testsDirectory)) {
-            throw new \InvalidArgumentException(
-                sprintf('Tests directory "%s" does not exist.', $testsDirectory)
-            );
-        }
-
-        $this->testsDirectory = realpath($testsDirectory);
-
-        return $this;
+        return $this->setPath('testsDirectory', $testsDirectory);
     }
 
     public function getTestsDirectory() : string
@@ -216,15 +200,7 @@ class Configuration
 
     public function setBootstrapPath(string $bootstrapPath) : self
     {
-        if (!file_exists($bootstrapPath)) {
-            throw new \InvalidArgumentException(
-                sprintf('Bootstrap path "%s" does not exist.', $bootstrapPath)
-            );
-        }
-
-        $this->bootstrapPath = realpath($bootstrapPath);
-
-        return $this;
+        return $this->setPath('bootstrapPath', $bootstrapPath);
     }
 
     public function getBootstrapPath() : string
@@ -234,15 +210,7 @@ class Configuration
 
     public function setPhpunitPath(string $phpunitPath) : self
     {
-        if (!file_exists($phpunitPath)) {
-            throw new \InvalidArgumentException(
-                sprintf('PHPUnit path "%s" does not exist.', $phpunitPath)
-            );
-        }
-
-        $this->phpunitPath = realpath($phpunitPath);
-
-        return $this;
+        return $this->setPath('phpunitPath', $phpunitPath);
     }
 
     public function getPhpunitPath() : string
@@ -335,5 +303,18 @@ class Configuration
         }
 
         return true;
+    }
+
+    private function setPath(string $name, string $path) : self
+    {
+        if (!file_exists($path)) {
+            throw new \InvalidArgumentException(
+                sprintf('%s "%s" does not exist.', $name, $path)
+            );
+        }
+
+        $this->$name = realpath($path);
+
+        return $this;
     }
 }

@@ -68,7 +68,7 @@ class ConfigurationTest extends BaseTest
 
     /**
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Root directory "unknown" does not exist.
+     * @expectedExceptionMessage rootDir "unknown" does not exist.
      */
     public function testSetRootDirThrowsInvalidArgumentException()
     {
@@ -104,7 +104,7 @@ class ConfigurationTest extends BaseTest
 
     /**
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Tests directory "unknown" does not exist.
+     * @expectedExceptionMessage testsDirectory "unknown" does not exist.
      */
     public function testSetGetTestsDirectoryThrowsInvalidArgumentException()
     {
@@ -122,7 +122,7 @@ class ConfigurationTest extends BaseTest
 
     /**
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Bootstrap path "unknown" does not exist.
+     * @expectedExceptionMessage bootstrapPath "unknown" does not exist.
      */
     public function testSetGetBootstrapPathThrowsInvalidArgumentException()
     {
@@ -140,7 +140,7 @@ class ConfigurationTest extends BaseTest
 
     /**
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage PHPUnit path "unknown" does not exist.
+     * @expectedExceptionMessage phpunitPath "unknown" does not exist.
      */
     public function testSetGetPhpunitPathThrowsInvalidArgumentException()
     {
