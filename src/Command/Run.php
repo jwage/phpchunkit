@@ -76,6 +76,11 @@ class Run implements CommandInterface
     private $showProgressBar = true;
 
     /**
+     * @var null|ProgressBar
+     */
+    private $progressBar;
+
+    /**
      * @var integer
      */
     private $numChunks = 1;
@@ -254,7 +259,7 @@ class Run implements CommandInterface
             ->setChunk($this->chunk)
         ;
 
-        if (!$testFiles) {
+        if (empty($testFiles)) {
             return $chunkedTests;
         }
 
