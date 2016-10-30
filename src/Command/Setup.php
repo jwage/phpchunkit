@@ -15,6 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * @testClass PHPChunkit\Test\Command\SetupTest
+ */
 class Setup implements CommandInterface
 {
     const NAME = 'setup';

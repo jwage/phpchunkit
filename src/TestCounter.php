@@ -107,7 +107,7 @@ class TestCounter
             if (strpos($method->name, 'test') === 0) {
                 $docComment = $method->getDocComment();
 
-                if ($docComment) {
+                if ($docComment !== false) {
                     preg_match_all('/@dataProvider\s([a-zA-Z0-9_]+)/', $docComment, $dataProvider);
 
                     if (isset($dataProvider[1][0])) {
@@ -125,7 +125,7 @@ class TestCounter
             } else {
                 $docComment = $method->getDocComment();
 
-                if ($docComment) {
+                if ($docComment !== false) {
                     preg_match_all('/@test/', $docComment, $tests);
 
                     if ($tests[0]) {

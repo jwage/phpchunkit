@@ -150,11 +150,13 @@ class TestWatcher implements CommandInterface
 
             $docComment = $reflectionClass->getDocComment();
 
-            preg_match_all('/@testClass\s(.*)/', $docComment, $testClasses);
+            if ($docComment !== false) {
+                preg_match_all('/@testClass\s(.*)/', $docComment, $testClasses);
 
-            if (isset($testClasses[1]) && $testClasses[1]) {
-                foreach ($testClasses[1] as $className) {
-                    $testFiles[] = (new \ReflectionClass($className))->getFileName();
+                if (isset($testClasses[1]) && $testClasses[1]) {
+                    foreach ($testClasses[1] as $className) {
+                        $testFiles[] = (new \ReflectionClass($className))->getFileName();
+                    }
                 }
             }
         }
