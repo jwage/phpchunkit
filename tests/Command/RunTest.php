@@ -63,8 +63,8 @@ class RunTest extends BaseTest
 
         $input->expects($this->at(1))
             ->method('getOption')
-            ->with('num-chunks')
-            ->willReturn(14);
+            ->with('stop')
+            ->willReturn(false);
 
         $input->expects($this->at(2))
             ->method('getOption')
@@ -74,7 +74,7 @@ class RunTest extends BaseTest
         $input->expects($this->at(3))
             ->method('getOption')
             ->with('file')
-            ->willReturn(null);
+            ->willReturn([]);
 
         $input->expects($this->at(4))
             ->method('getOption')
@@ -107,6 +107,11 @@ class RunTest extends BaseTest
             ->willReturn([]);
 
         $input->expects($this->at(10))
+            ->method('getOption')
+            ->with('num-chunks')
+            ->willReturn(14);
+
+        $input->expects($this->at(11))
             ->method('getOption')
             ->with('sandbox')
             ->willReturn(true);
