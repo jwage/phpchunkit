@@ -135,6 +135,8 @@ class Run implements CommandInterface
         $processes = [];
         $numChunkFailures = 0;
         $totalTestsRan = 0;
+        $numAssertions = 0;
+        $numFailures = 0;
         $numProcesses = $parallel;
 
         foreach ($chunks as $i => $chunk) {
@@ -157,14 +159,20 @@ class Run implements CommandInterface
             ;
 
             if ($showProgressBar) {
-                $callback = $this->createProgressCallback($progressBar);
+                $callback = $this->createProgressCallback($progressBar, $numAssertions, $numFailures);
             } else {
                 if ($verbose) {
-                    $callback = function($type, $out) use ($output) {
+                    $callback = function($type, $out) use ($output, &$numAssertions, &$numFailures) {
+                        $numAssertions += $this->extractNumAssertions($out);
+                        $numFailures += $this->extractNumFailures($out);
+
                         $output->write($out);
                     };
                 } else {
-                    $callback = null;
+                    $callback = function($type, $out) use (&$numAssertions, &$numFailures) {
+                        $numAssertions += $this->extractNumAssertions($out);
+                        $numFailures += $this->extractNumFailures($out);
+                    };
                 }
             }
 
@@ -248,10 +256,12 @@ class Run implements CommandInterface
         ));
 
         $output->writeln('');
-        $output->writeln(sprintf('%s (%s chunks, %s tests%s)',
+        $output->writeln(sprintf('%s (%s chunks, %s tests, %s assertions, %s failures%s)',
             $failed ? '<error>FAILED</error>' : '<info>PASSED</info>',
             count($chunks),
             $totalTestsRan,
+            $numAssertions,
+            $numFailures,
             $failed ? sprintf(', Failed chunks: %s', $numChunkFailures) : ''
         ));
 
@@ -297,6 +307,34 @@ class Run implements CommandInterface
                 }
             }
         }
+    }
+
+    private function extractNumAssertions(string $output) : int
+    {
+        preg_match_all('/([0-9]+) assertions/', $output, $matches);
+
+        if (isset($matches[1][0])) {
+            return (int) $matches[1][0];
+        }
+
+        preg_match_all('/Assertions: ([0-9]+)/', $output, $matches);
+
+        if (isset($matches[1][0])) {
+            return (int) $matches[1][0];
+        }
+
+        return 0;
+    }
+
+    private function extractNumFailures(string $output) : int
+    {
+        preg_match_all('/Failures: ([0-9]+)/', $output, $matches);
+
+        if (isset($matches[1][0])) {
+            return (int) $matches[1][0];
+        }
+
+        return 0;
     }
 
     private function formatBytes(int $size, int $precision = 2) : string
@@ -410,9 +448,12 @@ class Run implements CommandInterface
         return $progressBar;
     }
 
-    private function createProgressCallback(ProgressBar $progressBar = null)
+    private function createProgressCallback(ProgressBar $progressBar = null, &$numAssertions, &$numFailures)
     {
-        return function($type, $buffer) use ($progressBar) {
+        return function($type, $buffer) use ($progressBar, &$numAssertions, &$numFailures) {
+            $numAssertions += $this->extractNumAssertions($buffer);
+            $numFailures += $this->extractNumFailures($buffer);
+
             if ($progressBar) {
                 if (in_array($buffer, ['F', 'E'])) {
                     $progressBar->setBarCharacter('<fg=red>=</>');
