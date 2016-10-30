@@ -75,9 +75,9 @@ class Run implements CommandInterface
     private $parallel = false;
 
     /**
-     * @var null|integer
+     * @var bool
      */
-    private $chunk = null;
+    private $stop = false;
 
     /**
      * @var ChunkedTests
@@ -88,6 +88,16 @@ class Run implements CommandInterface
      * @var integer
      */
     private $numParallelProcesses = 1;
+
+    /**
+     * @var ChunkRepository
+     */
+    private $chunkRepository;
+
+    /**
+     * @var ChunkRunner
+     */
+    private $chunkRunner;
 
     /**
      * @var ChunkResults

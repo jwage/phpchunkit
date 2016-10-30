@@ -22,7 +22,7 @@ class Processes
     /**
      * @var int
      */
-    private $numProcesses;
+    private $numParallelProcesses;
 
     /**
      * @var bool

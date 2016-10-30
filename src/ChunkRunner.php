@@ -52,6 +52,16 @@ class ChunkRunner
      */
     private $parallel = false;
 
+    /**
+     * @var bool
+     */
+    private $showProgressBar = false;
+
+    /**
+     * @var ProgressBar|null
+     */
+    private $progressBar;
+
     public function __construct(
         ChunkedTests $chunkedTests,
         ChunkResults $chunkResults,
