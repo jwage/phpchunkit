@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace PHPChunkit\Command;
 
-use Closure;
 use PHPChunkit\ChunkRunner;
 use PHPChunkit\ChunkedTests;
 use PHPChunkit\ChunkRepository;
@@ -15,11 +14,9 @@ use PHPChunkit\TestFinder;
 use PHPChunkit\TestRunner;
 use PHPChunkit\Configuration;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
