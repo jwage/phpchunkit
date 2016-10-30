@@ -17,7 +17,7 @@
     },
     "require": {
         "php": ">=7.0.0",
-        "phpunit/phpunit": "5.5.*",
+        "phpunit/phpunit": "5.6.*",
         "symfony/console": "^2.1",
         "symfony/process": "^3.1",
         "symfony/stopwatch": "^3.1",
