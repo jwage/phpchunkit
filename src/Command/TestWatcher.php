@@ -64,6 +64,12 @@ class TestWatcher implements CommandInterface
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        if (empty($this->configuration->getWatchDirectories())) {
+            throw new \InvalidArgumentException(
+                'In order to use the watch feature you must configure watch directories.'
+            );
+        }
+
         $output->writeln('<info>Watching for changes to your code.</info>');
 
         $lastTime = time();

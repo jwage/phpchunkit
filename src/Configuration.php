@@ -320,22 +320,18 @@ class Configuration
         return $this->eventDispatcher;
     }
 
-    public function throwExceptionIfConfigurationIncomplete()
+    public function isSetup()
     {
         if (!$this->rootDir) {
-            throw new \InvalidArgumentException('You must configure a root directory.');
-        }
-
-        if (empty($this->watchDirectories)) {
-            throw new \InvalidArgumentException('You must configure a watch directory.');
+            return false;
         }
 
         if (!$this->testsDirectory) {
-            throw new \InvalidArgumentException('You must configure a tests directory.');
+            return false;
         }
 
         if (!$this->phpunitPath) {
-            throw new \InvalidArgumentException('You must configure a phpunit path.');
+            return false;
         }
 
         return true;

@@ -29,12 +29,6 @@ class TestFinder
     public function __construct(string $testsDirectory)
     {
         $this->testsDirectory = $testsDirectory;
-
-        $this->finder = Finder::create()
-            ->files()
-            ->name('*Test.php')
-            ->in($this->testsDirectory)
-            ->sortByName();
     }
 
     public function changed(bool $changed = true) : self
@@ -46,28 +40,28 @@ class TestFinder
 
     public function filter(string $filter = null) : self
     {
-        $this->finder->path($filter);
+        $this->getFinder()->path($filter);
 
         return $this;
     }
 
     public function contains(string $contains = null) : self
     {
-        $this->finder->contains($contains);
+        $this->getFinder()->contains($contains);
 
         return $this;
     }
 
     public function notContains(string $notContains = null) : self
     {
-        $this->finder->notContains($notContains);
+        $this->getFinder()->notContains($notContains);
 
         return $this;
     }
 
     public function inGroup(string $group = null) : self
     {
-        $this->finder->contains(sprintf('@group %s', $group));
+        $this->getFinder()->contains(sprintf('@group %s', $group));
 
         return $this;
     }
@@ -83,7 +77,7 @@ class TestFinder
 
     public function notInGroup(string $group = null) : self
     {
-        $this->finder->notContains(sprintf('@group %s', $group));
+        $this->getFinder()->notContains(sprintf('@group %s', $group));
 
         return $this;
     }
@@ -139,11 +133,24 @@ class TestFinder
         return $this->buildFilesArrayFromFinder();
     }
 
+    private function getFinder() : Finder
+    {
+        if ($this->finder === null) {
+            $this->finder = Finder::create()
+                ->files()
+                ->name('*Test.php')
+                ->in($this->testsDirectory)
+                ->sortByName();
+        }
+
+        return $this->finder;
+    }
+
     private function buildFilesArrayFromFinder() : array
     {
         return array_values(array_map(function($file) {
             return $file->getPathName();
-        }, iterator_to_array($this->finder)));
+        }, iterator_to_array($this->getFinder())));
     }
 
     private function buildFilesArrayFromFindCommand(string $command) : array

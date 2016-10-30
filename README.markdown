@@ -232,6 +232,14 @@ Pass through options to PHPUnit when running tests:
 
     phpchunkit --phpunit-opt="--coverage-html /path/to/save/coverage"
 
+List all the available options:
+
+    phpchunkit --help
+
+Help information for setting up PHPChunkit:
+
+    phpchunkit setup
+
 ## Demo Project
 
 Take a look at [jwage/phpchunkit-demo](https://github.com/jwage/phpchunkit-demo) to see how it can be integrated in to an existing PHPUnit project.

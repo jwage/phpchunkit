@@ -3,6 +3,7 @@
 namespace PHPChunkit\Test;
 
 use PHPChunkit\Command\CommandInterface;
+use PHPChunkit\Configuration;
 use PHPChunkit\Container;
 use PHPChunkit\PHPChunkitApplication;
 use Symfony\Component\Console\Application;
@@ -27,7 +28,9 @@ class PHPChunkitApplicationTest extends BaseTest
 
         $container = new Container();
         $container['phpchunkit.root_dir'] = $this->getRootDir();
+        $container['phpchunkit.configuration'] = $this->createMock(Configuration::class);
         $container['phpchunkit.symfony_application'] = $symfonyApplication;
+        $container['phpchunkit.command.setup'] = $this->createMock(CommandInterface::class);
         $container['phpchunkit.command.test_watcher'] = $this->createMock(CommandInterface::class);
         $container['phpchunkit.command.run'] = $this->createMock(CommandInterface::class);
         $container['phpchunkit.command.build_sandbox'] = $this->createMock(CommandInterface::class);

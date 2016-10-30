@@ -11,12 +11,17 @@ use Symfony\Component\Console\Application;
 
 class Container extends PimpleContainer
 {
+    const NAME = 'PHPChunkit';
+    const VERSION = '0.0.1';
+
     public function initialize()
     {
-        $this['phpchunkit.configuration'] = $this->getConfiguration();
+        $this['phpchunkit.configuration'] = function() {
+            return $this->getConfiguration();
+        };
 
         $this['phpchunkit.symfony_application'] = function() {
-            return new Application();
+            return new Application(self::NAME, self::VERSION);
         };
 
         $this['phpchunkit.application'] = function() {
@@ -54,6 +59,10 @@ class Container extends PimpleContainer
             return new TestFinder(
                 $this['phpchunkit.configuration']->getTestsDirectory()
             );
+        };
+
+        $this['phpchunkit.command.setup'] = function() {
+            return new Command\Setup();
         };
 
         $this['phpchunkit.command.test_watcher'] = function() {
@@ -133,8 +142,6 @@ class Container extends PimpleContainer
             }
         }
 
-        $configuration->throwExceptionIfConfigurationIncomplete();
-
         return $configuration;
     }
 
@@ -191,7 +198,11 @@ class Container extends PimpleContainer
 
             require_once $bootstrapPath;
         } else {
-            require_once sprintf('%s/vendor/autoload.php', $configuration->getRootDir());
+            $autoloaderPath = sprintf('%s/vendor/autoload.php', $configuration->getRootDir());
+
+            if (file_exists($autoloaderPath)) {
+                require_once $autoloaderPath;
+            }
         }
     }
 }

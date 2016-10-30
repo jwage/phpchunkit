@@ -7,6 +7,7 @@ namespace PHPChunkit;
 use PHPChunkit\Command;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -29,6 +30,7 @@ class PHPChunkitApplication
     private $symfonyApplication;
 
     private static $commands = [
+        'phpchunkit.command.setup',
         'phpchunkit.command.build_sandbox',
         'phpchunkit.command.create_databases',
         'phpchunkit.command.test_watcher',
@@ -62,7 +64,18 @@ class PHPChunkitApplication
 
         $service->configure($symfonyCommand);
 
-        $symfonyCommand->setCode([$service, 'execute']);
+        $symfonyCommand->setCode(function($input, $output) use ($service) {
+            if (!$service instanceof Command\Setup) {
+                $configuration = $this->container['phpchunkit.configuration'];
+
+                if (!$configuration->isSetup()) {
+                    return $this->symfonyApplication
+                        ->find('setup')->run($input, $output);
+                }
+            }
+
+            call_user_func_array([$service, 'execute'], [$input, $output]);
+        });
     }
 
     protected function runSymfonyApplication(

@@ -180,13 +180,4 @@ class ConfigurationTest extends BaseTest
 
         $this->assertSame($eventDispatcher, $this->configuration->getEventDispatcher());
     }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage You must configure a root directory.
-     */
-    public function testThrowExceptionIfConfigurationIncomplete()
-    {
-        $this->configuration->throwExceptionIfConfigurationIncomplete();
-    }
 }
