@@ -139,6 +139,8 @@ use PHPChunkit\Events;
 
 // Manipulate $configuration which is an instance of PHPChunkit\Configuration
 
+/** @var PHPChunkit\Configuration $configuration */
+
 $rootDir = $configuration->getRootDir();
 
 $configuration = $configuration
