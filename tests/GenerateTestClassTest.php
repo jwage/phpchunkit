@@ -146,7 +146,32 @@ EOF;
 
     public function testGenerateAdvancedClass()
     {
+        try {
+            new \ReflectionMethod(\PHPUnit_Framework_TestCase::class, 'createMock');
+        } catch (\ReflectionException $e) {
+            $this->markTestSkipped('PHPUnit >= 5.4 is required.');
+        }
+
         $this->checkGeneratedTestClass(self::EXPECTED_ADVANCED_CLASS, TestAdvancedClass::class);
+
+        $test = new \PHPChunkit\Test\TestAdvancedClassTest();
+        $test->setUp();
+        $test->testGetSomething1();
+        $test->testGetSomething2();
+    }
+
+    public function testGenerateAdvancedClassPHPUnitCompat()
+    {
+        try {
+            new \ReflectionMethod(\PHPUnit_Framework_TestCase::class, 'createMock');
+            $this->markTestSkipped('PHPUnit < 5.4 is required.');
+        } catch (\ReflectionException $e) {
+        }
+
+        $this->checkGeneratedTestClass(
+            str_replace('createMock', 'getMock', self::EXPECTED_ADVANCED_CLASS),
+            TestAdvancedClass::class
+        );
 
         $test = new \PHPChunkit\Test\TestAdvancedClassTest();
         $test->setUp();

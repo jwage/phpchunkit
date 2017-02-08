@@ -29,4 +29,24 @@ abstract class BaseTest extends PHPUnit_Framework_TestCase
     {
         return realpath(__DIR__.'/../tests');
     }
+
+    /**
+     * PHPUnit 5.x compat, see createMock vs getMock
+     *
+     * @param string $originalClassName
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function createMock($originalClassName)
+    {
+        $builder = $this->getMockBuilder($originalClassName)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning();
+
+        if (method_exists($builder, 'disallowMockingUnknownTypes')) {
+            $builder->disallowMockingUnknownTypes();
+        }
+
+        return $builder->getMock();
+    }
 }

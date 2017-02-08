@@ -3,12 +3,12 @@
 namespace PHPChunkit\Test\Command;
 
 use PHPChunkit\Command\Setup;
-use PHPUnit_Framework_TestCase;
+use PHPChunkit\Test\BaseTest;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\NullOutput;
 
-class SetupTest extends PHPUnit_Framework_TestCase
+class SetupTest extends BaseTest
 {
     /**
      * @var Setup

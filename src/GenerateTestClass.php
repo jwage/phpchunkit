@@ -191,8 +191,9 @@ EOF;
         if ($parameters = $this->getConstructorParameters()) {
             foreach ($parameters as $parameter) {
                 if ($parameterClass = $parameter->getClass()) {
-                    $setUpCode[] = sprintf('        $this->%s = $this->createMock(%s::class);',
+                    $setUpCode[] = sprintf('        $this->%s = $this->%s(%s::class);',
                         $parameter->name,
+                        $this->getPHPUnitMockMethod(),
                         $parameterClass->getShortName()
                     );
                 } else {
@@ -261,7 +262,12 @@ EOF;
         if (!empty($parameters)) {
             foreach ($parameters as $parameter) {
                 if ($parameterClass = $parameter->getClass()) {
-                    $testMethodBodyCode[] = sprintf('        $%s = $this->createMock(%s::class);', $parameter->name, $parameterClass->getShortName());
+                    $testMethodBodyCode[] = sprintf(
+                        '        $%s = $this->%s(%s::class);',
+                        $parameter->name,
+                        $this->getPHPUnitMockMethod(),
+                        $parameterClass->getShortName()
+                    );
                 } else {
                     $testMethodBodyCode[] = sprintf("        \$%s = '';", $parameter->name);
                 }
@@ -332,5 +338,21 @@ EOF;
         }
 
         return substr($method->name, 0, 2) !== '__' && $method->isPublic();
+    }
+
+    /**
+     * @return string
+     */
+    private function getPHPUnitMockMethod()
+    {
+        foreach (['createMock', 'getMock'] as $method) {
+            try {
+                new \ReflectionMethod(PHPUnit_Framework_TestCase::class, $method);
+                return $method;
+            } catch (\ReflectionException $e) {
+            }
+        }
+
+        throw new \RuntimeException('Unable to detect PHPUnit version');
     }
 }
