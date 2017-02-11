@@ -11,7 +11,20 @@ php:
   - 7.1
   - nightly
 
+env:
+  - PHPUNIT=5.0.*
+  - PHPUNIT=5.1.*
+  - PHPUNIT=5.2.*
+  - PHPUNIT=5.3.*
+  - PHPUNIT=5.4.*
+  - PHPUNIT=5.5.*
+  - PHPUNIT=5.6.*
+  - PHPUNIT=5.7.*
+
 before_script:
+  - phpenv config-rm xdebug.ini || true
+  - composer self-update
+  - composer require phpunit/phpunit:${PHPUNIT} --no-update
   - composer install
   - git config --global user.name travis-ci
   - git config --global user.email travis@example.com
