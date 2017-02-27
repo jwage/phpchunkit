@@ -18,6 +18,7 @@
     "require": {
         "php": ">=7.0.0",
         "phpunit/phpunit": "^5.0",
+        "phpunit/phpunit-mock-objects": "^3.1",
         "symfony/console": "^2.7|^3.0",
         "symfony/process": "^2.7|^3.0",
         "symfony/stopwatch": "^2.7|^3.0",
