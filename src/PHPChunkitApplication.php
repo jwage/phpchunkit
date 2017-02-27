@@ -42,6 +42,7 @@ class PHPChunkitApplication
     {
         $this->container = $container;
         $this->symfonyApplication = $this->container['phpchunkit.symfony_application'];
+        $this->symfonyApplication->setAutoExit(false);
     }
 
     public function run(InputInterface $input, OutputInterface $output) : int
@@ -74,7 +75,7 @@ class PHPChunkitApplication
                 }
             }
 
-            call_user_func_array([$service, 'execute'], [$input, $output]);
+            return call_user_func_array([$service, 'execute'], [$input, $output]);
         });
     }
 

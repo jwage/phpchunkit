@@ -52,10 +52,12 @@ $autoloaderPath = (new AutoloaderFinder())
 
 require_once $autoloaderPath;
 
-(new PHPChunkit(getcwd(), new Container()))
+$exitCode =(new PHPChunkit(getcwd(), new Container()))
     ->getContainer()['phpchunkit.application']
     ->run(
         new ArgvInput(),
         new ConsoleOutput()
     )
 ;
+
+exit($exitCode);
