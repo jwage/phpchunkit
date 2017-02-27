@@ -26,12 +26,12 @@
         "phpunit/php-token-stream": "^1.4",
         "pimple/pimple": "^3.0",
         "doctrine/inflector": "^1.1",
-        "twig/twig": "^1.27",
-        "kherge/box": "^2.7"
+        "twig/twig": "^1.27"
     },
     "require-dev": {
         "ext-pdo": "*",
-        "ext-pdo_mysql": "*"
+        "ext-pdo_mysql": "*",
+        "kherge/box": "^2.7"
     },
     "bin": [
         "bin/phpchunkit"
