@@ -24,8 +24,7 @@ env:
 before_script:
   - phpenv config-rm xdebug.ini || true
   - composer self-update
-  - composer require phpunit/phpunit:${PHPUNIT} --no-update
-  - composer update ${COMPOSER_OPTS}
+  - composer require phpunit/phpunit:${PHPUNIT} ${COMPOSER_OPTS}
   - git config --global user.name travis-ci
   - git config --global user.email travis@example.com
 
