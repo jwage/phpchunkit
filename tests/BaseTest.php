@@ -2,9 +2,9 @@
 
 namespace PHPChunkit\Test;
 
-use PHPUnit_Framework_TestCase;
+use \PHPUnit\Framework\TestCase;
 
-abstract class BaseTest extends PHPUnit_Framework_TestCase
+abstract class BaseTest extends TestCase
 {
     protected function buildPartialMock($className, array $mockedMethods, array $constructorArgs = null)
     {
