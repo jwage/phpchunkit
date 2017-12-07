@@ -21,7 +21,7 @@ namespace {{ namespace }};
 
 {{ useStatements }}
 
-class {{ shortName }} extends \PHPUnit\Framework\TestCase
+class {{ shortName }} extends TestCase
 {
 {{ properties }}
 
