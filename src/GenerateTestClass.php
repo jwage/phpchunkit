@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace PHPChunkit;
 
 use Doctrine\Common\Inflector\Inflector;
-use PHPUnit_Framework_TestCase;
+use \PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -21,7 +21,7 @@ namespace {{ namespace }};
 
 {{ useStatements }}
 
-class {{ shortName }} extends PHPUnit_Framework_TestCase
+class {{ shortName }} extends \PHPUnit\Framework\TestCase
 {
 {{ properties }}
 
@@ -294,7 +294,7 @@ EOF;
     {
         $dependencies = [];
         $dependencies[] = $this->reflectionClass->name;
-        $dependencies[] = PHPUnit_Framework_TestCase::class;
+        $dependencies[] = TestCase::class;
 
         if ($parameters = $this->getConstructorParameters()) {
             foreach ($parameters as $parameter) {
@@ -347,7 +347,7 @@ EOF;
     {
         foreach (['createMock', 'getMock'] as $method) {
             try {
-                new \ReflectionMethod(PHPUnit_Framework_TestCase::class, $method);
+                new \ReflectionMethod(TestCase::class, $method);
                 return $method;
             } catch (\ReflectionException $e) {
             }
