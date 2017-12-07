@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace PHPChunkit;
 
 use Doctrine\Common\Inflector\Inflector;
-use \PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
 

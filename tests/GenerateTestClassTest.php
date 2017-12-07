@@ -17,7 +17,7 @@ use PHPChunkit\Test\TestAdvancedClass;
 use PHPChunkit\Test\TestDependency1;
 use PHPChunkit\Test\TestDependency2;
 use PHPChunkit\Test\User;
-use \PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class TestAdvancedClassTest extends TestCase
 {
@@ -107,7 +107,7 @@ EOF;
 namespace PHPChunkit\Test;
 
 use PHPChunkit\Test\TestSimpleClass;
-use \PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class TestSimpleClassTest extends TestCase
 {
