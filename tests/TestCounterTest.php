@@ -57,14 +57,17 @@ class TestCounterTest extends BaseTest
 
     public function testCount1()
     {
+        $this->assertTrue(true);
     }
 
     public function testCount2()
     {
+        $this->assertTrue(true);
     }
 
     public function testCount3()
     {
+        $this->assertTrue(true);
     }
 
     /**
@@ -72,6 +75,7 @@ class TestCounterTest extends BaseTest
      */
     public function methodWithoutTestPrefix()
     {
+        $this->assertTrue(true);
     }
 
     /**
@@ -79,6 +83,7 @@ class TestCounterTest extends BaseTest
      */
     public function testWithDataProvider()
     {
+        $this->assertTrue(true);
     }
 
     public function getTestWithDataProviderData()
@@ -92,14 +97,17 @@ class TestCounterTest extends BaseTest
 
     public function nonTestPublicMethod()
     {
+        $this->assertTrue(true);
     }
 
     protected function nonTestProtectedMethod()
     {
+        $this->assertTrue(true);
     }
 
     private function nonTestPrivateMethod()
     {
+        $this->assertTrue(true);
     }
 }
 

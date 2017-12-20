@@ -5,8 +5,9 @@ namespace PHPChunkit\Test\Command;
 use PHPChunkit\Command\Setup;
 use PHPChunkit\Test\BaseTest;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class SetupTest extends BaseTest
 {
@@ -22,7 +23,7 @@ class SetupTest extends BaseTest
 
     public function testGetName()
     {
-        $this->setup->getName();
+        $this->assertEquals('setup', $this->setup->getName());
     }
 
     public function testConfigure()
@@ -39,8 +40,15 @@ class SetupTest extends BaseTest
     public function testExecute()
     {
         $input = $this->createMock(InputInterface::class);
-        $output = new NullOutput();
+        $output = $this->createMock(OutputInterface::class);
+        $formatter = $this->createMock(OutputFormatterInterface::class);
+
+        $output->expects($this->any())
+            ->method('getFormatter')
+            ->willReturn($formatter);
 
         $this->setup->execute($input, $output);
+
+        $this->assertTrue(true);
     }
 }
