@@ -3,6 +3,7 @@
 namespace PHPChunkit\Test;
 
 use PHPChunkit\GenerateTestClass;
+use PHPUnit\Framework\TestCase;
 
 class GenerateTestClassTest extends BaseTest
 {
@@ -16,9 +17,9 @@ use PHPChunkit\Test\TestAdvancedClass;
 use PHPChunkit\Test\TestDependency1;
 use PHPChunkit\Test\TestDependency2;
 use PHPChunkit\Test\User;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class TestAdvancedClassTest extends PHPUnit_Framework_TestCase
+class TestAdvancedClassTest extends TestCase
 {
     /**
      * @var TestDependency1
@@ -106,9 +107,9 @@ EOF;
 namespace PHPChunkit\Test;
 
 use PHPChunkit\Test\TestSimpleClass;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class TestSimpleClassTest extends PHPUnit_Framework_TestCase
+class TestSimpleClassTest extends TestCase
 {
     /**
      * @var TestSimpleClass
@@ -147,7 +148,7 @@ EOF;
     public function testGenerateAdvancedClass()
     {
         try {
-            new \ReflectionMethod(\PHPUnit_Framework_TestCase::class, 'createMock');
+            new \ReflectionMethod(TestCase::class, 'createMock');
         } catch (\ReflectionException $e) {
             $this->markTestSkipped('PHPUnit >= 5.4 is required.');
         }
@@ -163,7 +164,7 @@ EOF;
     public function testGenerateAdvancedClassPHPUnitCompat()
     {
         try {
-            new \ReflectionMethod(\PHPUnit_Framework_TestCase::class, 'createMock');
+            new \ReflectionMethod(TestCase::class, 'createMock');
             $this->markTestSkipped('PHPUnit < 5.4 is required.');
         } catch (\ReflectionException $e) {
         }
