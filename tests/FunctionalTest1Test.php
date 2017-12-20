@@ -3,6 +3,7 @@
 namespace PHPChunkit\Test;
 
 use PDO;
+use PDOException;
 
 /**
  * @group functional
@@ -15,8 +16,14 @@ class FunctionalTest1Test extends BaseTest
 
         $databases = parse_ini_file(realpath(__DIR__.'/../bin/config/databases_test.ini'));
 
-        foreach ($databases as $database) {
-            $pdo = new PDO(sprintf('mysql:host=localhost;dbname=%s', $database), 'root', null);
+        try {
+            foreach ($databases as $database) {
+                $pdo = new PDO(sprintf('mysql:host=localhost;dbname=%s', $database), 'root', null);
+            }
+        } catch (PDOException $e) {
+            if ($e->getMessage() === "SQLSTATE[HY000] [1049] Unknown database 'testdb1_test'") {
+                $this->markTestSkipped('Database is not setup. Run ./bin/phpchunkit create-dbs');
+            }
         }
     }
 
