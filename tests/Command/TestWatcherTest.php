@@ -48,18 +48,23 @@ class TestWatcherTest extends BaseTest
         $output = $this->createMock(OutputInterface::class);
 
         $this->testWatcher->execute($input, $output);
+
+        $this->assertEquals(1, $this->testWatcher->getCount());
     }
 }
 
 class TestWatcherStub extends TestWatcher
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $count = 0;
 
     protected function sleep()
     {
+    }
+
+    public function getCount() : int
+    {
+        return $this->count;
     }
 
     /**
